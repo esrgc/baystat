@@ -1,35 +1,33 @@
 $(document).ready(function(){
 
   var map = new L.Map('map').setView(new L.LatLng(38.85, -77.4), 7);
-  
   var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
   var countyURL = 'http://a.tiles.mapbox.com/v3/esrgc.CountyCompare/{z}/{x}/{y}.png';
+
   L.tileLayer(baseURL, {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
   L.tileLayer(countyURL).addTo(map);
 
-
   var stat = ' Cover Crops  '; //spaces required bc of ugly data
   var geo = 'maryland';
   getSocrata(stat, geo);
 
-
 });
 
 function getSocrata(stat, geo){
-  $('#res').html('loading...');
+  $('#line-chart').html('loading...');
   $.getJSON('api/bay/' + stat + '/' + geo, function(res){
-    $('#res').html('<h4>Cover Crops (Maryland)</h4>');
+    $('#line-chart').html('<h4>Cover Crops (Maryland)</h4>');
     makeLineChart(res);
   });
 }
 
 function makeLineChart(data){
   var margin = {top: 20, right: 20, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    width = 500 - margin.left - margin.right,
+    height = 255 - margin.top - margin.bottom;
 
   var parseDate = d3.time.format("%Y").parse;
   var chartData = [];
@@ -46,7 +44,6 @@ function makeLineChart(data){
       stat: +data[0]["_2013_goal"].replace(",", "").replace("*", "")
     });
   }
-  console.log(chartData2);
 
   var x = d3.time.scale()
       .range([0, width]);
@@ -66,7 +63,7 @@ function makeLineChart(data){
       .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.stat); });
 
-  var svg = d3.select("#res").append("svg")
+  var svg = d3.select("#line-chart").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")

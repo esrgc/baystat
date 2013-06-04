@@ -17,8 +17,7 @@ body {
   border: 1px solid #dedede;
   height: 660px;
   width:780px;
-  background: #f7f7f7;
-  font: 10px sans-serif;
+  background: #fff;
   position: relative;
   -webkit-border-top-left-radius: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -34,14 +33,15 @@ body {
 }
 
 .title h4 {
-  line-height: 30px;
+  line-height: 20px;
   margin-left: 10px;
 }
 
 .inner {
   height: 100%;
   width: 100%;
-  /*border: 1px solid #dedede;*/
+  background: #f7f7f7;
+  border: 1px solid #dedede;
 }
 
 #menu {
@@ -51,6 +51,12 @@ body {
   position: absolute;
   top: 50px;
   left: 10px;
+}
+
+#menu .inner .accordion {
+  margin: 10px;
+  background: white;
+  font-size: 12px;
 }
 
 #map-container { 
@@ -63,12 +69,17 @@ body {
 }
 
 #res {
-  /*background: #252AFF;*/
   width: 500px;
   height: 295px;
   position: absolute;
   top: 355px;
   right: 10px;
+  font: 10px sans-serif;
+}
+
+#line-chart h4 {
+  margin: 0px;
+  padding: 10px;
 }
 
 #notes {
