@@ -1,0 +1,13 @@
+{
+  "name": "baystatapi",
+  "description": "",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "request": "2.21.x",
+    "express": "3.2.x"
+  },
+  "devDependencies": {
+
+  }
+}
