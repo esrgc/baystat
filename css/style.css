@@ -1,5 +1,83 @@
-#map { 
-  height: 480px; 
+body {
+
+}
+
+.wrapper {
+
+}
+
+.header {
+  margin-top: 50px;
+  margin-left: 170px;
+  color: white;
+}
+
+.dashboard {
+  margin: 50px auto;
+  border: 1px solid #dedede;
+  height: 660px;
+  width:780px;
+  background: #f7f7f7;
+  font: 10px sans-serif;
+  position: relative;
+  -webkit-border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.title {
+  height: 30px;
+  border-bottom: 1px solid #dedede;
+}
+
+.title h4 {
+  line-height: 30px;
+  margin-left: 10px;
+}
+
+.inner {
+  height: 100%;
+  width: 100%;
+  /*border: 1px solid #dedede;*/
+}
+
+#menu {
+  /*background: #FFB318;*/
+  width: 310px;
+  height: 295px;
+  position: absolute;
+  top: 50px;
+  left: 10px;
+}
+
+#map-container { 
+  /*background: #E81645;*/
+  width: 440px;
+  height: 295px;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+}
+
+#res {
+  /*background: #252AFF;*/
+  width: 500px;
+  height: 295px;
+  position: absolute;
+  top: 355px;
+  right: 10px;
+}
+
+#notes {
+  /*background: #16E889;*/
+  width: 250px;
+  height: 295px;
+  position: absolute;
+  top: 355px;
+  left: 10px;
 }
 
 header {
@@ -11,7 +89,10 @@ header {
 }
 
 body {
-  font: 10px sans-serif;
+}
+
+svg {
+  margin: 0 auto;
 }
 
 .axis path,

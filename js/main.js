@@ -1,17 +1,20 @@
 $(document).ready(function(){
 
-  var map = new L.Map('map').setView(new L.LatLng(38.85, -77), 7);
-
-  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  var map = new L.Map('map').setView(new L.LatLng(38.85, -77.4), 7);
+  
+  var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
+  var countyURL = 'http://a.tiles.mapbox.com/v3/esrgc.CountyCompare/{z}/{x}/{y}.png';
+  L.tileLayer(baseURL, {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
-  $('.getData').click(function(e){
-    e.preventDefault();
-    var stat = ' Cover Crops  '; //spaces required bc of ugly data
-    var geo = 'maryland';
-    getSocrata(stat, geo);
-  })
+  L.tileLayer(countyURL).addTo(map);
+
+
+  var stat = ' Cover Crops  '; //spaces required bc of ugly data
+  var geo = 'maryland';
+  getSocrata(stat, geo);
+
 
 });
 
@@ -24,9 +27,9 @@ function getSocrata(stat, geo){
 }
 
 function makeLineChart(data){
-  var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  var margin = {top: 20, right: 20, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 
   var parseDate = d3.time.format("%Y").parse;
   var chartData = [];

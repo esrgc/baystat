@@ -12,28 +12,72 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-        <header class="span12">
-          <h1>BayStat</h1>
-        </header>
+    <div class="dashboard">
+      <div class="title">
+        <h4>Maryland's 2012 - 2013 Milestone Goals and Progress Report</h4>
       </div>
-      <div class="row">
-        <div class="span12">
-          <div id="map"></div>
+      <div id="menu">
+        <div class="inner">
+          <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                  Implement Best Farming Practices
+                </a>
+              </div>
+              <div id="collapseOne" class="accordion-body collapse in">
+                <div class="accordion-inner">
+                  <ul>
+                    <li>Cover Crops</li>
+                    <li>Soil Conservation & Water Quality Plans</li>
+                    <li>Stream Protection</li>
+                    <li>Manure Management Structures</li>
+                    <li>Natural Filters on Private Land</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                  Reducing Pollution From Urban Areas
+                </a>
+              </div>
+              <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  lol
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                  Public Land Resoration and Conservation
+                </a>
+              </div>
+              <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  lol
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="span12">
-          <button class="btn getData">Get Data</button>
-          <div id="res"></div>
-        </div>
+      <div id="map-container">
+        <div class="inner" id="map"></div>
       </div>
-    </div><!-- end container -->  
+      <div id="res">
+        <div class="inner"></div>
+      </div>
+      <div id="notes">
+        <div class="inner"></div>
+      </div>
+    </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.5/leaflet.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.1/d3.v3.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
