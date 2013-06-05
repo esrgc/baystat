@@ -77,6 +77,13 @@ body {
   font: 10px sans-serif;
 }
 
+#line-chart {
+  background: white;
+}
+
+#line-chart .title {
+  background: #f7f7f7;
+}
 #line-chart h5 {
   margin: 0px;
   padding: 5px 0 5px 10px;
@@ -120,9 +127,16 @@ svg {
 .line {
   fill: none;
   stroke: #006200;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
 }
 
 .line.secondary {
   stroke: red;
+}
+
+line.tick {
+  stroke: #e7e7e7;
+}
+path.domain {
+  stroke: #e7e7e7;
 }
