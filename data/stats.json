@@ -1,0 +1,78 @@
+[
+  {
+    "stat": "Cover Crops",
+    "definition": "Cover crops are small grains such as wheat or rye that are planted in the fall after the harvest of courn, soybeans and other summer crops to absorb unused fertilizers that may have remained in the soil.",
+    "units": "Acres of harvested and unharvested cover crops certified each year in Bay watershed",
+    "source": "MDA"
+  },{
+    "stat": "Soil Conservation & Water Quality Plans",
+    "definition": "SCWQPs are comprehensive plans for a farm that addresses natural resource management on agricultural lands and recommends best management practices (BMPs) that control erosion and sediment loss and manage nutrient runoff.",
+    "units": "Cumulative acres of farmland managed with soil conservation and water quality plans.",
+    "source": "MDA"
+  },{
+    "stat": "Stream Protection",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Manure Management Structures",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Natural Filters on Private Land",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Wastewater Treatment Plants ENR",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Stormwater Runoff Management Retrofits",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Septic Retrofits",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Air Pollution Reductions",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Natural Filters on Public Land",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Program Open Space",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "CREP Permanent Easements",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Rural Legacy",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Maryland Environmental Trust",
+    "definition": "",
+    "units": "",
+    "source": ""
+  },{
+    "stat": "Maryland Agricultural Land Preservation",
+    "definition": "",
+    "units": "",
+    "source": ""
+  }
+]
