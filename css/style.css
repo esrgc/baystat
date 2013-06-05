@@ -77,9 +77,9 @@ body {
   font: 10px sans-serif;
 }
 
-#line-chart h4 {
+#line-chart h5 {
   margin: 0px;
-  padding: 10px;
+  padding: 5px 0 5px 10px;
 }
 
 #notes {

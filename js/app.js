@@ -1,6 +1,8 @@
 $(document).ready(function(){
 
-  var map = new L.Map('map').setView(new L.LatLng(38.85, -77.4), 7);
+  var map = new L.Map('map', {
+    minZoom: 7
+  }).setView(new L.LatLng(38.85, -77.4), 7);
   var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
   var countyURL = 'http://a.tiles.mapbox.com/v3/esrgc.CountyCompare/{z}/{x}/{y}.png';
 
@@ -10,16 +12,33 @@ $(document).ready(function(){
 
   L.tileLayer(countyURL).addTo(map);
 
-  var stat = ' Cover Crops  '; //spaces required bc of ugly data
+  map.setMaxBounds(map.getBounds());
+
+  var stat = 'Cover Crops';
   var geo = 'maryland';
-  getSocrata(stat, geo);
+  getSocrataStat(stat, geo);
+
+  $('a.stat').click(function(e){
+    e.preventDefault();
+    var stat = $(this).html();
+    stat = $("<div/>").html(stat).text(); //decode
+    getSocrataStat(stat, geo);
+  });
 
 });
 
-function getSocrata(stat, geo){
+function getStats() {
+  $.getJSON('api/bay/stats/', function(res){
+    res.forEach(function(stat){
+      console.log(stat);
+    });
+  });
+}
+
+function getSocrataStat(stat, geo){
   $('#line-chart').html('loading...');
-  $.getJSON('api/bay/' + stat + '/' + geo, function(res){
-    $('#line-chart').html('<h4>Cover Crops (Maryland)</h4>');
+  $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
+    $('#line-chart').html('<h5>Cover Crops (Maryland)</h5>');
     makeLineChart(res);
   });
 }
@@ -34,10 +53,15 @@ function makeLineChart(data){
   var chartData2 = [];
 
   for(var i = 2000; i <= 2013; i++) {
-    var year = "_" + i;
+    var year = "_" + i, stat;
+    if(data[0][year] === '#NULL!') {
+      stat = 0;
+    } else {
+      stat = +data[0][year].replace(",", "").replace("*", "");
+    }
     chartData.push({
       date: parseDate(i.toString()),
-      stat: +data[0][year].replace(",", "").replace("*", "")
+      stat: stat
     });
     chartData2.push({
       date: parseDate(i.toString()),
@@ -69,9 +93,11 @@ function makeLineChart(data){
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+  var extent1 = d3.extent(chartData, function(d) { return d.stat; });
+  var extent2 = d3.extent(chartData2, function(d) { return d.stat; });
+  if(extent2[1] > extent1[1]) extent1[1] = extent2[1];
   x.domain(d3.extent(chartData, function(d) { return d.date; }));
-  y.domain(d3.extent(chartData, function(d) { return d.stat; }));
+  y.domain(extent1);
 
   svg.append("g")
       .attr("class", "x axis")
