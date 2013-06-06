@@ -32,6 +32,8 @@ Dashboard.prototype.getSocrataStat = function(stat, geo){
   $('#line-chart .title').html('<h5>' + stat + ' (' + geo + ')</h5>');
   self.chart.updateChart(self.chart.emptyData);
   var def = _.where(self.statsData, {stat: stat})[0].definition;
+  var units = _.where(self.statsData, {stat: stat})[0].units;
+  $('.units').html(units);
   $('#notes .inner').html('<div class="def"><h6>Definition:</h6><p>' + def + '</p></div>');
   $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
     console.log(JSON.stringify(res));

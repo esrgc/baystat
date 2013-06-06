@@ -1,6 +1,6 @@
 function Chart(){
   var self = this;
-  this.margin = {top: 20, right: 20, bottom: 30, left: 60};
+  this.margin = {top: 60, right: 20, bottom: 30, left: 60};
   this.width = 500 - this.margin.left - this.margin.right;
   this.height = 255 - this.margin.top - this.margin.bottom;
 
@@ -20,7 +20,7 @@ function Chart(){
       .orient("left");
 
   this.line = d3.svg.line()
-      //.interpolate('basis')
+      .interpolate('monotone')
       .x(function(d) { return self.x(d.date); })
       .y(function(d) { return self.y(d.stat); });
 
@@ -42,7 +42,7 @@ function Chart(){
 
 Chart.prototype.hoverOnDot = function(d, i){
   $('.hoverbox').css('left', 60 + this.x(d.date));
-  $('.hoverbox').css('top', 30 + this.y(d.stat));
+  $('.hoverbox').css('top', 70 + this.y(d.stat));
   $('.hoverbox').html(d.stat);
   $('.hoverbox').show();
 }
@@ -103,7 +103,7 @@ Chart.prototype.makeLineChart = function(){
       .data(chartData)
     .enter().append("circle")
       .attr("class", "dot primary")
-      .attr("r", 4.5)
+      .attr("r", 4)
       .attr("data", function(d){ return d.stat; })
       .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
       .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })
@@ -118,7 +118,7 @@ Chart.prototype.makeLineChart = function(){
   svg.append("circle")
       .data(goaldot)
       .attr("class", "dot secondary")
-      .attr("r", 4.5)
+      .attr("r", 4)
       .attr("data", function(d){ return d.stat; })
       .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
       .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })

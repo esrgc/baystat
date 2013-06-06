@@ -128,6 +128,44 @@ header {
 .row {
   margin-bottom: 20px;
 }
+
+.legend-container{
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  height: 38px;
+  width: 478px;
+  /*border: 1px solid #dedede;*/
+}
+.units {
+  width: 300px;
+  height: 38px;
+  float: left;
+}
+.legend {
+  width:100px;
+  float: right;
+}
+.legend-item {
+  height: 19px;
+}
+.legend-item p {
+  margin: 0;
+  line-height: 19px;
+}
+.sample {
+  height: 3px;
+  width: 40px;
+  margin-top: 7px;
+  margin-right: 5px;
+  float: left;
+}
+.sample.primary {
+  background: #d80000;
+}
+.sample.secondary {
+  background: #006200;
+}
 .hoverbox {
   width: 100px;
   height: 20px;
@@ -155,12 +193,12 @@ svg {
 
 .line {
   fill: none;
-  stroke: #006200;
+  stroke: #d80000;
   stroke-width: 2px;
 }
 
 .line.secondary {
-  stroke: #d80000;
+  stroke: #006200;
 }
 
 line.tick {
@@ -168,14 +206,15 @@ line.tick {
 }
 path.domain {
   stroke: #e7e7e7;
+  opacity: 0;
 }
 
 .dot {
-  fill: #009500;
+  fill: #d80000;
   stroke: #333;
   stroke-width: 1;
 }
 
 .dot.secondary {
-  fill: #d80000;
+  fill: #009500;
 }
