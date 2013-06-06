@@ -30,9 +30,11 @@ Dashboard.prototype.getStats = function() {
 Dashboard.prototype.getSocrataStat = function(stat, geo){
   var self = this;
   $('#line-chart .title').html('<h5>' + stat + ' (' + geo + ')</h5>');
+  self.chart.updateChart(self.chart.emptyData);
   var def = _.where(self.statsData, {stat: stat})[0].definition;
   $('#notes .inner').html('<div class="def"><h6>Definition:</h6><p>' + def + '</p></div>');
   $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
+    console.log(JSON.stringify(res));
     self.chart.updateChart(res);
   });
 }
