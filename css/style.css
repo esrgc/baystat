@@ -52,19 +52,54 @@ body {
   border: 1px solid #dedede;
 }
 
-#menu {
-  /*background: #FFB318;*/
+#intro {
   width: 310px;
-  height: 295px;
+  height: 40px;
   position: absolute;
   top: 50px;
   left: 10px;
 }
 
+#intro p {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 0px 10px 0px 10px;
+}
+
+#menu {
+  /*background: #FFB318;*/
+  width: 310px;
+  height: 245px;  
+  position: absolute;
+  top: 100px;
+  left: 10px;
+}
+
+#menu .inner {
+  height: 243px;
+}
+
 #menu .inner .accordion {
   margin: 10px;
-  background: white;
+  background: #f7f7f7;
   font-size: 12px;
+}
+
+#menu .accordion-group {
+  background: white;
+}
+
+#menu .accordion-toggle {
+  padding: 3px 15px;
+}
+
+#menu a {
+  color: green;
+}
+
+#menu li {
+  font-size: 11px;
+  line-height: 16px;
 }
 
 #map-container { 
@@ -99,6 +134,16 @@ body {
   padding: 5px 0 5px 10px;
 }
 
+.rednote {
+  width: 300px;
+  height: 20px;
+  position: absolute;
+  right: 10px;
+  bottom: 1px;
+  color: red;
+  text-align: right;
+}
+
 #notes {
   /*background: #16E889;*/
   width: 250px;
@@ -108,17 +153,21 @@ body {
   left: 10px;
 }
 
-.def {
+.def, .notes {
   padding: 10px;
   font-size: 10px;
 }
 
-.def h6 {
+#notes h6 {
   margin: 0px;
 }
 
-.def p {
+#notes p {
   line-height: 14px;
+}
+
+.notes {
+
 }
 
 header {

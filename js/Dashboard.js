@@ -38,15 +38,38 @@ Dashboard.prototype.getSocrataStat = function(stat, geo){
   $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
     console.log(JSON.stringify(res));
     self.chart.updateChart(res);
+    self.addNotes(res[0]);
   });
 }
 
 Dashboard.prototype.addHandlers = function(){
   var self = this;
-  $('a.stat').click(function(e){
+  $('a.stat').click(function(e){  
     e.preventDefault();
     var stat = $(this).html();
     self.stat = $("<div/>").html(stat).text(); //decode
     self.getSocrataStat(self.stat, self.geo);
   });
+}
+
+Dashboard.prototype.addNotes = function(data) {
+  if(data.red_footnote) {
+    $('.rednote').html(data.red_footnote);
+  } else {
+    $('.rednote').html('');
+  }
+  var notelist = '';
+  if(data.note1) {
+    notelist += '<h6>Notes:</h6><ul>';
+    notelist += '<li>' + data.note1 + '</li>';
+    if(data.note2) {
+      notelist += '<li>' + data.note2 + '</li>';
+    }
+    if(data.note3) {
+      notelist += '<li>' + data.note3 + '</li>';
+    }
+    notelist += '</ul>';
+  }
+  var html = '<div class="notes">'+notelist+'</div>';
+  $('#notes .inner').append(html);
 }

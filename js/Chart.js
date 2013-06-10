@@ -1,6 +1,6 @@
 function Chart(){
   var self = this;
-  this.margin = {top: 60, right: 20, bottom: 30, left: 60};
+  this.margin = {top: 60, right: 20, bottom: 40, left: 60};
   this.width = 500 - this.margin.left - this.margin.right;
   this.height = 255 - this.margin.top - this.margin.bottom;
 
