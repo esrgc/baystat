@@ -134,7 +134,7 @@ Chart.prototype.updateChart = function(data) {
 
   for(var i = 2000; i <= 2013; i++) {
     var year = "_" + i, stat;
-    if(data[0][year] === '#NULL!') {
+    if(data[0][year].indexOf("NULL") >= 0) {
       stat = 0;
     } else {
       stat = +data[0][year].replace(",", "").replace("*", "");
