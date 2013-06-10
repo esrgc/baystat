@@ -41,9 +41,11 @@ function Chart(){
 }
 
 Chart.prototype.hoverOnDot = function(d, i){
+  var format = d3.format(",");
+  var stat = format(d.stat);
   $('.hoverbox').css('left', 60 + this.x(d.date));
   $('.hoverbox').css('top', 70 + this.y(d.stat));
-  $('.hoverbox').html(d.stat);
+  $('.hoverbox').html(stat);
   $('.hoverbox').show();
 }
 

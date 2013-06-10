@@ -34,7 +34,7 @@ Dashboard.prototype.getSocrataStat = function(stat, geo){
   var def = _.where(self.statsData, {stat: stat})[0].definition;
   var units = _.where(self.statsData, {stat: stat})[0].units;
   $('.units').html(units);
-  $('#notes .inner').html('<div class="def"><h6>Definition:</h6><p>' + def + '</p></div>');
+  $('.def').html('<h6>Definition:</h6><p>' + def + '</p>');
   $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
     console.log(JSON.stringify(res));
     self.chart.updateChart(res);
@@ -48,6 +48,8 @@ Dashboard.prototype.addHandlers = function(){
     e.preventDefault();
     var stat = $(this).html();
     self.stat = $("<div/>").html(stat).text(); //decode
+    $('a.stat').removeClass('active');
+    $(this).addClass('active');
     self.getSocrataStat(self.stat, self.geo);
   });
 }
@@ -69,7 +71,10 @@ Dashboard.prototype.addNotes = function(data) {
       notelist += '<li>' + data.note3 + '</li>';
     }
     notelist += '</ul>';
+    var html = notelist;
+    $('.notes').html(html);
+    $('.notes').show();
+  } else {
+    $('.notes').hide();
   }
-  var html = '<div class="notes">'+notelist+'</div>';
-  $('#notes .inner').append(html);
 }
