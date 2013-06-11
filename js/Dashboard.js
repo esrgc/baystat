@@ -29,16 +29,11 @@ Dashboard.prototype.getStats = function() {
 
 Dashboard.prototype.getSocrataStat = function(stat, geo){
   var self = this;
-  $('#line-chart .title').html('<h5>' + stat + ' (' + geo + ')</h5>');
   self.chart.updateChart(self.chart.emptyData);
-  var def = _.where(self.statsData, {stat: stat})[0].definition;
-  var units = _.where(self.statsData, {stat: stat})[0].units;
-  $('.units').html(units);
-  $('.def').html('<h6>Definition:</h6><p>' + def + '</p>');
   $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
-    console.log(JSON.stringify(res));
+    self.chart.updateLabels(stat, geo);
     self.chart.updateChart(res);
-    self.addNotes(res[0]);
+    self.addNotes(stat, res[0]);
   });
 }
 
@@ -54,7 +49,10 @@ Dashboard.prototype.addHandlers = function(){
   });
 }
 
-Dashboard.prototype.addNotes = function(data) {
+Dashboard.prototype.addNotes = function(stat, data) {
+  var self = this;
+  var def = _.where(self.statsData, {stat: stat})[0].definition;
+  $('.def').html('<h6>Definition:</h6><p>' + def + '</p>');
   if(data.red_footnote) {
     $('.rednote').html(data.red_footnote);
   } else {

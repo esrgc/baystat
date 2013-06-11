@@ -53,6 +53,12 @@ Chart.prototype.hoverOffDot = function(d, i){
   $('.hoverbox').hide();
 }
 
+Chart.prototype.updateLabels = function(stat, geo){
+  $('#line-chart .title').html('<h5>' + stat + ' (' + geo + ')</h5>');
+  var units = _.where(dashboard.statsData, {stat: stat})[0].units;
+  $('.units').html(units);
+}
+
 Chart.prototype.makeLineChart = function(){
   var self = this,
       chartData = [],
