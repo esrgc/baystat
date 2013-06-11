@@ -54,8 +54,8 @@ body {
 
 .inner {
   height: 293px;
-  background: #f7f7f7;
-  border: 1px solid #dedede;
+/*  background: #f7f7f7;
+  border: 1px solid #dedede;*/
 }
 
 #intro {
@@ -86,8 +86,8 @@ body {
 }
 
 #menu .inner .accordion {
-  margin: 10px;
-  background: #f7f7f7;
+  margin: 0px;
+  background: #fff;
   font-size: 12px;
 }
 
@@ -124,6 +124,10 @@ body {
   right: 10px;
 }
 
+#map {
+  border: 1px solid #dedede;
+}
+
 #res {
   width: 500px;
   height: 295px;
@@ -135,12 +139,13 @@ body {
 
 #line-chart {
   background: white;
+  /*border: 1px solid #dedede;*/
 }
 
 #line-chart .title {
-  height: 29px;
-  background: #f7f7f7;
-  border-bottom: 1px solid #dedede;
+  height: 20px;
+/*  background: #f7f7f7;
+  border-bottom: 1px solid #dedede;*/
 }
 #line-chart h5 {
   margin: 0px;
@@ -166,32 +171,35 @@ body {
   left: 10px;
 }
 
+#notes h5 {
+    margin: 0px;
+}
+
 #notes li {
   line-height: 12px;
   padding-bottom: 5px;
 }
 
 .def {
-  height: 128px;
+  height: 148px;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0px;
+  left: 0px;
 }
 
 .notes {
   position: absolute;
-  top: 170px;
-  left: 10px;
-  height: 93px;
-  display: none;
+  top: 160px;
+  left: 0px;
+  height: 133px;
+  /*display: none;*/
 }
 
 .def, .notes {
   background: white;
-  padding: 10px;
-  border: 1px solid #dedede;
+  border: 1px solid #fff;
   font-size: 10px;
-  width: 208px;
+  width: 248px;
 }
 
 #notes h6 {
@@ -216,7 +224,7 @@ header {
 
 .legend-container{
   position: absolute;
-  top: 40px;
+  top: 30px;
   left: 10px;
   height: 38px;
   width: 478px;
