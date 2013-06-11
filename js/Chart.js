@@ -44,8 +44,15 @@ function Chart(){
 Chart.prototype.hoverOnDot = function(d, i){
   var format = d3.format(",");
   var stat = format(d.stat);
-  $('.hoverbox').css('left', 60 + this.x(d.date));
-  $('.hoverbox').css('top', 70 + this.y(d.stat));
+  var x = 55 + this.x(d.date);
+  var y = 45 + this.y(d.stat);
+  
+  //get width of x-axis, so labels don't go off the edge
+  var w = $('.line.primary').get(0).getBBox().width;
+  if(this.x(d.date) >= w) x -= 55;
+
+  $('.hoverbox').css('left', x);
+  $('.hoverbox').css('top', y);
   $('.hoverbox').html(stat);
   $('.hoverbox').show();
 }
@@ -106,7 +113,7 @@ Chart.prototype.makeLineChart = function(){
       .data(chartData)
     .enter().append("circle")
       .attr("class", "dot primary")
-      .attr("r", 4)
+      .attr("r", 3)
       .attr("data", function(d){ return d.stat; })
       .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
       .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })
@@ -121,7 +128,7 @@ Chart.prototype.makeLineChart = function(){
   svg.append("circle")
       .data(goaldot)
       .attr("class", "dot secondary")
-      .attr("r", 4)
+      .attr("r", 3)
       .attr("data", function(d){ return d.stat; })
       .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
       .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })
@@ -157,9 +164,6 @@ Chart.prototype.updateChart = function(data) {
 
   svg.select(".y.axis").transition()
     .call(this.yAxis);
-
-  // svg.select(".y.axis > text")
-  //     .text(data[0].bmpname2);
 
   svg.select(".x.axis").transition()
     .call(this.xAxis);

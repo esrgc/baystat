@@ -4,6 +4,7 @@ function Dashboard(){
   this.geo = 'Maryland';
   this.map = new Map();
   this.chart = new Chart();
+  this.pie = new PieChart();
   this.addHandlers();
   this.chart.makeLineChart();
   this.loadData(function(){
