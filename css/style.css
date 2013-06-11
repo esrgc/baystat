@@ -1,3 +1,9 @@
+/*_______________
+  |             |
+  | BayStat CSS |
+  |_____________|
+*/
+
 body {
   background: #fff;
 }
@@ -27,7 +33,6 @@ body {
 .header h4 {
   line-height: 20px;
   margin-left: 10px;
-
 }
 
 .footer {
@@ -54,8 +59,7 @@ body {
 
 .inner {
   height: 293px;
-/*  background: #f7f7f7;
-  border: 1px solid #dedede;*/
+/*  background: #f7f7f7; */
 }
 
 #intro {
@@ -273,6 +277,13 @@ header {
   border-radius: 4px;
 }
 
+/*
+  _______
+  |     |
+  | SVG |
+  |_____|
+*/
+
 svg {
   margin: 0 auto;
 }
@@ -314,4 +325,8 @@ path.domain {
 
 .dot.secondary {
   fill: #009500;
+}
+
+div {
+  /*border: 1px dashed #76E9FF;*/
 }

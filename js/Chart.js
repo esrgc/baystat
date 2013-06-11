@@ -12,6 +12,7 @@ function Chart(){
 
   this.xAxis = d3.svg.axis()
       .scale(this.x)
+      .tickSize(this.height*-1)
       .orient("bottom");
 
   this.yAxis = d3.svg.axis()
@@ -84,18 +85,12 @@ Chart.prototype.makeLineChart = function(){
 
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + this.height + ")")
+      .attr("transform", "translate(0," + (this.height) + ")")
       .call(this.xAxis);
 
   svg.append("g")
       .attr("class", "y axis")
       .call(this.yAxis);
-    // .append("text")
-    //   .attr("transform", "rotate(-90)")
-    //   .attr("y", 6)
-    //   .attr("dy", ".71em")
-    //   .style("text-anchor", "end")
-    //   .text("Cover Crops (acres)");
 
   svg.append("path")
       .datum(chartData2)
