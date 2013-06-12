@@ -120,7 +120,7 @@ body {
 }
 
 #map-container { 
-  /*background: #E81645;*/
+  background: #fff;
   width: 440px;
   height: 295px;
   position: absolute;
@@ -129,7 +129,8 @@ body {
 }
 
 #map {
-  border: 1px solid #dedede;
+  border: 0px solid #dedede;
+  background: #fff;
 }
 
 #res {
@@ -148,8 +149,8 @@ body {
   position: absolute;
   top: 195px;
   left: 330px;
-  border-top: 1px solid #dedede;
-  border-right: 1px solid #dedede;
+/*  border-top: 1px solid #dedede;
+  border-right: 1px solid #dedede;*/
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topright: 5px;
   border-top-right-radius: 5px;
