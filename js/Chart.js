@@ -3,6 +3,7 @@ function Chart(){
   this.margin = {top: 50, right: 20, bottom: 30, left: 50};
   this.width = 500 - this.margin.left - this.margin.right;
   this.height = 255 - this.margin.top - this.margin.bottom;
+  this.dotRadius = 3;
 
   this.x = d3.time.scale()
       .range([0, this.width]);
@@ -26,26 +27,27 @@ function Chart(){
       .y(function(d) { return self.y(d.stat); });
 
   this.parseDate = d3.time.format("%Y").parse;
+  this.formatComma = d3.format(",");
 
   this.emptyData = [{"_2006":"00","_2005":"0","_2004":"0","_2003":"0","_2009":"0","_2008":"0","_2007":"0","_2013_goal":"0","_2012":"0","_2013":"0","_2000":"0","_2010":"0","_2001":"0","_2011":"0","_2002":"0"}];
-
-  this.setDomain = function(d1, d2) {
-    var extent = d3.extent(d1, function(d) { return d.stat; });
-    var extent2 = d3.extent(d2, function(d) { return d.stat; });
-    if(extent2[1] > extent[1]) extent[1] = extent2[1];
-    extent[1] = extent[1] + extent[1]*.2;
-    extent[0] = extent[0] - extent[0]*.2;
-    if(extent[0] < 0) extent[0] = 0;
-    this.x.domain(d3.extent(d1, function(d) { return d.date; }));
-    this.y.domain(extent);
-  }
 }
 
-Chart.prototype.hoverOnDot = function(d, i){
-  var format = d3.format(",");
-  var stat = format(d.stat);
+Chart.prototype.setDomain = function(d1, d2){
+  var extent = d3.extent(d1, function(d) { return d.stat; });
+  var extent2 = d3.extent(d2, function(d) { return d.stat; });
+  if(extent2[1] > extent[1]) extent[1] = extent2[1];
+  extent[1] = extent[1] + extent[1]*.2;
+  extent[0] = extent[0] - extent[0]*.2;
+  if(extent[0] < 0) extent[0] = 0;
+  this.x.domain(d3.extent(d1, function(d) { return d.date; }));
+  this.y.domain(extent);
+}
+
+Chart.prototype.hoverOnDot = function(d, i, dot){
+  var stat = this.formatComma(d.stat);
   var x = 55 + this.x(d.date);
   var y = 45 + this.y(d.stat);
+  d3.select(dot).transition().attr('r', this.dotRadius + 3);
   
   //get width of x-axis, so labels don't go off the edge
   var w = $('.line.primary').get(0).getBBox().width;
@@ -54,11 +56,12 @@ Chart.prototype.hoverOnDot = function(d, i){
   $('.hoverbox').css('left', x);
   $('.hoverbox').css('top', y);
   $('.hoverbox').html(stat);
-  $('.hoverbox').show();
+  $('.hoverbox').fadeIn(200);
 }
 
-Chart.prototype.hoverOffDot = function(d, i){
-  $('.hoverbox').hide();
+Chart.prototype.hoverOffDot = function(d, i, dot){
+  $('.hoverbox').fadeOut(200);
+  d3.select(dot).transition().attr('r', this.dotRadius);
 }
 
 Chart.prototype.updateLabels = function(stat, geo){
@@ -113,10 +116,10 @@ Chart.prototype.makeLineChart = function(){
       .data(chartData)
     .enter().append("circle")
       .attr("class", "dot primary")
-      .attr("r", 3)
+      .attr("r", this.dotRadius)
       .attr("data", function(d){ return d.stat; })
-      .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
-      .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })
+      .on('mouseover', function(d, i) {self.hoverOnDot(d, i, this); })
+      .on('mouseout', function(d, i) {self.hoverOffDot(d, i, this); })
       .attr("cx", function(d) { return self.x(d.date); })
       .attr("cy", function(d) { return self.y(d.stat); });
 
@@ -128,10 +131,10 @@ Chart.prototype.makeLineChart = function(){
   svg.append("circle")
       .data(goaldot)
       .attr("class", "dot secondary")
-      .attr("r", 3)
+      .attr("r", this.dotRadius)
       .attr("data", function(d){ return d.stat; })
-      .on('mouseover', function(d, i) {self.hoverOnDot(d, i); })
-      .on('mouseout', function(d, i) {self.hoverOffDot(d, i); })
+      .on('mouseover', function(d, i) {self.hoverOnDot(d, i, this); })
+      .on('mouseout', function(d, i) {self.hoverOffDot(d, i, this); })
       .attr("cx", function(d) { console.log(d.date); return self.x(d.date); })
       .attr("cy", function(d) { return self.y(d.stat); });
 
@@ -198,5 +201,9 @@ Chart.prototype.updateChart = function(data) {
       .attr("data", function(d){ return d.stat; })
       .attr("cx", function(d) { return self.x(d.date); })
       .attr("cy", function(d) { return self.y(d.stat); });
+
+  var overlaytext = '<p>2013: ' + this.formatComma(chartData[chartData.length-1].stat) + '</p>';
+  overlaytext += '<p>2013 Goal: ' + this.formatComma(chartData2[0].stat) + '</p>';
+  $('.overlay').html(overlaytext);
 
 }

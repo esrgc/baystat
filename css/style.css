@@ -192,6 +192,10 @@ body {
   font-size: 10px;
 }
 
+#pie .legend-item p {
+  line-height: 23px;
+}
+
 #pie .sample.primary {
   background: #d80000;
 }
@@ -219,12 +223,32 @@ body {
 
 .rednote {
   width: 300px;
-  height: 20px;
+  height: 30px;
   position: absolute;
-  right: 10px;
-  bottom: 1px;
+  left: 50px;
+  bottom: 0px;
   color: red;
+  text-align: left;
+}
+
+.rednote p {
+  margin: 15px 0 0 0;
+  line-height: 15px;
+}
+
+.overlay {
+  width: 100px;
+  height: 30px;
+  position: absolute;
+  right: 20px;
+  bottom: 0px;
+  color: #9f9f9f;
   text-align: right;
+}
+
+.overlay p {
+  margin: 0;
+  line-height: 15px;
 }
 
 #notes {
@@ -392,6 +416,10 @@ path.domain {
 #pie path {
   stroke-width: 1;
   stroke: #fff;
+}
+
+#pie path:hover {
+  stroke: #333;
 }
 
 div {

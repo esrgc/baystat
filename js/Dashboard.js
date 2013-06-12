@@ -55,7 +55,7 @@ Dashboard.prototype.addNotes = function(stat, data) {
   var def = _.where(self.statsData, {stat: stat})[0].definition;
   $('.def').html('<h6>Definition:</h6><p>' + def + '</p>');
   if(data.red_footnote) {
-    $('.rednote').html(data.red_footnote);
+    $('.rednote').html('<p>' + data.red_footnote + '</p>');
   } else {
     $('.rednote').html('');
   }
