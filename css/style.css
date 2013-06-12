@@ -8,6 +8,10 @@ body {
   background: #fff;
 }
 
+a {
+  color: green;
+}
+
 .dashboard {
   margin: 50px auto;
   border: 1px solid #dedede;
@@ -73,7 +77,7 @@ body {
 #intro p {
   font-size: 11px;
   line-height: 14px;
-  padding: 0px 10px 0px 10px;
+  padding: 0px 0px 0px 0px;
 }
 
 #menu {
@@ -106,10 +110,6 @@ body {
   padding: 3px 15px;
 }
 
-#menu a {
-  color: green;
-}
-
 #menu li {
   font-size: 11px;
   line-height: 16px;
@@ -119,12 +119,26 @@ body {
   font-weight: bold;
 }
 
+#map-intro {
+  width: 440px;
+  height: 40px;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+}
+
+#map-intro p {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 0px 0px 0px 5px;
+}
+
 #map-container { 
   background: #fff;
   width: 440px;
-  height: 295px;
+  height: 245px;
   position: absolute;
-  top: 50px;
+  top: 100px;
   right: 10px;
 }
 

@@ -48,6 +48,10 @@ Dashboard.prototype.addHandlers = function(){
     $(this).addClass('active');
     self.getSocrataStat(self.stat, self.geo);
   });
+  $('a[href="#stat"]').click(function(e){
+    e.preventDefault();
+    
+  })
 }
 
 Dashboard.prototype.addNotes = function(stat, data) {

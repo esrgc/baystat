@@ -2,7 +2,7 @@ function Map(){
   this.map = new L.Map('map', {
     attributionControl: false,
     zoomControl: false
-  }).setView(new L.LatLng(38.85, -77.4), 7);
+  }).setView(new L.LatLng(38.55, -77.4), 7);
 
   var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
   var countyURL = 'http://a.tiles.mapbox.com/v3/esrgc.CountyCompare/{z}/{x}/{y}.png';
