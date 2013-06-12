@@ -10,8 +10,12 @@ function Map(){
   // L.tileLayer(baseURL, {
   //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   // }).addTo(this.map);
-
+  
   L.tileLayer(countyURL).addTo(this.map);
 
-  //this.map.setMaxBounds(this.map.getBounds());
+  var southWest = new L.LatLng(36.986422, -80.980469),
+    northEast = new L.LatLng(40.006054, -74.904785),
+    bounds = new L.LatLngBounds(southWest, northEast);
+
+  this.map.setMaxBounds(bounds);
 }
