@@ -21,7 +21,7 @@ Dashboard.prototype.loadData = function(next){
 }
 
 Dashboard.prototype.getStats = function() {
-  $.getJSON('../api/bay/stats/', function(res){
+  $.getJSON('api/bay/stats/', function(res){
     res.forEach(function(stat){
       console.log(stat);
     });
@@ -31,7 +31,7 @@ Dashboard.prototype.getStats = function() {
 Dashboard.prototype.getSocrataStat = function(stat, geo){
   var self = this;
   self.chart.updateChart(self.chart.emptyData);
-  $.getJSON('../api/bay/stat/' + stat + '/' + geo, function(res){
+  $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
     self.chart.updateLabels(stat, geo);
     self.chart.updateChart(res);
     self.addNotes(stat, res[0]);
