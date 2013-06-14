@@ -135,7 +135,7 @@ Chart.prototype.makeLineChart = function(){
       .attr("data", function(d){ return d.stat; })
       .on('mouseover', function(d, i) {self.hoverOnDot(d, i, this); })
       .on('mouseout', function(d, i) {self.hoverOffDot(d, i, this); })
-      .attr("cx", function(d) { console.log(d.date); return self.x(d.date); })
+      .attr("cx", function(d) { return self.x(d.date); })
       .attr("cy", function(d) { return self.y(d.stat); });
 
 }
