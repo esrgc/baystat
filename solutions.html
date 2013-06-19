@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.5/leaflet.css" />
     <!--[if lte IE 8]> <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.5/leaflet.ie.css" /> <![endif]-->    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://localhost/dashboards/geodash/dist/GeoDash.min.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/solutions.css" />
   </head>
@@ -130,10 +131,15 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.1/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-    <script src="js/Dashboard.js"></script>
+    <script src="http://localhost/dashboards/geodash/dist/GeoDash.min.js"></script>
+    <script src="js/Solutions.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/Chart.js"></script>
     <script src="js/PieChart.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+      $(function(){
+        window.dashboard = new Solutions();
+      });
+    </script>
   </body>
 </html>

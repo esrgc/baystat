@@ -1,7 +1,8 @@
 function Map(){
   this.map = new L.Map('map', {
     attributionControl: false,
-    zoomControl: false
+    zoomControl: false,
+    dragging: false
   }).setView(new L.LatLng(38.55, -77.4), 7);
 
   var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
@@ -13,9 +14,9 @@ function Map(){
   
   L.tileLayer(countyURL).addTo(this.map);
 
-  var southWest = new L.LatLng(36.986422, -80.980469),
-    northEast = new L.LatLng(40.006054, -74.904785),
-    bounds = new L.LatLngBounds(southWest, northEast);
+  // var southWest = new L.LatLng(36.986422, -80.980469),
+  //   northEast = new L.LatLng(40.006054, -74.904785),
+  //   bounds = new L.LatLngBounds(southWest, northEast);
 
-  this.map.setMaxBounds(bounds);
+  // this.map.setMaxBounds(bounds);
 }
