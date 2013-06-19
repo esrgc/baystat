@@ -1,0 +1,16 @@
+
+
+#map-container { 
+  background: #fff;
+  width: 760px;
+  height: 400px;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+}
+
+#map {
+  border: 0px solid #dedede;
+  background: #41B0FF;
+  height: 100%;
+}

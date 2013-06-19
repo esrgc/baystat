@@ -11,11 +11,15 @@
     <!--[if lte IE 8]> <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.5/leaflet.ie.css" /> <![endif]-->    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/causes.css" />
   </head>
   <body>
     <div class="dashboard">
       <div class="header">
         <h4>Sources of Chesapeake Bay Pollution</h4>
+      </div>
+      <div id="map-container">
+        <div class="inner" id="map"></div>
       </div>
       <div class="footer">
         <img src="img/favicon.png" /><p>Powered by open data on <a href="https://data.maryland.gov/">https://data.maryland.gov/</a></p>
@@ -26,10 +30,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.1/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-    <script src="js/Dashboard.js"></script>
+    <script src="js/Causes.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/Chart.js"></script>
     <script src="js/PieChart.js"></script>
-    <!--<script src="js/app.js"></script>-->
+    <script>
+      $(function(){
+        window.dashboard = new Causes();
+      });
+    </script>
   </body>
 </html>
