@@ -11,7 +11,16 @@ function Solutions(){
     height: 255,
     colors: ['#d80000', '#006200']
   });
-  this.pie = new PieChart();
+  this.pie = new GeoDash.PieChart('#pie .chart', {
+    label: 'source',
+    value: 'percent',
+    colors: ["#d80000", "#0B6909", "#EDD70A"]
+  });
+  this.pie.update([
+    {"source":"Urban/Suburban","percent":50},
+    {"source":"Public Land","percent":4},
+    {"source":"Farms","percent":46}
+  ]);
   this.addHandlers();
   this.emptyData = this.prepareData([{"_2006":"0","_2005":"0","_2004":"0","_2003":"0","_2009":"0","_2008":"0","_2007":"0","_2013_goal":"0","_2012":"0","_2013":"0","_2000":"0","_2010":"0","_2001":"0","_2011":"0","_2002":"0"}]);
   this.loadData(function(){
