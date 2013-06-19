@@ -5,7 +5,7 @@ var request = require('request'),
     app = express(),
     config = JSON.parse(fs.readFileSync('config/config.json'));
 
-var dataurl = "https://data.maryland.gov/resource/v5pd-9ptg.json?$$app_token=" + config.app_token;
+var dataurl = "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=" + config.app_token;
 
 //Middleware
 app.use(express.bodyParser());
@@ -17,16 +17,16 @@ app.get('/', function(req, res){
 app.get('/bay/stat/:stat?/:geo?', function(req, res){
   var geo = encodeURIComponent(req.params.geo),
       stat = encodeURIComponent(req.params.stat),
-      url = dataurl + "&$where=basinname='"+geo+"'%20and%20bmpname2='"+stat+"'";
+      url = dataurl + "&$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
   socrata(url, function(json){
     res.json(json);
   });
 });
 
 app.get('/bay/stats', function(req, res){
-  var url = dataurl + "&$select=bmpname2";
+  var url = dataurl + "&$select=bmpname";
   socrata(url, function(json){
-    var stats = _.pluck(json, 'bmpname2');
+    var stats = _.pluck(json, 'bmpname');
     stats = _.uniq(stats);
     res.json(stats);
   });
