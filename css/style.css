@@ -132,6 +132,10 @@ path.domain {
   stroke: #333;
 }
 
+.axis text {
+  fill: #333;
+}
+
 div {
   /*border: 1px dashed #76E9FF;*/
 }

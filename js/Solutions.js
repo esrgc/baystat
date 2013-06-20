@@ -8,14 +8,18 @@ function Solutions(){
     x: 'date',
     y: 'stat',
     width: 'auto',
-    height: 255,
-    colors: ['#d80000', '#006200']
+    height: 'auto',
+    colors: ['#d80000', '#006200'],
+    interpolate: 'monotone'
   });
   this.pie = new GeoDash.PieChart('#pie .chart', {
     label: 'source',
     value: 'percent',
     colors: ["#d80000", "#0B6909", "#f0db4f"],
-    innerRadius: 17
+    innerRadius: 17,
+    drawX: false,
+    drawY: false,
+    opacity: 0.8
   });
   this.pie.update([
     {"source":"Urban/Suburban","percent":50},

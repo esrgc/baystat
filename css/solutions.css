@@ -159,6 +159,11 @@
   /*border: 1px solid #dedede;*/
 }
 
+#line-chart .chart {
+  margin-top: 50px;
+  height: 200px;
+}
+
 #line-chart .title {
   height: 20px;
 /*  background: #f7f7f7;
