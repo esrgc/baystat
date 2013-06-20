@@ -148,7 +148,7 @@
   background: #d80000;
 }
 #pie .sample.secondary {
-  background: #EDD70A;
+  background: #f0db4f;
 }
 #pie .sample.three {
   background: #0B6909;
@@ -174,7 +174,7 @@
   height: 30px;
   position: absolute;
   left: 50px;
-  bottom: 0px;
+  bottom: 10px;
   color: red;
   text-align: left;
 }
@@ -281,17 +281,19 @@
   line-height: 19px;
 }
 .sample {
-  height: 3px;
+  height: 2px;
   width: 40px;
-  margin-top: 7px;
+  margin-top: 9px;
   margin-right: 5px;
   float: left;
 }
 .sample.primary {
   background: #d80000;
+  background: -webkit-linear-gradient(left, #fff, #d80000 20%, #d80000 80%, #fff);
 }
 .sample.secondary {
   background: #006200;
+  background: -webkit-linear-gradient(left, #fff, #006200 20%, #006200 80%, #fff);
 }
 .hoverbox {
   font-size: 10px;

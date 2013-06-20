@@ -14,7 +14,7 @@ function Solutions(){
   this.pie = new GeoDash.PieChart('#pie .chart', {
     label: 'source',
     value: 'percent',
-    colors: ["#d80000", "#0B6909", "#EDD70A"],
+    colors: ["#d80000", "#0B6909", "#f0db4f"],
     innerRadius: 17
   });
   this.pie.update([
