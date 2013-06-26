@@ -1,4 +1,10 @@
-function Map(){
+function Map(options){
+  this.defaults = {
+    zoom: 7,
+    lat: 38,
+    lng: -75
+  };
+  this.setOptions(options);
   this.style = {
     color: '#333',
     fillColor: '#fff',
@@ -15,7 +21,22 @@ function Map(){
     attributionControl: false,
     zoomControl: false,
     dragging: false
-  }).setView(new L.LatLng(38.55, -77.4), 7);
+  }).setView(new L.LatLng(this.options.lat, this.options.lng), this.options.zoom);
+}
+
+Map.prototype.setOptions = function (options) {
+  if(options !== undefined){
+    for (var key in this.defaults) {
+      if (this.defaults.hasOwnProperty(key)) {
+        if (options[key] === undefined) {
+          options[key] = this.defaults[key];
+        }
+      }
+    }
+    this.options = options;
+  } else {
+    this.options = this.defaults;
+  }
 }
 
 Map.prototype.addGeoJSON = function(geojson) {

@@ -3,7 +3,11 @@ function Solutions(){
   this.stat = 'Cover Crops';
   this.geo = 'Maryland';
   this.formatComma = d3.format(",");
-  this.map = new Map();
+  this.map = new Map({
+    zoom: 7,
+    lat: 38.55,
+    lng: -77.4
+  });
   $.getJSON('data/wfr.geojson', function(geojson){
     self.map.addGeoJSON(geojson);
   });
