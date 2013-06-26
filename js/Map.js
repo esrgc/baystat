@@ -1,22 +1,42 @@
 function Map(){
+  this.style = {
+    color: '#333',
+    fillColor: '#fff',
+    fillOpacity: 0.9,
+    weight: 1
+  };
+  this.selectedStyle = {
+    color: '#333',
+    fillColor: '#f00',
+    fillOpacity: 0.9,
+    weight: 1
+  };
   this.map = new L.Map('map', {
     attributionControl: false,
     zoomControl: false,
     dragging: false
   }).setView(new L.LatLng(38.55, -77.4), 7);
+}
 
-  var baseURL = 'http://a.tiles.mapbox.com/v3/esrgc.map-y9awf40v/{z}/{x}/{y}.png';
-  var countyURL = 'http://a.tiles.mapbox.com/v3/esrgc.CountyCompare/{z}/{x}/{y}.png';
+Map.prototype.addGeoJSON = function(geojson) {
+  var self = this;
+  self.geojsonlayer = L.geoJson(geojson, {
+    style: function (feature) {
+      return self.style;
+    },
+    onEachFeature: function (feature, layer) {
+      
+    }
+  }).addTo(self.map);
 
-  // L.tileLayer(baseURL, {
-  //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-  // }).addTo(this.map);
-  
-  L.tileLayer(countyURL).addTo(this.map);
-
-  // var southWest = new L.LatLng(36.986422, -80.980469),
-  //   northEast = new L.LatLng(40.006054, -74.904785),
-  //   bounds = new L.LatLngBounds(southWest, northEast);
-
-  // this.map.setMaxBounds(bounds);
+  self.geojsonlayer.on('click', function(x) {
+    self.geojsonlayer.setStyle(self.style);
+    if(self.selectedGeog === x.layer.feature.properties.WFR) {
+      self.selectedGeog = 'Maryland';
+      x.layer.setStyle(self.style);
+    } else {
+      self.selectedGeog = x.layer.feature.properties.WFR;
+        x.layer.setStyle(self.selectedStyle);
+    }
+  });
 }

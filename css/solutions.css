@@ -126,13 +126,13 @@
   height: 10px;
 }
 
-#pie .hover-box {
+#pie .hoverbox {
   width: 30px;
   height: 30px;
   font-size: 14px;
   position: absolute;
-  bottom: 40px;
-  left: 30px;
+  bottom: 50px;
+  left: 20px;
   text-align: center;
 }
 
@@ -300,12 +300,13 @@
   background: #006200;
   background: -webkit-linear-gradient(left, #fff, #006200 20%, #006200 80%, #fff);
 }
-.hoverbox {
+#line-chart .hoverbox {
   font-size: 10px;
   position: absolute;
   left: 60px;
   top: 50px;
   display: none;
+  /*opacity: 0;*/
   background: black;
   color: white;
   padding: 5px;

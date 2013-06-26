@@ -4,6 +4,9 @@ function Solutions(){
   this.geo = 'Maryland';
   this.formatComma = d3.format(",");
   this.map = new Map();
+  $.getJSON('data/wfr.geojson', function(geojson){
+    self.map.addGeoJSON(geojson);
+  });
   this.chart = new GeoDash.LineChart("#line-chart .chart", {
     x: 'date',
     y: 'stat',

@@ -2,15 +2,51 @@
 
 #map-container { 
   background: #fff;
-  width: 760px;
-  height: 400px;
+  width: 800px;
+  height: 450px;
   position: absolute;
   top: 50px;
-  right: 10px;
+  right: 0px;
 }
 
 #map {
   border: 0px solid #dedede;
-  background: #41B0FF;
+  background: #fff;
   height: 100%;
+}
+
+#menu {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  height: 250px;
+  width: 100px;
+  background: red;
+}
+
+#pie {
+  position: absolute;
+  top: 200px;
+  left: 10px;
+  height: 190px;
+  width: 340px;
+  background: red;
+}
+
+#line {
+  position: absolute;
+  top: 400px;
+  left: 10px;
+  height: 250px;
+  width: 440px;
+  background: red;
+}
+
+#details {
+  position: absolute;
+  top: 500px;
+  right: 10px;
+  height: 150px;
+  width: 300px;
+  background: red;
 }
