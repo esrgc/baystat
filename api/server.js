@@ -6,6 +6,8 @@ var request = require('request'),
     config = JSON.parse(fs.readFileSync('config/config.json'));
 
 var dataurl = "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=" + config.app_token;
+var causes_url = "https://data.maryland.gov/resource/mp2x-4nn6.json?$$app_token=" + config.app_token;
+
 
 //Middleware
 app.use(express.bodyParser());
@@ -14,7 +16,7 @@ app.get('/', function(req, res){
   res.json('BayStat API');
 });
 
-app.get('/bay/stat/:stat?/:geo?', function(req, res){
+app.get('/bay/stat/solutions/:stat?/:geo?', function(req, res){
   var geo = encodeURIComponent(req.params.geo),
       stat = encodeURIComponent(req.params.stat),
       url = dataurl + "&$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
@@ -22,6 +24,21 @@ app.get('/bay/stat/:stat?/:geo?', function(req, res){
     res.json(json);
   });
 });
+
+app.get('/bay/stat/causes/:source?/:geo?', function(req, res){
+  var geo = encodeURIComponent(req.params.geo),
+      source = encodeURIComponent(req.params.source),
+      url = causes_url + "&$select=sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)&$where=sourcesector='Agriculture'&$group=sourcesector";
+
+  if(source === 'all') {
+    url = causes_url + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
+  }
+
+  socrata(url, function(json){
+    res.json(json);
+  });
+});
+
 
 app.get('/bay/stats', function(req, res){
   var url = dataurl + "&$select=bmpname";
@@ -33,6 +50,7 @@ app.get('/bay/stats', function(req, res){
 });
 
 function socrata(url, next) {
+  console.log(url);
   request({
     url: url,
     json: true,
