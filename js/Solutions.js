@@ -26,7 +26,8 @@ function Solutions(){
     innerRadius: 17,
     drawX: false,
     drawY: false,
-    opacity: 0.8
+    opacity: 0.8,
+    legend: '#pie .legend'
   });
   this.pie.update([
     {"source":"Urban/Suburban","percent":50},
@@ -59,7 +60,7 @@ Solutions.prototype.getStats = function() {
 Solutions.prototype.getSocrataStat = function(stat, geo){
   var self = this;
   self.chart.update(self.emptyData);
-  $.getJSON('api/bay/stat/' + stat + '/' + geo, function(res){
+  $.getJSON('api/bay/stat/solutions/' + stat + '/' + geo, function(res){
     self.updateLabels(stat, geo, res);
     self.addNotes(stat, res[0]);
     var data = self.prepareData(res);

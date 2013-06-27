@@ -72,6 +72,10 @@ a {
 /*  background: #f7f7f7; */
 }
 
+.title {
+  color: #333;
+}
+
 
 /*
   _______
@@ -126,10 +130,6 @@ path.domain {
 #pie path {
   stroke-width: 1;
   stroke: #fff;
-}
-
-#pie path:hover {
-  stroke: #333;
 }
 
 .axis text {

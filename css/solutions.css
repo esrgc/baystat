@@ -113,12 +113,13 @@
   width: 90px;
   height: 90px;
   float: left;
+  margin-top: 20px;
 }
 
 #pie .legend {
-  width: 95px;
+  width: 100px;
   height: 80px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 #pie .sample {
@@ -134,14 +135,6 @@
   bottom: 50px;
   left: 20px;
   text-align: center;
-}
-
-#pie .legend-item {
-  font-size: 10px;
-}
-
-#pie .legend-item p {
-  line-height: 23px;
 }
 
 #pie .sample.primary {

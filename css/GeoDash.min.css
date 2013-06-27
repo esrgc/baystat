@@ -7,10 +7,29 @@
 .axis text {
   font-size: 10px;
   fill: #b8b8b8;
+  font-family: 'arial', sans-serif;
 }
 .line {
   fill: none;
 }
-.arc {
-  stroke: #b8b8b8;
+.title {
+  height: 20px;
+  background: none;
+  color: #b1b1b1;
+  font-size: 12px;
+  font-family: 'arial', sans-serif;
+}
+svg {
+  fill: blue;
+}
+.linechart-svg path.domain {
+  display: none;
+}
+.piechart-svg .arc {
+  stroke: #fff;
+  stroke-width: 3;
+}
+.legend-item {
+  font-size: 11px;
+  fill: #333;
 }

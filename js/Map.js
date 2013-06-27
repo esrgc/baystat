@@ -5,6 +5,7 @@ function Map(options){
     lng: -75
   };
   this.setOptions(options);
+  this.selectedGeo = 'Maryland';
   this.style = {
     color: '#333',
     fillColor: '#fff',
@@ -52,11 +53,11 @@ Map.prototype.addGeoJSON = function(geojson) {
 
   self.geojsonlayer.on('click', function(x) {
     self.geojsonlayer.setStyle(self.style);
-    if(self.selectedGeog === x.layer.feature.properties.WFR) {
-      self.selectedGeog = 'Maryland';
+    if(self.selectedGeo === x.layer.feature.properties.WFR) {
+      self.selectedGeo = 'Maryland';
       x.layer.setStyle(self.style);
     } else {
-      self.selectedGeog = x.layer.feature.properties.WFR;
+      self.selectedGeo = x.layer.feature.properties.WFR;
         x.layer.setStyle(self.selectedStyle);
     }
   });
