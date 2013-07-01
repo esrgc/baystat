@@ -35,9 +35,9 @@ app.get('/bay/stat/causes/:pollution?/:source?/:geo?', function(req, res){
       url = causes[pollution];
   
   if(req.params.source === 'All Sources') {
-    url += "&$select=sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+    url += "&$select=sum(ms2013),sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
   } else {
-    url += "&$select=sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)&$where=sourcesector='" + source + "'&$group=sourcesector";
+    url += "&$select=sum(ms2013),sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)&$where=sourcesector='" + source + "'&$group=sourcesector";
   }
 
   socrata(url, function(json){

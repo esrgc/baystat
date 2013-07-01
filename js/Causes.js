@@ -85,15 +85,18 @@ Causes.prototype.updateLabels = function() {
 }
 
 Causes.prototype.prepareData = function(data) {
+  console.log(data);
   var chartData = [];
+  var milestone = data[0]["sum_milestone_2013"];
   var parseDate = d3.time.format("%Y").parse;
   for(var i = 0; i < data.length; i++){
-    var obj = data[i];
-    for(var key in obj){
+    var years = _.omit(data[0], 'sum_milestone_2013');
+    for(var key in years){
       var year = key.replace("sum", "").replace("_", "");
       chartData.push({
         date: parseDate(year),
-        stat: obj[key]
+        stat: years[key],
+        goal: milestone
       });
     }
   }
