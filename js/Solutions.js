@@ -5,9 +5,10 @@ function Solutions(){
   this.formatComma = d3.format(",");
   this.map = new Map({
     zoom: 7,
-    lat: 38.55,
+    lat: 39,
     lng: -77.4
   });
+  L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(self.map.map);
   $.getJSON('data/wfr.geojson', function(geojson){
     self.map.addGeoJSON(geojson);
   });

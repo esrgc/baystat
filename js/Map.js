@@ -7,21 +7,31 @@ function Map(options){
   this.setOptions(options);
   this.selectedGeo = 'Maryland';
   this.style = {
-    color: '#333',
     fillColor: '#fff',
-    fillOpacity: 0.9,
+    fillOpacity: 1,
+    color: '#000',
+    strokeOpacity: 1,
     weight: 1
   };
   this.selectedStyle = {
-    color: '#333',
-    fillColor: '#f00',
-    fillOpacity: 0.9,
+    color: '#000',
+    fillColor: '#19547e',
+    fillOpacity: 1,
+    weight: 1
+  };
+  this.hoverStyle = {
+    color: '#000',
+    fillColor: '#19547e',
+    fillOpacity: 1,
     weight: 1
   };
   this.map = new L.Map('map', {
     attributionControl: false,
     zoomControl: false,
-    dragging: false
+    dragging: false,
+    touchZoom: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false
   }).setView(new L.LatLng(this.options.lat, this.options.lng), this.options.zoom);
 }
 
@@ -59,6 +69,20 @@ Map.prototype.addGeoJSON = function(geojson) {
     } else {
       self.selectedGeo = x.layer.feature.properties.WFR;
         x.layer.setStyle(self.selectedStyle);
+    }
+  });
+
+  self.geojsonlayer.on('mouseover', function(x) {
+    if(self.selectedGeo !== x.layer.feature.properties.WFR) {
+      x.layer.setStyle(self.hoverStyle);
+    }
+  });
+
+  self.geojsonlayer.on('mouseout', function(x) {
+    if(self.selectedGeo === x.layer.feature.properties.WFR) {
+      x.layer.setStyle(self.selectedStyle);
+    } else {
+      x.layer.setStyle(self.style);
     }
   });
 }

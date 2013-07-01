@@ -3,9 +3,9 @@
 #map-container { 
   background: #fff;
   width: 800px;
-  height: 450px;
+  height: 500px;
   position: absolute;
-  top: 80px;
+  top: 50px;
   right: 0px;
 }
 
@@ -15,9 +15,22 @@
   height: 100%;
 }
 
+#title {
+  height: 40px;
+  width: 200px;
+  position: absolute;
+  top: 130px;
+  left: 100px;
+  text-align: center;
+}
+
+#title h5 {
+  margin: 0px;
+}
+
 #menu {
   position: absolute;
-  top: 50px;
+  top: 46px;
   left: 10px;
   height: 30px;
   width: 780px;
@@ -63,6 +76,14 @@
   height: 50px;
 }
 
+#dropdown label {
+  font-size: 11px;
+}
+
+#dropdown select {
+  font-size: 12px;
+}
+
 #line {
   position: absolute;
   top: 450px;
@@ -75,6 +96,8 @@
 #line .title {
   height: 30px;
   margin-left: 50px;
+  line-height: 13px;
+  font-size: 11px;
 }
 
 #line .chart {
@@ -115,9 +138,10 @@
 
 #details {
   position: absolute;
-  top: 500px;
+  top: 520px;
   right: 10px;
-  height: 150px;
+  height: 130px;
   width: 300px;
-  background: red;
+  font-size: 11px;
+  line-height: 11px;
 }

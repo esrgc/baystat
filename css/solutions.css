@@ -68,10 +68,10 @@
 
 #map-container { 
   background: #fff;
-  width: 440px;
+  width: 490px;
   height: 245px;
   position: absolute;
-  top: 100px;
+  top: 50px;
   right: 10px;
 }
 
