@@ -9,7 +9,7 @@ function Solutions(){
     lng: -77.4
   });
   L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(self.map.map);
-  $.getJSON('data/wfr.geojson', function(geojson){
+  $.getJSON('data/watershed.geojson', function(geojson){
     self.map.addGeoJSON(geojson);
   });
   this.chart = new GeoDash.LineChart("#line-chart .chart", {

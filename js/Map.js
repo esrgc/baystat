@@ -57,7 +57,8 @@ Map.prototype.addGeoJSON = function(geojson) {
       return self.style;
     },
     onEachFeature: function (feature, layer) {
-      
+      console.log(feature);
+      layer.bindLabel(feature.properties.STRANAME)
     }
   }).addTo(self.map);
 
