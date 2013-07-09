@@ -75,6 +75,9 @@ a {
 .title {
   color: #333;
 }
+a.stat {
+  cursor: pointer;
+}
 
 
 /*

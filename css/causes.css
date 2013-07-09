@@ -28,7 +28,7 @@
   margin: 0px;
 }
 
-#menu {
+#pollution-menu {
   position: absolute;
   top: 46px;
   left: 10px;
@@ -69,18 +69,18 @@
   line-height: 11px;
 }
 
-#dropdown {
+#source-menu {
   position: absolute;
   top: 395px;
   left: 10px;
   height: 50px;
 }
 
-#dropdown label {
+#source-menu label {
   font-size: 11px;
 }
 
-#dropdown select {
+#source-menu select {
   font-size: 12px;
 }
 

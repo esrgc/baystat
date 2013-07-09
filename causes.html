@@ -24,22 +24,7 @@
         <div class="inner" id="map"></div>
       </div>
       <div id="title"></div>
-      <div id="menu">
-        <form id="pollution" class="form-inline">
-          <label class="radio">
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="nitrogen" checked>
-            Nitrogen
-          </label>
-          <label class="radio">
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="phosphorus">
-            Phosphorus
-          </label>
-          <label class="radio">
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="sediment">
-            Sediment
-          </label>
-        </form>
-      </div>
+      <div id="pollution-menu"></div>
       <div id="pie">
         <div class="chart"></div>
         <div class="legend"></div>
@@ -47,24 +32,7 @@
           <p>* Forests naturally contribute a small amount of nutrients and sediment to the Bay, but are not considered to be a pollution source.</p>
         </div>
       </div>
-      <div id="dropdown">
-        <form class="form-horizontal">
-          <div class="control-group">
-            <label class="control-label" for="source">Pollution Source: </label>
-            <div class="controls">
-              <select id="source">
-                <option>All Sources</option>
-                <option>Agriculture</option>
-                <option>Forest</option>
-                <option>Non-Tidal Atm</option>
-                <option>Septic</option>
-                <option>Stormwater</option>
-                <option>Wastewater</option>
-              </select>
-            </div>
-          </div>
-        </form>
-      </div>
+      <div id="source-menu"></div>
       <div id="line">
         <div class="title"></div>
         <div class="chart"></div>
@@ -78,11 +46,37 @@
         <img src="img/favicon.png" /><p>Powered by open data on <a href="https://data.maryland.gov/">https://data.maryland.gov/</a></p>
       </div>
     </div>
+    <script type="text/template" id="pollution-menu-template">
+      <form id="pollution" class="form-inline">
+      <% _.each(pollutionlist, function(pollution, idx) { %> 
+        <label class="radio">
+          <input type="radio" name="optionsRadios" id="optionsRadios1" value="<%= pollution %>" 
+          <%= idx == 0 ? 'checked' : '' %> >
+          <%= pollution %>
+        </label>
+      <% }); %>
+      </form>
+    </script>
+    <script type="text/template" id="source-menu-template">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="source">Pollution Source: </label>
+          <div class="controls">
+            <select id="source">
+            <% _.each(sourcelist, function(source) { %> 
+              <option><%= source %></option>
+            <% }); %>
+            </select>
+          </div>
+        </div>
+      </form>
+    </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.5/leaflet.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.1/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="js/GeoDash.min.js"></script>
     <script src="js/leaflet.label.js"></script>
     <script src="js/Causes.js"></script>
@@ -91,7 +85,7 @@
     <script src="js/PieChart.js"></script>
     <script>
       $(function(){
-        window.dashboard = new Causes();
+        window.dashboard = new CausesView({model: causes});
       });
     </script>
   </body>

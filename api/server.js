@@ -7,9 +7,9 @@ var request = require('request'),
 
 var dataurl = "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=" + config.app_token;
 var causes = {
-  'nitrogen': "https://data.maryland.gov/resource/mp2x-4nn6.json?$$app_token=" + config.app_token,
-  'phosphorus': "https://data.maryland.gov/resource/hucz-vxqe.json?$$app_token=" + config.app_token,
-  'sediment': "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=" + config.app_token
+  'Nitrogen': "https://data.maryland.gov/resource/mp2x-4nn6.json?$$app_token=" + config.app_token,
+  'Phosphorus': "https://data.maryland.gov/resource/hucz-vxqe.json?$$app_token=" + config.app_token,
+  'Sediment': "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=" + config.app_token
 }
 
 //Middleware
@@ -34,12 +34,22 @@ app.get('/bay/stat/causes/:pollution?/:source?/:geo?', function(req, res){
       pollution = encodeURIComponent(req.params.pollution),
       url = causes[pollution];
   
-  if(req.params.source === 'All Sources') {
-    url += "&$select=sum(ms2013),sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+  if(req.params.geo === 'Maryland') {
+    url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+    if(req.params.source !== 'All Sources') {
+      url += "&$where=sourcesector='" + source + "'&$group=sourcesector";
+    }
   } else {
-    url += "&$select=sum(ms2013),sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)&$where=sourcesector='" + source + "'&$group=sourcesector";
+    if(req.params.source === 'All Sources') {
+      url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+      url += "&$where=basinname='" + geo + "'";
+    } else {
+      url += "&$select=ms2013 as milestone2013,_1985,_2007,_2009,_2010,_2011,_2012";
+      url += "&$where=basinname='" + geo + "'";
+      url += " and sourcesector='" + source + "'";
+    }
   }
-
+  
   socrata(url, function(json){
     res.json(json);
   });
@@ -65,6 +75,7 @@ app.get('/bay/stats', function(req, res){
 });
 
 function socrata(url, next) {
+  console.log(url);
   request({
     url: url,
     json: true,
