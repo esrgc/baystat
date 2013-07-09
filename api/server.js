@@ -55,9 +55,13 @@ app.get('/bay/stat/causes/:pollution?/:source?/:geo?', function(req, res){
   });
 });
 
-app.get('/bay/stat/sources/:pollution?', function(req, res){
+app.get('/bay/stat/sources/:pollution?/:geo?', function(req, res){
   var pollution = encodeURIComponent(req.params.pollution),
+      geo = encodeURIComponent(req.params.geo),
       url = causes[pollution] + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
+      if(req.params.geo !== 'Maryland') {
+        url += "&$where=basinname='" + geo + "'";
+      }
 
   socrata(url, function(json){
     res.json(json);
