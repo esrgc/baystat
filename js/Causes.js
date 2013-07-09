@@ -69,6 +69,7 @@ var CausesView = Backbone.View.extend({
   initialize: function() {
     this.listenTo(this.model, "change", this.getSocrataStat);
     this.listenTo(this.model, "change:pollution", this.getPieStats);
+    this.listenTo(this.model, "change:geo", this.getPieStats);
     var self = this;
     this.formatComma = d3.format(",");
     this.details = {
@@ -76,6 +77,15 @@ var CausesView = Backbone.View.extend({
       'Phosphorus': "Phosphorus: Phosphorus pollution fuels the growth of algae, creating dense, harmful algae blooms that rob the Chesapeake Bay's aquatic life of needed sunlight and oxygen. Phosphorus often attaches to soil and sediment particles on land, entering the Bay many years later when stream banks erode or rainwater washes it into streams, rivers, and the Bay. Sources of phosphorus pollution include fertilizers from farmlands, lawns and golf courses, eroding soil and sediment from stream banks in urban and suburban neighborhoods, animal manure from farms, and wastewater from industrial facilities and sewage treatment plants.",
       'Sediment': "Sediment: Maryland did not establish TMDL caps for sediments. Excess sediments - direct, clay, silt, and sand - hurt the Bay's water quality by blocking the sunlight needed by underwater plants and grasses. Without enough sunlight, these underwater grasses are not able to grow and provide habitat for young fish and blue crabs. In addition to blocking sunlight, sediment pollution can also carry nutrient and chemical contaminates into the bay, and smother oysters, underwater grasses and other bottom dwelling creatures."
     };
+    this.emptyData = this.prepareData([ {
+      "milestone2013" : "0",
+      "sum_2009" : "0",
+      "sum_2007" : "0",
+      "sum_1985" : "0",
+      "sum_2010" : "0",
+      "sum_2011" : "0",
+      "sum_2012" : "0"
+    }]);
     this.render();
     this.getSocrataStat();
     this.getPieStats();
@@ -110,12 +120,13 @@ var CausesView = Backbone.View.extend({
   },
   getPieStats: function() {
     var self = this;
-    $.getJSON('api/bay/stat/sources/' + self.model.get('pollution'), function(res){
+    $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
       self.pie.update(res);
     });
   },
   getSocrataStat: function(){
     var self = this;
+    self.chart.update(self.emptyData);
     $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
       self.updateLabels();
       var data = self.prepareData(res);
