@@ -33,8 +33,9 @@ var MenuView = Backbone.View.extend({
 
 var SolutionsView = Backbone.View.extend({
   events: {
-    
+    "click .state": "goToState"
   },
+  template: _.template($('#solutions-template').html()),
   initialize: function() {
     this.listenTo(this.model, "change", this.getSocrataStat);
     var self = this;
@@ -43,9 +44,10 @@ var SolutionsView = Backbone.View.extend({
     this.render();
   },
   render: function() {
+    this.$el.html(this.template(this.model.toJSON()));
     var view = new MenuView({model: solutions});
     $("#menu .inner").html(view.render().el);
-    var map = new MapView({model: solutions});
+    this.map = new MapView({model: solutions});
     this.makeCharts();
     this.loadData();
   },
@@ -69,7 +71,7 @@ var SolutionsView = Backbone.View.extend({
       label: 'source',
       value: 'percent',
       colors: ["#d80000", "#0B6909", "#f0db4f"],
-      innerRadius: 17,
+      innerRadius: 1,
       drawX: false,
       drawY: false,
       opacity: 0.8,
@@ -144,6 +146,12 @@ var SolutionsView = Backbone.View.extend({
     $('a.stat').removeClass('active');
     $(this).addClass('active');
     self.getSocrataStat(self.stat, self.geo);
+    return false;
+  },
+  goToState: function(e){
+    console.log('asdf');
+    this.map.geojsonlayer.setStyle(this.map.style);
+    this.model.set({geo: 'Maryland'});
     return false;
   },
   addNotes: function(data) {

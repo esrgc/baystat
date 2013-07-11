@@ -307,3 +307,8 @@
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
+
+
+.state {
+  cursor: pointer;
+}

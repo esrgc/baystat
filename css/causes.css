@@ -51,6 +51,16 @@
   float: left;
 }
 
+#pie .hoverbox {
+  font-size: 11px;
+  position: absolute;
+  bottom: 0px;
+  left: 20px;
+  text-align: center;
+  background: #fff;
+  color: #333;
+}
+
 #pie .legend {
   width: 150px;
   height: 100px;

@@ -66,6 +66,7 @@ var CausesView = Backbone.View.extend({
   events: {
     
   },
+  template: _.template($('#causes-template').html()),
   initialize: function() {
     this.listenTo(this.model, "change", this.getSocrataStat);
     this.listenTo(this.model, "change:pollution", this.getPieStats);
@@ -91,6 +92,7 @@ var CausesView = Backbone.View.extend({
     this.getPieStats();
   },
   render: function() {
+    this.$el.html(this.template(this.model.toJSON()));
     var view = new PollutionMenuView({model: causes});
     $("#pollution-menu").html(view.render().el);
     var view = new SourceMenuView({model: causes});
@@ -115,7 +117,8 @@ var CausesView = Backbone.View.extend({
       drawX: false,
       drawY: false,
       opacity: 0.7,
-      legend: '#pie .legend'
+      legend: '#pie .legend',
+      hover: true
     });
   },
   getPieStats: function() {
