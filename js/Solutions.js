@@ -86,7 +86,7 @@ var SolutionsView = Backbone.View.extend({
   getStats: function() {
     $.getJSON('api/bay/stats/', function(res){
       res.forEach(function(stat){
-        console.log(stat);
+        //console.log(stat);
       });
     });
   },
