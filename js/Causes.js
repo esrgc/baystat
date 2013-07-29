@@ -4,7 +4,7 @@ var Causes = Backbone.Model.extend({
     source: '',
     pollution: '',
     zoom: 8,
-    lat: 38.77121,
+    lat: 38.57121,
     lng: -77.31628,
     pollutionlist: ['Nitrogen', 'Phosphorus', 'Sediment'],
     sourcelist: [

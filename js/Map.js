@@ -10,7 +10,7 @@ var MapView = Backbone.View.extend({
     };
     this.style = {
       fillColor: '#fff',
-      fillOpacity: 1,
+      fillOpacity: 0.5,
       color: '#000',
       strokeOpacity: 1,
       weight: 1
@@ -40,7 +40,8 @@ var MapView = Backbone.View.extend({
       doubleClickZoom: false,
       tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
-    L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
+    L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.map-1501lecw/{z}/{x}/{y}.png').addTo(this.map);
+    //L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
     $.getJSON('data/watershed.geojson', function(geojson){
       self.addGeoJSON(geojson);
     });
