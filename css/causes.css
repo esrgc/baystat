@@ -3,9 +3,9 @@
 #map-container { 
   background: #fff;
   width: 800px;
-  height: 500px;
+  height: 620px;
   position: absolute;
-  top: 50px;
+  top: 40px;
   right: 0px;
 }
 
@@ -96,11 +96,14 @@
 
 #line {
   position: absolute;
-  top: 440px;
+  bottom: 50px;
   left: 10px;
   height: 210px;
-  width: 440px;
+  width: 445px;
   font-size: 11px;
+  background: white;
+  padding-top: 5px;
+  border: 1px solid #dedede;
 }
 
 #line .title {
@@ -147,11 +150,14 @@
 }
 
 #details {
+  background: white;
+  border: 1px solid #dedede;
   position: absolute;
-  top: 520px;
+  bottom: 50px;
   right: 10px;
   height: 130px;
   width: 300px;
   font-size: 11px;
   line-height: 11px;
+  padding: 10px;
 }
