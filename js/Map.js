@@ -37,7 +37,8 @@ var MapView = Backbone.View.extend({
       dragging: false,
       touchZoom: false,
       scrollWheelZoom: false,
-      doubleClickZoom: false
+      doubleClickZoom: false,
+      tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
     L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
     $.getJSON('data/watershed.geojson', function(geojson){
@@ -51,19 +52,12 @@ var MapView = Backbone.View.extend({
         return self.style;
       },
       onEachFeature: function (feature, layer) {
-        layer.bindLabel(feature.properties.STRANAME)
+        //layer.bindLabel(feature.properties.STRANAME);
       }
     }).addTo(self.map);
 
     self.geojsonlayer.on('click', function(x) {
-      self.geojsonlayer.setStyle(self.style);
-      if(self.model.get('geo') === x.layer.feature.properties.STRANAME) {
-        self.model.set({geo: 'Maryland'});
-        x.layer.setStyle(self.style);
-      } else {
-        self.model.set({geo: x.layer.feature.properties.STRANAME});
-        x.layer.setStyle(self.selectedStyle);
-      }
+      self.activateGeo(x.layer);
     });
 
     self.geojsonlayer.on('mouseover', function(x) {
@@ -79,5 +73,16 @@ var MapView = Backbone.View.extend({
         x.layer.setStyle(self.style);
       }
     });
+  },
+  activateGeo: function(layer){
+    var self = this;
+    self.geojsonlayer.setStyle(self.style);
+    if(self.model.get('geo') === layer.feature.properties.STRANAME) {
+      self.model.set({geo: 'Maryland'});
+      layer.setStyle(self.style);
+    } else {
+      self.model.set({geo: layer.feature.properties.STRANAME});
+      layer.setStyle(self.selectedStyle);
+    }
   }
 });
