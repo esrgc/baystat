@@ -56,7 +56,7 @@
   width: 440px;
   height: 40px;
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 10px;
 }
 
@@ -98,9 +98,9 @@
   left: 330px;
 /*  border-top: 1px solid #dedede;
   border-right: 1px solid #dedede;*/
-  -webkit-border-top-right-radius: 5px;
-  -moz-border-radius-topright: 5px;
-  border-top-right-radius: 5px;
+  -webkit-border-top-right-radius: 2px;
+  -moz-border-radius-topright: 2px;
+  border-top-right-radius: 2px;
 }
 
 #pie .title {

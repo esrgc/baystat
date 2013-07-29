@@ -59,6 +59,7 @@
   text-align: center;
   background: #fff;
   color: #333;
+  padding: 0px 5px 0px 5px;
 }
 
 #pie .legend {
@@ -87,7 +88,7 @@
 }
 
 #source-menu label {
-  font-size: 11px;
+  font-size: 14px;
 }
 
 #source-menu select {
@@ -98,25 +99,32 @@
   position: absolute;
   bottom: 50px;
   left: 10px;
-  height: 210px;
-  width: 445px;
+  height: 215px;
+  width: 440px;
   font-size: 11px;
   background: white;
-  padding-top: 5px;
+  padding: 5px 5px 0 0;
   border: 1px solid #dedede;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 
 #line .title {
-  height: 30px;
+  height: 40px;
   margin-left: 50px;
-  line-height: 13px;
-  font-size: 11px;
+  line-height: 15px;
+  font-size: 14px;
+}
+
+#line .title h5 {
+  margin : 0;
 }
 
 #line .chart {
   margin-top: 0px;
   width: 100%;
-  height: 170px;
+  height: 160px;
   float: right;
 }
 
@@ -160,4 +168,7 @@
   font-size: 11px;
   line-height: 11px;
   padding: 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }

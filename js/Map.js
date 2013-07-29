@@ -18,13 +18,13 @@ var MapView = Backbone.View.extend({
     this.selectedStyle = {
       color: '#000',
       fillColor: '#19547e',
-      fillOpacity: 1,
+      fillOpacity: 0.9,
       weight: 1
     };
     this.hoverStyle = {
       color: '#000',
       fillColor: '#19547e',
-      fillOpacity: 1,
+      fillOpacity: 0.7,
       weight: 1
     };
     this.render();
