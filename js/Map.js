@@ -40,7 +40,7 @@ var MapView = Backbone.View.extend({
       doubleClickZoom: false,
       tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
-    L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.map-1501lecw/{z}/{x}/{y}.png').addTo(this.map);
+    L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.map-4zj131o4/{z}/{x}/{y}.png').addTo(this.map);
     //L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
     $.getJSON('data/watershed.geojson', function(geojson){
       self.addGeoJSON(geojson);
