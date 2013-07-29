@@ -9,7 +9,7 @@ Dashboards built to visualize causes of and solutions to pollution in Maryland's
 #### Technology
 
 * Data hosted on Socrata at https://data.maryland.gov
-* Charts built with the [@esrgc](https://github.com/esrgc/) GeoDash charting library https://github.com/esrgc/geodash
+* Charts built with the ESRGC [GeoDash](https://github.com/esrgc/geodash) charting library 
 * Maps built with [Leaflet.js](https://github.com/Leaflet/Leaflet)
 
 ##### Browser Support
