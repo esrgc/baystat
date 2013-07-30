@@ -8,7 +8,7 @@ module.exports = function(grunt) {
           namespace: "BayStat.templates"
         },
         files: {
-          "js/templates.js": "templates/*.handlebars"
+          "templates/templates.js": "templates/*.handlebars"
         }
       }
     },
