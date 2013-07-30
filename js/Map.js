@@ -34,44 +34,38 @@ var MapView = Backbone.View.extend({
     this.map = new L.Map('map', {
       attributionControl: false,
       zoomControl: false,
-      dragging: false,
+      //dragging: false,
       touchZoom: false,
-      scrollWheelZoom: false,
+      //scrollWheelZoom: false,
       doubleClickZoom: false,
       tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
     L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.map-4zj131o4/{z}/{x}/{y}.png').addTo(this.map);
     //L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
     $.getJSON('data/watershed.geojson', function(geojson){
-      self.addGeoJSON(geojson);
+      self.geojsonlayer = L.geoJson(geojson, {
+        style: self.style,
+        onEachFeature: function(f, l) { self.onEachFeature(f, l); }
+      }).addTo(self.map);
     });
   },
-  addGeoJSON: function(geojson) {
+  onEachFeature: function(feature, layer){
     var self = this;
-    self.geojsonlayer = L.geoJson(geojson, {
-      style: function (feature) {
-        return self.style;
-      },
-      onEachFeature: function (feature, layer) {
-        //layer.bindLabel(feature.properties.STRANAME);
-      }
-    }).addTo(self.map);
-
-    self.geojsonlayer.on('click', function(x) {
-      self.activateGeo(x.layer);
+    layer.on('click', function(e) {
+      self.activateGeo(layer);
     });
 
-    self.geojsonlayer.on('mouseover', function(x) {
-      if(self.model.get('geo') !== x.layer.feature.properties.STRANAME) {
-        x.layer.setStyle(self.hoverStyle);
+    layer.on('mouseover', function(e) {
+      if(self.model.get('geo') !== feature.properties.STRANAME) {
+        layer.setStyle(self.hoverStyle);
       }
     });
 
-    self.geojsonlayer.on('mouseout', function(x) {
-      if(self.model.get('geo') === x.layer.feature.properties.STRANAME) {
-        x.layer.setStyle(self.selectedStyle);
+    layer.on('mouseout', function(e) {
+      if(self.model.get('geo') === feature.properties.STRANAME) {
+        layer.setStyle(self.selectedStyle);
       } else {
-        x.layer.setStyle(self.style);
+        layer.setStyle(self.style);
       }
     });
   },

@@ -29,7 +29,7 @@
 #menu .inner .accordion {
   margin: 0px;
   background: #fff;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 #menu .accordion-group {
@@ -44,8 +44,8 @@
 }
 
 #menu li {
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 20px;
 }
 
 #menu a.stat.active {
@@ -92,15 +92,9 @@
 #pie {
   height: 150px;
   width: 195px;
-  background: white;
   position: absolute;
-  top: 195px;
-  left: 330px;
-/*  border-top: 1px solid #dedede;
-  border-right: 1px solid #dedede;*/
-  -webkit-border-top-right-radius: 2px;
-  -moz-border-radius-topright: 2px;
-  border-top-right-radius: 2px;
+  top: 200px;
+  left: 340px;
 }
 
 #pie .title {

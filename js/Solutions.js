@@ -97,7 +97,6 @@ var SolutionsView = Backbone.View.extend({
       self.updateLabels(res);
       self.addNotes(res[0]);
       var data = self.prepareData(res);
-      console.log(JSON.stringify(data));
       self.chart.update(data);
     });
   },
