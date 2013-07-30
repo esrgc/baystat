@@ -34,9 +34,9 @@ var MapView = Backbone.View.extend({
     this.map = new L.Map('map', {
       attributionControl: false,
       zoomControl: false,
-      //dragging: false,
+      dragging: false,
       touchZoom: false,
-      //scrollWheelZoom: false,
+      scrollWheelZoom: false,
       doubleClickZoom: false,
       tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
