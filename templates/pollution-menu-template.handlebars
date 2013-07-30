@@ -1,0 +1,8 @@
+<form id="pollution" class="form-inline">
+  {{#each pollutionlist}}
+    <label class="radio">
+      <input type="radio" name="optionsRadios" class="pollutionRadio" value="{{ this }}" >
+      {{ this }}
+    </label>
+  {{/each}}
+</form>

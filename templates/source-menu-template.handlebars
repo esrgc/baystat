@@ -1,0 +1,12 @@
+<form class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="source">Pollution Source: </label>
+    <div class="controls">
+      <select id="source">
+        {{#each sourcelist}}
+          <option>{{ this }}</option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+</form>

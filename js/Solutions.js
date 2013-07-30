@@ -1,5 +1,6 @@
-var Solutions = Backbone.Model.extend({
+var SolutionsModel = Backbone.Model.extend({
   defaults: {
+    title: "Maryland's 2012 - 2013 Milestone Goals and Progress Report",
     stat: 'Cover Crops',
     geo: 'Maryland',
     zoom: 7,
@@ -8,13 +9,12 @@ var Solutions = Backbone.Model.extend({
     data: {}
   }
 });
-var solutions = new Solutions();
 
 var MenuView = Backbone.View.extend({
   events: {
     "click .stat": "setStat"
   },
-  template: _.template($('#menu-template').html()),
+  template: BayStat.templates["templates/solutions-menu-template.handlebars"],
   initialize: function() {
 
   },
@@ -33,23 +33,22 @@ var MenuView = Backbone.View.extend({
 });
 
 var SolutionsView = Backbone.View.extend({
+  el: '.dashboard',
   events: {
     "click .state": "goToState"
   },
-  template: _.template($('#solutions-template').html()),
+  template: BayStat.templates["templates/solutions-template.handlebars"],
   initialize: function() {
     this.listenTo(this.model, "change:stat", this.getSocrataStat);
     this.listenTo(this.model, "change:geo", this.getSocrataStat);
-    var self = this;
     this.formatComma = d3.format(",");
-    //this.emptyData = this.prepareData({"_2006":"0","_2005":"0","_2004":"0","_2003":"0","_2009":"0","_2008":"0","_2007":"0","_2013_goal":"0","_2012":"0","_2013":"0","_2000":"0","_2010":"0","_2001":"0","_2011":"0","_2002":"0"});
     this.render();
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
-    var view = new MenuView({model: solutions});
+    var view = new MenuView({model: this.model});
     $("#menu .inner").html(view.render().el);
-    this.map = new MapView({model: solutions});
+    this.map = new MapView({model: this.model});
     this.makeCharts();
     this.loadData();
   },
@@ -152,7 +151,7 @@ var SolutionsView = Backbone.View.extend({
   updateLabels: function(data){
     var self = this;
     $('#line-chart .title').html('<h5>' + self.model.get('stat') + ' (' + self.model.get('geo') + ')</h5>');
-    var units = _.where(dashboard.statsData, {stat: self.model.get('stat')})[0].units;
+    var units = _.where(self.statsData, {stat: self.model.get('stat')})[0].units;
     $('.units').html(units);
     if(_.has(data[0], "_2013_goal")) {
       var overlaytext = '<p>2013: ' + this.formatComma(+data[0]['_2013'].replace(",", "").replace("*", "")) + '</p>';

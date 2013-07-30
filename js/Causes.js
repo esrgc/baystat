@@ -1,5 +1,6 @@
-var Causes = Backbone.Model.extend({
+var CausesModel = Backbone.Model.extend({
   defaults: {
+    title: 'Sources of Chesapeake Bay Pollution',
     geo: 'Maryland',
     source: '',
     pollution: '',
@@ -22,18 +23,18 @@ var Causes = Backbone.Model.extend({
     this.set({source: this.get('sourcelist')[0]});
   }
 });
-var causes = new Causes();
 
 var PollutionMenuView = Backbone.View.extend({
   events: {
     "change #pollution": "setPollution"
   },
-  template: _.template($('#pollution-menu-template').html()),
+  template: BayStat.templates["templates/pollution-menu-template.handlebars"],
   initialize: function() {
 
   },
   render: function(){
      this.$el.html(this.template(this.model.toJSON()));
+     this.$el.find(".pollutionRadio").first().prop("checked", true);
      return this;
   },
   setPollution: function(e) {
@@ -47,7 +48,7 @@ var SourceMenuView = Backbone.View.extend({
   events: {
     "change #source": "setSource"
   },
-  template: _.template($('#source-menu-template').html()),
+  template: BayStat.templates["templates/source-menu-template.handlebars"],
   initialize: function() {
 
   },
@@ -63,14 +64,16 @@ var SourceMenuView = Backbone.View.extend({
 });
 
 var CausesView = Backbone.View.extend({
+  el: '.dashboard',
   events: {
     
   },
-  template: _.template($('#causes-template').html()),
+  template: BayStat.templates["templates/causes-template.handlebars"],
   initialize: function() {
-    this.listenTo(this.model, "change", this.getSocrataStat);
-    this.listenTo(this.model, "change:pollution", this.getPieStats);
+    this.listenTo(this.model, "change:source", this.getSocrataStat);
+    this.listenTo(this.model, "change:geo", this.getSocrataStat);
     this.listenTo(this.model, "change:geo", this.getPieStats);
+    this.listenTo(this.model, "change:pollution", this.getPieStats);
     var self = this;
     this.formatComma = d3.format(",");
     this.details = {
@@ -98,11 +101,11 @@ var CausesView = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
-    var view = new PollutionMenuView({model: causes});
+    var view = new PollutionMenuView({model: this.model});
     $("#pollution-menu").html(view.render().el);
-    var view = new SourceMenuView({model: causes});
+    var view = new SourceMenuView({model: this.model});
     $("#source-menu").html(view.render().el);
-    var map = new MapView({model: causes});
+    var map = new MapView({model: this.model});
     this.makeCharts();
   },
   makeCharts: function(){
