@@ -54,13 +54,11 @@ var MapView = Backbone.View.extend({
     layer.on('click', function(e) {
       self.activateGeo(layer);
     });
-
     layer.on('mouseover', function(e) {
       if(self.model.get('geo') !== feature.properties.STRANAME) {
         layer.setStyle(self.hoverStyle);
       }
     });
-
     layer.on('mouseout', function(e) {
       if(self.model.get('geo') === feature.properties.STRANAME) {
         layer.setStyle(self.selectedStyle);

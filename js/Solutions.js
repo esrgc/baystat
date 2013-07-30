@@ -4,7 +4,8 @@ var Solutions = Backbone.Model.extend({
     geo: 'Maryland',
     zoom: 7,
     lat: 39,
-    lng: -77.4
+    lng: -77.4,
+    data: {}
   }
 });
 var solutions = new Solutions();
@@ -37,10 +38,11 @@ var SolutionsView = Backbone.View.extend({
   },
   template: _.template($('#solutions-template').html()),
   initialize: function() {
-    this.listenTo(this.model, "change", this.getSocrataStat);
+    this.listenTo(this.model, "change:stat", this.getSocrataStat);
+    this.listenTo(this.model, "change:geo", this.getSocrataStat);
     var self = this;
     this.formatComma = d3.format(",");
-    this.emptyData = this.prepareData([{"_2006":"0","_2005":"0","_2004":"0","_2003":"0","_2009":"0","_2008":"0","_2007":"0","_2013_goal":"0","_2012":"0","_2013":"0","_2000":"0","_2010":"0","_2001":"0","_2011":"0","_2002":"0"}]);
+    //this.emptyData = this.prepareData({"_2006":"0","_2005":"0","_2004":"0","_2003":"0","_2009":"0","_2008":"0","_2007":"0","_2013_goal":"0","_2012":"0","_2013":"0","_2000":"0","_2010":"0","_2001":"0","_2011":"0","_2002":"0"});
     this.render();
   },
   render: function() {
@@ -92,34 +94,58 @@ var SolutionsView = Backbone.View.extend({
   },
   getSocrataStat: function(){
     var self = this;
-    self.chart.update(self.emptyData);
+    if(_.isEmpty(this.model.get('data')) == false) {
+      var empty = this.makeEmptyData();
+      this.chart.update(empty);
+    }
     $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
       self.updateLabels(res);
       self.addNotes(res[0]);
-      var data = self.prepareData(res);
+      self.model.set({data: res[0]});
+      var data = self.prepareData(res[0]);
       self.chart.update(data);
     });
+  },
+  makeEmptyData: function() {
+    var data = this.model.get('data');
+    var keys = _.keys(data);
+    _.each(keys, function(key, idx){
+      data[key] = "0";
+    });
+    return this.prepareData(data);
   },
   prepareData: function(data) {
     var chartData = [];
     var parseDate = d3.time.format("%Y").parse;
     for(var i = 2000; i <= 2013; i++) {
       var year = "_" + i, stat;
-      if(data[0][year] === undefined) {
-        
-        stat = 0;
+      if(data[year] === undefined) {
+        stat = null;
       } else {
-        stat = +data[0][year].replace(",", "").replace("*", "");
-      }
-      chartData.push({
-        date: parseDate(i.toString()),
-        stat: stat
-      });
-      if(_.has(data[0], "_2013_goal")) {
-        _.each(chartData, function(el, idx){
-          chartData[idx]['goal'] = +data[0]["_2013_goal"].replace(",", "").replace("*", "");
+        stat = +data[year].replace(",", "").replace("*", "");
+        chartData.push({
+          date: parseDate(i.toString()),
+          stat: stat
         });
       }
+    }
+    var idx = 0;
+    for(var year = 2000; year <= 2013; year++) {
+      var goal;
+      if(_.has(data, "_2013_goal")) {
+        goal = +data["_2013_goal"].replace(",", "").replace("*", "");
+      } else {
+        goal = 0;
+      }
+      if(chartData[idx]) {
+        chartData[idx]['goal'] = goal;
+      } else {
+        chartData.push({
+          date: parseDate(year.toString()),
+          goal: goal
+        });
+      }
+      idx++;
     }
     return chartData;
   },
@@ -137,7 +163,6 @@ var SolutionsView = Backbone.View.extend({
     }
   },
   setStat: function(e){
-    console.log('lol');
     var self = this;
     var $target = $(e.target);
     var stat = $target.html();
@@ -148,7 +173,6 @@ var SolutionsView = Backbone.View.extend({
     return false;
   },
   goToState: function(e){
-    console.log('asdf');
     this.map.geojsonlayer.setStyle(this.map.style);
     this.model.set({geo: 'Maryland'});
     return false;
