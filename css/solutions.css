@@ -259,7 +259,7 @@
   width: 250px;
   height: 295px;
   position: absolute;
-  top: 410px;
+  top: 405px;
   left: 10px;
 }
 
@@ -273,7 +273,6 @@
 }
 
 .def {
-  height: 120px;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -281,29 +280,32 @@
 
 .notes {
   position: absolute;
-  top: 120px;
+  top: 130px;
   left: 0px;
-  height: 133px;
   /*display: none;*/
 }
 
+.notes ul {
+  margin-bottom: 0px;
+}
+
 .def, .notes {
-  background: white;
-  border: 1px solid #fff;
   font-size: 10px;
-  width: 248px;
+  width: 310px;
 }
 
 #notes h6 {
   margin: 0px;
 }
 
-#notes p {
+#notes, .def p {
   line-height: 14px;
+  margin: 0;
 }
 
-.notes {
-
+#notes .panel-heading {
+  padding: 5px 10px;
+  margin-bottom: 5px;
 }
 
 .row {

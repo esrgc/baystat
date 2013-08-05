@@ -179,7 +179,7 @@ var SolutionsView = Backbone.View.extend({
   addNotes: function(data) {
     var self = this;
     var def = _.where(self.statsData, {stat: self.model.get('stat')})[0].definition;
-    $('.def').html('<h6>Definition:</h6><p>' + def + '</p>');
+    $('.def > .content').html('<p>' + def + '</p>');
     if(data.footnote) {
       $('.rednote').html('<p>' + data.footnote + '</p>');
     } else {
@@ -187,7 +187,7 @@ var SolutionsView = Backbone.View.extend({
     }
     var notelist = '';
     if(data.note1) {
-      notelist += '<h6>Notes:</h6><ul>';
+      notelist += '<ul>';
       notelist += '<li>' + data.note1 + '</li>';
       if(data.note2) {
         notelist += '<li>' + data.note2 + '</li>';
@@ -197,7 +197,8 @@ var SolutionsView = Backbone.View.extend({
       }
       notelist += '</ul>';
       var html = notelist;
-      $('.notes').html(html);
+      console.log(html);
+      $('.notes > .content').html(html);
       $('.notes').show();
     } else {
       $('.notes').hide();
