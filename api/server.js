@@ -87,7 +87,6 @@ function socrata(url, next) {
       user: config.username,
       pass: config.password
     }}, function (error, response, body) {
-      console.log(response.statusCode);
       if (!error && response.statusCode == 200) {
         next(body);
       } else {
