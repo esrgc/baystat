@@ -4,7 +4,7 @@ var SolutionsModel = Backbone.Model.extend({
     stat: 'Cover Crops',
     geo: 'Maryland',
     zoom: 7,
-    lat: 39,
+    lat: 38.8,
     lng: -77.4,
     data: {}
   }
@@ -97,7 +97,9 @@ var SolutionsView = Backbone.View.extend({
       var empty = this.makeEmptyData();
       this.chart.update(empty);
     }
+    $('.loader').css('opacity', '1');
     $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
+      $('.loader').css('opacity', '0');
       self.updateLabels(res);
       self.addNotes(res[0]);
       self.model.set({data: res[0]});
@@ -150,7 +152,7 @@ var SolutionsView = Backbone.View.extend({
   },
   updateLabels: function(data){
     var self = this;
-    $('#line-chart .title').html('<h5>' + self.model.get('stat') + ' (' + self.model.get('geo') + ')</h5>');
+    $('#line-chart .panel-heading').html('<h5>' + self.model.get('stat') + ' (' + self.model.get('geo') + ')</h5>');
     var units = _.where(self.statsData, {stat: self.model.get('stat')})[0].units;
     $('.units').html(units);
     if(_.has(data[0], "_2013_goal")) {

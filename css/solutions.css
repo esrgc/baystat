@@ -112,10 +112,10 @@
 }
 
 #map-intro {
-  width: 440px;
+  width: 465px;
   height: 40px;
   position: absolute;
-  top: 60px;
+  top: 50px;
   right: 10px;
 }
 
@@ -125,12 +125,20 @@
   padding: 0px 0px 0px 5px;
 }
 
+.loader {
+  float: right;
+  padding: 7px 7px 0 0;
+  opacity: 0;
+  color: #dbdbdb;
+  transition: opacity 0.2s ease;
+}
+
 #map-container { 
   background: #fff;
   width: 460px;
-  height: 313px;
+  height: 268px;
   position: absolute;
-  top: 50px;
+  top: 100px;
   right: 10px;
 }
 
@@ -141,15 +149,6 @@
 
 #map.inner {
   height: 100%;
-}
-
-#res {
-  width: 460px;
-  height: 295px;
-  position: absolute;
-  top: 365px;
-  right: 10px;
-  font: 10px sans-serif;
 }
 
 #pie {
@@ -204,32 +203,53 @@
   background: #0B6909;
 }
 
+#res {
+  width: 460px;
+  height: 275px;
+  position: absolute;
+  top: 375px;
+  right: 10px;
+  font: 10px sans-serif;
+}
+
+#res .inner {
+  height: auto;
+}
+
+#res .panel-heading {
+  padding: 0px 10px;
+}
+
+.legend-container{
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  height: 38px;
+  width: 450px;
+  /*border: 1px solid #dedede;*/
+}
+
 #line-chart {
   background: white;
   /*border: 1px solid #dedede;*/
 }
 
 #line-chart .chart {
-  margin-top: 50px;
-  height: 200px;
+  margin-top: 35px;
+  height: 190px;
 }
 
-#line-chart .title {
-  height: 20px;
-/*  background: #f7f7f7;
-  border-bottom: 1px solid #dedede;*/
-}
 #line-chart h5 {
   margin: 0px;
-  padding: 5px 0 5px 10px;
+  padding: 5px 0 5px 0px;
 }
 
 .rednote {
   width: 300px;
-  height: 30px;
+  height: 36px;
   position: absolute;
   left: 50px;
-  bottom: 10px;
+  bottom: 0px;
   color: red;
   text-align: left;
 }
@@ -282,6 +302,7 @@
   position: absolute;
   top: 130px;
   left: 0px;
+  height: 115px;
   /*display: none;*/
 }
 
@@ -312,14 +333,6 @@
   margin-bottom: 20px;
 }
 
-.legend-container{
-  position: absolute;
-  top: 30px;
-  left: 10px;
-  height: 38px;
-  width: 450px;
-  /*border: 1px solid #dedede;*/
-}
 .units {
   width: 300px;
   height: 38px;
