@@ -13,6 +13,7 @@
   border: 0px solid #dedede;
   background: #fff;
   height: 100%;
+  z-index: 0;
 }
 
 #title {
@@ -43,6 +44,7 @@
   left: 10px;
   height: 190px;
   width: 340px;
+  z-index: 5;
 }
 
 #pie .chart {
