@@ -72,6 +72,7 @@ var CausesView = Backbone.View.extend({
   initialize: function() {
     this.listenTo(this.model, "change:source", this.getSocrataStat);
     this.listenTo(this.model, "change:geo", this.getSocrataStat);
+    this.listenTo(this.model, "change:pollution", this.getSocrataStat);
     this.listenTo(this.model, "change:geo", this.getPieStats);
     this.listenTo(this.model, "change:pollution", this.getPieStats);
     var self = this;
