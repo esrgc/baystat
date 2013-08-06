@@ -145,6 +145,7 @@
 #map {
   border: 0px solid #dedede;
   background: #fff;
+  z-index: 0;
 }
 
 #map.inner {
