@@ -36,11 +36,11 @@ app.get('/bay/stat/causes/:pollution?/:source?/:geo?', function(req, res){
   
   if(req.params.geo === 'Maryland') {
     url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
-    if(req.params.source !== 'All Sources') {
+    if(req.params.source !== 'All Causes') {
       url += "&$where=sourcesector='" + source + "'&$group=sourcesector";
     }
   } else {
-    if(req.params.source === 'All Sources') {
+    if(req.params.source === 'All Causes') {
       url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
       url += "&$where=basinname='" + geo + "'";
     } else {

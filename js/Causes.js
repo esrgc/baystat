@@ -1,6 +1,6 @@
 var CausesModel = Backbone.Model.extend({
   defaults: {
-    title: 'Sources of Chesapeake Bay Pollution',
+    title: 'Causes of Chesapeake Bay Pollution',
     geo: 'Maryland',
     source: '',
     pollution: '',
@@ -9,7 +9,7 @@ var CausesModel = Backbone.Model.extend({
     lng: -77.31628,
     pollutionlist: ['Nitrogen', 'Phosphorus', 'Sediment'],
     sourcelist: [
-      'All Sources',
+      'All Causes',
       'Agriculture',
       'Forest',
       'Non-Tidal Atm',
