@@ -27,11 +27,24 @@ module.exports = function(grunt) {
           'js/<%= pkg.name %>.<%= pkg.version %>.min.js': ['templates/templates.js', 'js/*.js']
         }
       }
+    },
+    watch: {
+      templates: {
+        files: ['templates/*.handlebars'],
+        tasks: ['handlebars']
+      },
+      livereload: {
+        options: { livereload: true },
+        files: ['templates/templates.js', 'css/*.css'],
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['handlebars']);
+  grunt.registerTask('default', ['handlebars', 'watch']);
+  grunt.registerTask('deploy', ['handlebars']);
+
 };
