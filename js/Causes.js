@@ -123,7 +123,7 @@ var CausesView = Backbone.View.extend({
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'sourcesector',
       value: 'sum_2012',
-      colors: ["#d80000", "#0B6909", "#f0db4f", "#66adda", "#ff6600", "#a882c5"],
+      colors: ["#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5"],
       innerRadius: 1,
       drawX: false,
       drawY: false,
@@ -135,7 +135,43 @@ var CausesView = Backbone.View.extend({
   getPieStats: function() {
     var self = this;
     $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
-      self.pie.update(res);
+      console.log(res);
+      var data = [];
+      var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
+      console.log(atm);
+      _.each(res, function(source, idx){
+        if(source.sourcesector === 'Forest') {
+          source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
+        }
+        if(source.sourcesector === 'Agriculture') {
+          source.sourcesector = 'Farms';
+        }
+        if(source.sourcesector === 'Forest') {
+          source.sourcesector = 'Forests';
+        }
+        if(source.sourcesector === 'Stormwater') {
+          source.sourcesector = 'Stormwater Runoff';
+        }
+        if(source.sourcesector === 'Wastewater') {
+          source.sourcesector = 'Wastewater Treatment Plants';
+        }
+        if(source.sourcesector !== "Non-Tidal Atm"){
+          data.push(source);
+        }
+      });
+      console.log(data);
+      var sorted_data = [];
+      var obj = _.where(res, {sourcesector: "Farms"})[0];
+      sorted_data.push(obj);
+      obj = _.where(res, {sourcesector: "Wastewater Treatment Plants"})[0];
+      sorted_data.push(obj);
+      obj = _.where(res, {sourcesector: "Stormwater Runoff"})[0];
+      sorted_data.push(obj);
+      obj = _.where(res, {sourcesector: "Septic"})[0];
+      sorted_data.push(obj);
+      obj = _.where(res, {sourcesector: "Forests"})[0];
+      sorted_data.push(obj);
+      self.pie.update(sorted_data);
     });
   },
   getSocrataStat: function(){
@@ -160,6 +196,7 @@ var CausesView = Backbone.View.extend({
     $('#details').html(this.details[pollution]);
   },
   prepareData: function(data) {
+    console.log(data);
     var chartData = [];
     var milestone = data[0]["milestone2013"];
     var parseDate = d3.time.format("%Y").parse;
