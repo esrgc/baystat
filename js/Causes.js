@@ -135,10 +135,8 @@ var CausesView = Backbone.View.extend({
   getPieStats: function() {
     var self = this;
     $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
-      console.log(res);
       var data = [];
       var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
-      console.log(atm);
       _.each(res, function(source, idx){
         if(source.sourcesector === 'Forest') {
           source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
@@ -159,7 +157,6 @@ var CausesView = Backbone.View.extend({
           data.push(source);
         }
       });
-      console.log(data);
       var sorted_data = [];
       var obj = _.where(res, {sourcesector: "Farms"})[0];
       sorted_data.push(obj);
