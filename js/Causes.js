@@ -174,16 +174,16 @@ var CausesView = Backbone.View.extend({
   getSocrataStat: function(){
     var self = this;
     self.chart.update(self.emptyData);
+    self.updateLabels();
     this.chart.setYAxisLabel(self.labels[self.model.get('pollution')]);
     $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
-      self.updateLabels();
       var data = self.prepareData(res);
       self.chart.update(data);
+      self.updateLabels();
     });
   },
   updateLabels: function() {
     var self = this;
-    //var charttitle = 'The chart below shows how <b>' + self.model.get('pollution') + '</b> pollution from <b>' + self.model.get('source') + '</b> in <b>' + self.model.get('geo') + '</b> has changed over time';
     var charttitle = '<h5>' + self.model.get('pollution') + ' pollution from ' + self.model.get('source') + ' in ' + self.model.get('geo') + '</h5>';
     $('#line .title').html(charttitle);
     var pollution = self.model.get('pollution');
@@ -191,9 +191,15 @@ var CausesView = Backbone.View.extend({
     var dashboardtitle = '<h5>' + self.model.get('geo') + '</h5><p>' + capitalPollution + '</p>';
     $('#title').html(dashboardtitle);
     $('#details').html(this.details[pollution]);
+    $('.x.axis text').each(function(idx){
+      var year  = d3.select(this).text();
+      if(year === '2006') {
+        year = '1985';
+        d3.select(this).text(year);
+      }
+    });
   },
   prepareData: function(data) {
-    console.log(data);
     var chartData = [];
     var milestone = data[0]["milestone2013"];
     var parseDate = d3.time.format("%Y").parse;
@@ -201,6 +207,7 @@ var CausesView = Backbone.View.extend({
       var years = _.omit(data[0], 'milestone2013');
       for(var key in years){
         var year = key.replace("sum", "").replace("_", "");
+        if(year === '1985') year = '2006';
         chartData.push({
           date: parseDate(year),
           stat: years[key],
