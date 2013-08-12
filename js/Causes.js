@@ -66,7 +66,7 @@ var SourceMenuView = Backbone.View.extend({
 var CausesView = Backbone.View.extend({
   el: '.dashboard',
   events: {
-    
+    "click .state": "goToState"
   },
   template: BayStat.templates["templates/causes-template.handlebars"],
   initialize: function() {
@@ -106,7 +106,7 @@ var CausesView = Backbone.View.extend({
     $("#pollution-menu").html(view.render().el);
     var view = new SourceMenuView({model: this.model});
     $("#source-menu").html(view.render().el);
-    var map = new MapView({model: this.model});
+    this.map = new MapView({model: this.model});
     this.makeCharts();
   },
   makeCharts: function(){
@@ -221,5 +221,10 @@ var CausesView = Backbone.View.extend({
       return a<b?-1:a>b?1:0;
     });
     return chartData;
+  },
+  goToState: function(e){
+    this.map.geojsonlayer.setStyle(this.map.style);
+    this.model.set({geo: 'Maryland'});
+    return false;
   }
 });

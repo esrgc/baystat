@@ -142,3 +142,7 @@ path.domain {
 div {
   /*border: 1px dashed #76E9FF;*/
 }
+
+.state {
+  cursor: pointer;
+}

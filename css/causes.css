@@ -3,9 +3,9 @@
 #map-container { 
   background: #fff;
   width: 800px;
-  height: 620px;
+  height: 580px;
   position: absolute;
-  top: 40px;
+  top: 80px;
   right: 0px;
 }
 
@@ -20,7 +20,7 @@
   height: 40px;
   width: 200px;
   position: absolute;
-  top: 130px;
+  top: 150px;
   left: 100px;
   text-align: center;
 }
@@ -31,11 +31,47 @@
 
 #pollution-menu {
   position: absolute;
-  top: 46px;
+  top: 45px;
+  left: 250px;
+  height: 30px;
+  width: 300px;
+  text-align: center;
+}
+
+#pollution-menu form {
+  margin-top: 2px;
+}
+
+#map-intro {
+  position: absolute;
+  top: 45px;
   left: 10px;
   height: 30px;
-  width: 780px;
-  text-align: center;
+  width: 160px;
+  text-align: left;
+}
+
+#map-intro p {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 0px 0px 0px 0px;
+  margin: 0;
+}
+
+#data-source {
+  position: absolute;
+  top: 45px;
+  right: 10px;
+  height: 30px;
+  width: 160px;
+  text-align: right;
+}
+
+#data-source p {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 0px 0px 0px 5px;
+  margin: 0;
 }
 
 #pie {
@@ -165,7 +201,6 @@
   position: absolute;
   bottom: 50px;
   right: 10px;
-  height: 130px;
   width: 300px;
   font-size: 11px;
   line-height: 11px;
