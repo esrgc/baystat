@@ -29,7 +29,7 @@ a {
 
 .header {
   height: 39px;
-  background: #f7f7f7;
+  background: #f5f5f5;
   border-bottom: 1px solid #dedede;
   position: absolute;
   top: 0;
@@ -48,7 +48,7 @@ a {
 .footer {
   height: 39px;
   width: 100%;
-  background: #f7f7f7;
+  background: #f5f5f5;
   border-top: 1px solid #dedede;
   position: absolute;
   bottom: 0;
