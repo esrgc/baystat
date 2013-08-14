@@ -40,6 +40,7 @@ var MapView = Backbone.View.extend({
       doubleClickZoom: false,
       tap: true
     }).setView(new L.LatLng(this.model.get('lat'), this.model.get('lng')), this.model.get('zoom'));
+    $('.leaflet-top.leaflet-right').html('<div class="geom-hover"></div>');
     L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.map-4zj131o4/{z}/{x}/{y}.png').addTo(this.map);
     //L.tileLayer('http://{s}.tiles.mapbox.com/v3/esrgc.mdblur/{z}/{x}/{y}.png').addTo(this.map);
     $.getJSON('data/watershed4.geojson', function(geojson){
@@ -55,11 +56,13 @@ var MapView = Backbone.View.extend({
       self.activateGeo(layer);
     });
     layer.on('mouseover', function(e) {
+      $('.geom-hover').html(feature.properties.STRANAME);
       if(self.model.get('geo') !== feature.properties.STRANAME) {
         layer.setStyle(self.hoverStyle);
       }
     });
     layer.on('mouseout', function(e) {
+      $('.geom-hover').html('');
       if(self.model.get('geo') === feature.properties.STRANAME) {
         layer.setStyle(self.selectedStyle);
       } else {

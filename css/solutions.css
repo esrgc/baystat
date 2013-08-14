@@ -118,6 +118,7 @@
   position: absolute;
   top: 50px;
   right: 10px;
+  text-align: right;
 }
 
 #map-intro p {
@@ -127,7 +128,7 @@
 }
 
 .loader {
-  float: right;
+  float: left;
   padding: 7px 7px 0 0;
   opacity: 0;
   color: #dbdbdb;

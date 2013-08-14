@@ -146,3 +146,12 @@ div {
 .state {
   cursor: pointer;
 }
+
+.geom-hover {
+  padding: 2px 5px 0px 0px;
+  font-weight: bold;
+}
+
+
+
+
