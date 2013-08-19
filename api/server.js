@@ -33,24 +33,41 @@ app.get('/bay/stat/causes/:pollution?/:source?/:geo?', function(req, res){
       source = encodeURIComponent(req.params.source),
       pollution = encodeURIComponent(req.params.pollution),
       url = causes_url[pollution];
+
+  if(req.params.source === "Farms") {
+    source = "Agriculture";
+  }
+  if(req.params.source === "Forests") {
+    source = "Forest' or sourcesector='Non-Tidal ATM";
+  }
+  if(req.params.source === "Wastewater Treatment Plants") {
+    source = "Wastewater";
+  }
+  if(req.params.source === "Stormwater Runoff") {
+    source = "Stormwater";
+  }
   
   if(req.params.geo === 'Maryland') {
-    url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+    url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
     if(req.params.source !== 'All Causes') {
-      url += "&$where=sourcesector='" + source + "'&$group=sourcesector";
+      url += "&$where=sourcesector='" + source + "'";
+      //url += "&$group=sourcesector";
     }
   } else {
     if(req.params.source === 'All Causes') {
-      url += "&$select=sum(ms2013) as milestone2013,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+      url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
       url += "&$where=basinname='" + geo + "'";
     } else {
-      url += "&$select=ms2013 as milestone2013,_1985,_2007,_2009,_2010,_2011,_2012";
+      url += "&$select=wip2017 as milestone2017,_1985,_2007,_2009,_2010,_2011,_2012";
       url += "&$where=basinname='" + geo + "'";
-      url += " and sourcesector='" + source + "'";
+      url += " and (sourcesector='" + source + "')";
     }
   }
   
   socrata(url, function(json){
+    if(json.length > 1){
+      json = combineSources(json);
+    }
     res.json(json);
   });
 });
@@ -94,6 +111,23 @@ function socrata(url, next) {
         console.log(response.statusCode);
       }
   });
+}
+
+function combineSources(json){
+  var keys = _.keys(json[0]);
+  var combination = {};
+  _.each(keys, function(key, idx){
+    combination[key] = 0;
+  });
+  _.each(json, function(obj, key){
+    _.each(keys, function(key, idx){
+      combination[key] = combination[key] + parseFloat(obj[key]);
+    });
+  });
+  console.log(combination);
+  var res = [];
+  res.push(combination);
+  return res;
 }
 
 var port = 3003;

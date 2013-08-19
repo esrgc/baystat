@@ -10,12 +10,11 @@ var CausesModel = Backbone.Model.extend({
     pollutionlist: ['Nitrogen', 'Phosphorus', 'Sediment'],
     sourcelist: [
       'All Causes',
-      'Agriculture',
-      'Forest',
-      'Non-Tidal Atm',
+      'Farms',
+      'Forests',
       'Septic',
-      'Stormwater',
-      'Wastewater'
+      'Stormwater Runoff',
+      'Wastewater Treatment Plants'
     ]
   },
   initialize: function(){
@@ -88,7 +87,7 @@ var CausesView = Backbone.View.extend({
       'Sediment': "Tons Per Year"
     };
     this.emptyData = this.prepareData([ {
-      "milestone2013" : "0",
+      "milestone2017" : "0",
       "sum_2009" : "0",
       "sum_2007" : "0",
       "sum_1985" : "0",
@@ -201,10 +200,10 @@ var CausesView = Backbone.View.extend({
   },
   prepareData: function(data) {
     var chartData = [];
-    var milestone = data[0]["milestone2013"];
+    var milestone = data[0]["milestone2017"];
     var parseDate = d3.time.format("%Y").parse;
     for(var i = 0; i < data.length; i++){
-      var years = _.omit(data[0], 'milestone2013');
+      var years = _.omit(data[0], 'milestone2017');
       for(var key in years){
         var year = key.replace("sum", "").replace("_", "");
         if(year === '1985') year = '2006';
