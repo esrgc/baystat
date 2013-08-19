@@ -302,12 +302,15 @@
   left: 0px;
 }
 
+.def a {
+  margin-top: 5px;
+  display: block;
+}
+
 .notes {
   position: absolute;
-  top: 130px;
+  bottom: 30px;
   left: 0px;
-  height: 115px;
-  /*display: none;*/
 }
 
 .notes ul {
