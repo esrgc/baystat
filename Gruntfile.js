@@ -28,6 +28,20 @@ module.exports = function(grunt) {
         }
       }
     },
+    replace: {
+      dist: {
+        options: {
+          variables: {
+            'timestamp': '<%= new Date().getTime() %>',
+            'version': '<%= pkg.version %>'
+          }
+        },
+        files: [
+          {src: ['html/solutions.html'], dest: 'solutions.html'},
+          {src: ['html/causes.html'], dest: 'causes.html'}
+        ]
+      }
+    },
     watch: {
       templates: {
         files: ['templates/*.handlebars'],
@@ -43,8 +57,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-replace');
 
   grunt.registerTask('default', ['handlebars', 'watch']);
-  grunt.registerTask('deploy', ['handlebars']);
+  grunt.registerTask('deploy', ['handlebars', 'replace']);
 
 };
