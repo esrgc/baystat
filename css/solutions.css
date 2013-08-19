@@ -156,10 +156,10 @@
 }
 
 #pie {
-  height: 125px;
+  height: 110px;
   width: 195px;
   position: absolute;
-  top: 230px;
+  top: 245px;
   left: 340px;
 }
 
@@ -346,7 +346,7 @@
   float: left;
 }
 .legend {
-  width:100px;
+  width:120px;
   font-size: 11px;
   float: right;
 }
