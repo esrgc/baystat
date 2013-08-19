@@ -66,7 +66,9 @@ var SolutionsView = Backbone.View.extend({
       width: 'auto',
       height: 'auto',
       colors: ['#d80000', '#006200'],
-      interpolate: 'monotone'
+      interpolate: 'monotone',
+      axisLabels: true,
+      yAxisLabel: ''
     });
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'source',
@@ -155,6 +157,8 @@ var SolutionsView = Backbone.View.extend({
     $('#line-chart .panel-heading').html('<h5>' + self.model.get('stat') + ' (' + self.model.get('geo') + ')</h5>');
     var units = _.where(self.statsData, {stat: self.model.get('stat')})[0].units;
     $('.units').html(units);
+    var units_abbr = _.where(self.statsData, {stat: self.model.get('stat')})[0].units_abbr;
+    this.chart.setYAxisLabel(units_abbr);
     if(_.has(data[0], "_2013_goal")) {
       var overlaytext = '<p>2013: ' + this.formatComma(+data[0]['_2013'].replace(",", "").replace("*", "")) + '</p>';
       overlaytext += '<p>2013 Goal: ' + this.formatComma(+data[0]["_2013_goal"].replace(",", "").replace("*", "")) + '</p>';
