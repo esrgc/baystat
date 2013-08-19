@@ -6,7 +6,8 @@ var SolutionsModel = Backbone.Model.extend({
     zoom: 7,
     lat: 38.8,
     lng: -77.4,
-    data: {}
+    data: {},
+    invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
   }
 });
 
@@ -99,15 +100,20 @@ var SolutionsView = Backbone.View.extend({
       var empty = this.makeEmptyData();
       this.chart.update(empty);
     }
+    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+      self.updateLabels([{}]);
+      self.addNotes([{}]);
+    } else {
     $('.loader').css('opacity', '1');
-    $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
-      $('.loader').css('opacity', '0');
-      self.updateLabels(res);
-      self.addNotes(res[0]);
-      self.model.set({data: res[0]});
-      var data = self.prepareData(res[0]);
-      self.chart.update(data);
-    });
+      $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
+        $('.loader').css('opacity', '0');
+        self.updateLabels(res);
+        self.addNotes(res[0]);
+        self.model.set({data: res[0]});
+        var data = self.prepareData(res[0]);
+        self.chart.update(data);
+      });
+    }
   },
   makeEmptyData: function() {
     var data = this.model.get('data');
@@ -154,7 +160,11 @@ var SolutionsView = Backbone.View.extend({
   },
   updateLabels: function(data){
     var self = this;
-    $('#line-chart .panel-heading').html('<h5>' + self.model.get('stat') + ' (' + self.model.get('geo') + ')</h5>');
+    var charttitle = self.model.get('stat') + ' (' + self.model.get('geo') + ')';
+    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+      charttitle += ' (Not in Bay watershed)'
+    }
+    $('#line-chart .panel-heading').html('<h5>' + charttitle + '</h5>');
     var units = _.where(self.statsData, {stat: self.model.get('stat')})[0].units;
     $('.units').html(units);
     var units_abbr = _.where(self.statsData, {stat: self.model.get('stat')})[0].units_abbr;
@@ -203,7 +213,6 @@ var SolutionsView = Backbone.View.extend({
       }
       notelist += '</ul>';
       var html = notelist;
-      console.log(html);
       $('.notes > .content').html(html);
       $('.notes').show();
     } else {

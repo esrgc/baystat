@@ -15,7 +15,9 @@ var CausesModel = Backbone.Model.extend({
       'Septic',
       'Stormwater Runoff',
       'Wastewater Treatment Plants'
-    ]
+    ],
+    invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
+    pie_colors: ["#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5"]
   },
   initialize: function(){
     this.set({pollution: this.get('pollutionlist')[0]});
@@ -109,6 +111,7 @@ var CausesView = Backbone.View.extend({
     this.makeCharts();
   },
   makeCharts: function(){
+    var self = this;
     this.chart = new GeoDash.LineChart("#line .chart", {
       x: 'date',
       y: 'stat',
@@ -122,7 +125,7 @@ var CausesView = Backbone.View.extend({
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'sourcesector',
       value: 'sum_2012',
-      colors: ["#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5"],
+      colors: self.model.get('pie_colors'),
       innerRadius: 1,
       drawX: false,
       drawY: false,
@@ -133,57 +136,71 @@ var CausesView = Backbone.View.extend({
   },
   getPieStats: function() {
     var self = this;
-    $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
-      var data = [];
-      var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
-      _.each(res, function(source, idx){
-        if(source.sourcesector === 'Forest') {
-          source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
-        }
-        if(source.sourcesector === 'Agriculture') {
-          source.sourcesector = 'Farms';
-        }
-        if(source.sourcesector === 'Forest') {
-          source.sourcesector = 'Forests';
-        }
-        if(source.sourcesector === 'Stormwater') {
-          source.sourcesector = 'Stormwater Runoff';
-        }
-        if(source.sourcesector === 'Wastewater') {
-          source.sourcesector = 'Wastewater Treatment Plants';
-        }
-        if(source.sourcesector !== "Non-Tidal Atm"){
-          data.push(source);
-        }
+    var empty_data = [{"sourcesector":"Farms","sum_2012":"1"},{"sourcesector":"Wastewater Treatment Plants","sum_2012":"0"},{"sourcesector":"Stormwater Runoff","sum_2012":"0"},{"sourcesector":"Septic","sum_2012":"0"},{"sourcesector":"Forests","sum_2012":"0"}];
+    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+      self.pie.setColors(['#ccc']);
+      self.pie.update(empty_data);
+    } else {
+      self.pie.setColors(self.model.get('pie_colors'));
+      $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
+        var data = [];
+        var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
+        _.each(res, function(source, idx){
+          if(source.sourcesector === 'Forest') {
+            source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
+          }
+          if(source.sourcesector === 'Agriculture') {
+            source.sourcesector = 'Farms';
+          }
+          if(source.sourcesector === 'Forest') {
+            source.sourcesector = 'Forests';
+          }
+          if(source.sourcesector === 'Stormwater') {
+            source.sourcesector = 'Stormwater Runoff';
+          }
+          if(source.sourcesector === 'Wastewater') {
+            source.sourcesector = 'Wastewater Treatment Plants';
+          }
+          if(source.sourcesector !== "Non-Tidal Atm"){
+            data.push(source);
+          }
+        });
+        var sorted_data = [];
+        var obj = _.where(res, {sourcesector: "Farms"})[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {sourcesector: "Wastewater Treatment Plants"})[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {sourcesector: "Stormwater Runoff"})[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {sourcesector: "Septic"})[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {sourcesector: "Forests"})[0];
+        sorted_data.push(obj);
+        self.pie.update(sorted_data);
       });
-      var sorted_data = [];
-      var obj = _.where(res, {sourcesector: "Farms"})[0];
-      sorted_data.push(obj);
-      obj = _.where(res, {sourcesector: "Wastewater Treatment Plants"})[0];
-      sorted_data.push(obj);
-      obj = _.where(res, {sourcesector: "Stormwater Runoff"})[0];
-      sorted_data.push(obj);
-      obj = _.where(res, {sourcesector: "Septic"})[0];
-      sorted_data.push(obj);
-      obj = _.where(res, {sourcesector: "Forests"})[0];
-      sorted_data.push(obj);
-      self.pie.update(sorted_data);
-    });
+    }
   },
   getSocrataStat: function(){
     var self = this;
     self.chart.update(self.emptyData);
     self.updateLabels();
     this.chart.setYAxisLabel(self.labels[self.model.get('pollution')]);
-    $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
-      var data = self.prepareData(res);
-      self.chart.update(data);
-      self.updateLabels();
-    });
+    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+      
+    } else {
+      $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
+        var data = self.prepareData(res);
+        self.chart.update(data);
+        self.updateLabels();
+      });
+    }
   },
   updateLabels: function() {
     var self = this;
     var charttitle = '<h5>' + self.model.get('pollution') + ' pollution from ' + self.model.get('source') + ' in ' + self.model.get('geo') + '</h5>';
+    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+      charttitle = '<h5>This basin is in the ' + self.model.get('geo') + ' watershed. (Not in Bay watershed)</h5>';
+    }
     $('#line .title').html(charttitle);
     var pollution = self.model.get('pollution');
     var capitalPollution = pollution.charAt(0).toUpperCase() + pollution.slice(1);

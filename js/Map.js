@@ -21,9 +21,21 @@ var MapView = Backbone.View.extend({
       fillOpacity: 0.9,
       weight: 1
     };
+    this.selectedStyleInvalid = {
+      color: '#000',
+      fillColor: '#878787',
+      fillOpacity: 0.9,
+      weight: 1
+    };
     this.hoverStyle = {
       color: '#000',
       fillColor: '#19547e',
+      fillOpacity: 0.7,
+      weight: 1
+    };
+    this.hoverStyleInvalid = {
+      color: '#000',
+      fillColor: '#ccc',
       fillOpacity: 0.7,
       weight: 1
     };
@@ -46,31 +58,45 @@ var MapView = Backbone.View.extend({
     $.getJSON('data/watershed4.geojson', function(geojson){
       self.geojsonlayer = L.geoJson(geojson, {
         style: self.style,
-        onEachFeature: function(f, l) { self.onEachFeature(f, l); }
+        onEachFeature: function(f, l) { self.onEachFeature(f, l); },
+        filter: function(feature, layer) {
+            //return feature.properties.ORIG_FID != 5;
+            return true;
+        }
       }).addTo(self.map);
     });
   },
   onEachFeature: function(feature, layer){
     var self = this;
     layer.on('click', function(e) {
-      self.activateGeo(layer);
+      self.activateGeo(feature, layer);
     });
     layer.on('mouseover', function(e) {
-      $('.geom-hover').html(feature.properties.STRANAME);
+      var hovertext = feature.properties.STRANAME;
       if(self.model.get('geo') !== feature.properties.STRANAME) {
-        layer.setStyle(self.hoverStyle);
+        if(feature.properties.ORIG_FID == 5){
+          layer.setStyle(self.hoverStyleInvalid);
+          hovertext += ' (Not in Bay watershed)';
+        } else {
+          layer.setStyle(self.hoverStyle);
+        }
       }
+      $('.geom-hover').html(hovertext);
     });
     layer.on('mouseout', function(e) {
       $('.geom-hover').html('');
       if(self.model.get('geo') === feature.properties.STRANAME) {
-        layer.setStyle(self.selectedStyle);
+        if(feature.properties.ORIG_FID == 5){
+          layer.setStyle(self.selectedStyleInvalid);
+        } else {
+          layer.setStyle(self.selectedStyle);
+        }
       } else {
         layer.setStyle(self.style);
       }
     });
   },
-  activateGeo: function(layer){
+  activateGeo: function(feature, layer){
     var self = this;
     self.geojsonlayer.setStyle(self.style);
     if(self.model.get('geo') === layer.feature.properties.STRANAME) {
@@ -78,7 +104,11 @@ var MapView = Backbone.View.extend({
       layer.setStyle(self.style);
     } else {
       self.model.set({geo: layer.feature.properties.STRANAME});
-      layer.setStyle(self.selectedStyle);
+      if(feature.properties.ORIG_FID == 5){
+        layer.setStyle(self.selectedStyleInvalid);
+      } else {
+        layer.setStyle(self.selectedStyle);
+      }
     }
   }
 });
