@@ -9,7 +9,7 @@ var js_dependencies = [
   'js/lib/handlebars.min.js',
   'js/lib/leaflet.js',
   'templates/templates.js',
-  'js/*.js'
+  'js/min/baystat.js'
 ];
 
 var css_dependencies = [
@@ -40,10 +40,11 @@ module.exports = function(grunt) {
           '*/\n',
           mangle: false,
           beautify: true,
-          wrap: true
+          wrap: false,
+          compress: false
         },
         files: {
-          'js/<%= pkg.name %>.<%= pkg.version %>.min.js': ['templates/templates.js', 'js/*.js']
+          'js/min/baystat.js': ['js/src/*.js']
         }
       }
     },
@@ -71,7 +72,9 @@ module.exports = function(grunt) {
       dev: {
         options: {
           deploy: false,
-          version: '<%= pkg.version %>'
+          version: '<%= pkg.version %>',
+          js_dependencies: js_dependencies,
+          css_dependencies: css_dependencies
         },
         files: {
           'solutions.html': ['html/solutions.handlebars'],
@@ -95,7 +98,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-line-remover');
 
-  grunt.registerTask('dev', ['handlebars', 'concat', 'assemble:dev']);
-  grunt.registerTask('deploy', ['handlebars', 'concat', 'assemble:deploy', 'lineremover']);
+  grunt.registerTask('dev', ['handlebars', 'uglify', 'concat', 'assemble:dev']);
+  grunt.registerTask('deploy', ['handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
 
 };
