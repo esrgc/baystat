@@ -11,11 +11,25 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" /><![endif]--> 
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="css/min/baystat-dashboards.0.3.17.min.css" />
-    <link rel="stylesheet" href="css/solutions.css?v=0.3.17" />
+    <link rel="stylesheet" href="css/solutions.css?v={{version}}" />
   </head>
   <body>
     <div class="dashboard"></div>
+{{#if deploy}}
     <script src="js/min/baystat-dashboards.0.3.17.min.js"></script>
+{{else}}
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/d3.v3.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+    <script src="js/lib/handlebars.min.js"></script>
+    <script src="js/lib/leaflet.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/GeoDash.min.js?v0.1"></script>
+    <script src="templates/templates.js?v={{version}}"></script>
+    <script src="js/Map.js?v={{version}}"></script>
+    <script src="js/Solutions.js?v={{version}}"></script>
+{{/if}}
     <script>
       $(function(){
         BayStat.Solutions = new SolutionsView({model: new SolutionsModel()});

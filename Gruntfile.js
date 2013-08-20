@@ -1,4 +1,23 @@
 
+var js_dependencies = [
+  'js/lib/jquery.min.js',
+  'js/lib/underscore-min.js',
+  'js/lib/backbone-min.js',
+  'js/lib/bootstrap.min.js',
+  'js/lib/d3.v3.min.js',
+  'js/lib/GeoDash.min.js',
+  'js/lib/handlebars.min.js',
+  'js/lib/leaflet.js',
+  'templates/templates.js',
+  'js/*.js'
+];
+
+var css_dependencies = [
+  'css/bootstrap.min.css',
+  'css/GeoDash.min.css',
+  'css/style.css'
+];
+
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -28,38 +47,55 @@ module.exports = function(grunt) {
         }
       }
     },
-    replace: {
-      dist: {
-        options: {
-          variables: {
-            'timestamp': '<%= new Date().getTime() %>',
-            'version': '<%= pkg.version %>'
-          }
-        },
-        files: [
-          {src: ['html/solutions.html'], dest: 'solutions.html'},
-          {src: ['html/causes.html'], dest: 'causes.html'}
-        ]
+    concat: {
+      js: {
+        src: js_dependencies,
+        dest: 'js/min/<%= pkg.name %>.<%= pkg.version %>.min.js',
+      },
+      css: {
+        src: css_dependencies,
+        dest: 'css/min/<%= pkg.name %>.<%= pkg.version %>.min.css',
       }
     },
-    watch: {
-      templates: {
-        files: ['templates/*.handlebars'],
-        tasks: ['handlebars']
+    assemble: {
+      deploy: {
+        options: {
+          deploy: true,
+          version: '<%= pkg.version %>'
+        },
+        files: {
+          'solutions.html': ['html/solutions.handlebars'],
+          'causes.html': ['html/causes.handlebars']
+        }
       },
-      livereload: {
-        options: { livereload: true },
-        files: ['templates/templates.js', 'css/*.css'],
+      dev: {
+        options: {
+          deploy: false,
+          version: '<%= pkg.version %>'
+        },
+        files: {
+          'solutions.html': ['html/solutions.handlebars'],
+          'causes.html': ['html/causes.handlebars']
+        }
+      }
+    },
+    lineremover: {
+      removeBlankLines: {
+        files: {
+          'solutions.html': 'solutions.html',
+          'causes.html': 'causes.html'
+        }
       }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-replace');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('assemble');
+  grunt.loadNpmTasks('grunt-line-remover');
 
-  grunt.registerTask('default', ['handlebars', 'watch']);
-  grunt.registerTask('deploy', ['handlebars', 'replace']);
+  grunt.registerTask('dev', ['handlebars', 'concat', 'assemble:dev']);
+  grunt.registerTask('deploy', ['handlebars', 'concat', 'assemble:deploy', 'lineremover']);
 
 };
