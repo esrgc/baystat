@@ -1,3 +1,5 @@
+//BayStat dashboards build script
+
 
 var js_dependencies = [
   'js/lib/jquery.min.js',
@@ -21,6 +23,7 @@ var css_dependencies = [
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    //Compile handlebars templates
     handlebars: {
       compile: {
         options: {
@@ -31,6 +34,7 @@ module.exports = function(grunt) {
         }
       }
     },
+    //Compile javascript source to js/min/baystat.js
     uglify: {
       build: {
         options: {
@@ -48,6 +52,8 @@ module.exports = function(grunt) {
         }
       }
     },
+    //Concat javascript source, templates and libraries
+    //Concat css source ands css libraries
     concat: {
       js: {
         src: js_dependencies,
@@ -58,6 +64,7 @@ module.exports = function(grunt) {
         dest: 'css/min/<%= pkg.name %>.<%= pkg.version %>.min.css',
       }
     },
+    //Build HTML files for dev or deploy. (uses handlebars templates in /html)
     assemble: {
       deploy: {
         options: {
