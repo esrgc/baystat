@@ -11,7 +11,9 @@ var js_dependencies = [
   'js/lib/handlebars.min.js',
   'js/lib/leaflet.js',
   'templates/templates.js',
-  'js/min/baystat.js'
+  'js/src/Map.js',
+  'js/src/Causes.js',
+  'js/src/Solutions.js'
 ];
 
 var css_dependencies = [
