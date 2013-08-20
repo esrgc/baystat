@@ -75,7 +75,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<form class=\"form-horizontal\">\n  <div class=\"control-group\">\n    <label class=\"control-label\" for=\"source\">Pollution Source: </label>\n    <div class=\"controls\">\n      <select id=\"source\">\n        ";
+  buffer += "<form class=\"form-horizontal\">\n  <div class=\"form-group\">\n    <label class=\"col-lg-5 control-label\" for=\"source\">Pollution Source: </label>\n    <div class=\"col-lg-7\">\n      <select id=\"source\">\n        ";
   stack1 = helpers.each.call(depth0, depth0.sourcelist, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n      </select>\n    </div>\n  </div>\n</form>";
