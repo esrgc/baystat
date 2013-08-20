@@ -12,7 +12,7 @@ var CausesModel = Backbone.Model.extend({
         lat: 38.57121,
         lng: -77.31628,
         pollutionlist: [ "Nitrogen", "Phosphorus", "Sediment" ],
-        sourcelist: [ "All Causes", "Farms", "Forests", "Septic", "Stormwater Runoff", "Wastewater Treatment Plants" ],
+        sourcelist: [ "All Causes", "Farms", "Wastewater Treatment Plants", "Stormwater Runoff", "Septic", "Forests" ],
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
         pie_colors: [ "#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5" ]
     },
