@@ -231,7 +231,7 @@ var CausesView = Backbone.View.extend({
         var self = this;
         var charttitle = "<h5>" + self.model.get("pollution") + " pollution from " + self.model.get("source") + " in " + self.model.get("geo") + "</h5>";
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {
-            charttitle = "<h5>This basin is in the " + self.model.get("geo") + " watershed. (Not in Bay watershed)</h5>";
+            charttitle = "<h5>This basin is in the " + self.model.get("geo") + ' watershed. <br><span class="text-danger">(Not in Bay watershed)</span></h5>';
         }
         $("#line .title").html(charttitle);
         var pollution = self.model.get("pollution");
@@ -569,7 +569,7 @@ var SolutionsView = Backbone.View.extend({
         var self = this;
         var charttitle = self.model.get("stat") + " (" + self.model.get("geo") + ")";
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {
-            charttitle += " (Not in Bay watershed)";
+            charttitle += ' <span class="text-danger">(Not in Bay watershed)</span>';
         }
         $("#line-chart .panel-heading").html("<h5>" + charttitle + "</h5>");
         var units = _.where(self.statsData, {

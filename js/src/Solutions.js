@@ -162,7 +162,7 @@ var SolutionsView = Backbone.View.extend({
     var self = this;
     var charttitle = self.model.get('stat') + ' (' + self.model.get('geo') + ')';
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
-      charttitle += ' (Not in Bay watershed)'
+      charttitle += ' <span class="text-danger">(Not in Bay watershed)</span>';
     }
     $('#line-chart .panel-heading').html('<h5>' + charttitle + '</h5>');
     var units = _.where(self.statsData, {stat: self.model.get('stat')})[0].units;
