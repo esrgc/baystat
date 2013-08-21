@@ -69,15 +69,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "";
-  buffer += "\n          <option>"
+  buffer += "\n      <option>"
     + escapeExpression((typeof depth0 === functionType ? depth0.apply(depth0) : depth0))
-    + "</option>\n        ";
+    + "</option>\n    ";
   return buffer;
   }
 
-  buffer += "<form class=\"form-horizontal\">\n  <div class=\"form-group\">\n    <label class=\"col-lg-5 control-label\" for=\"source\">Pollution Source: </label>\n    <div class=\"col-lg-7\">\n      <select id=\"source\">\n        ";
+  buffer += "\n<div class=\"menu-label\" for=\"source\">Pollution Source: </div>\n<div class=\"menu\">\n  <select id=\"source\">\n    ";
   stack1 = helpers.each.call(depth0, depth0.sourcelist, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n      </select>\n    </div>\n  </div>\n</form>";
+  buffer += "\n  </select>\n</div>\n";
   return buffer;
   });

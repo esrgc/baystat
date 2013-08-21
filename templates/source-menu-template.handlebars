@@ -1,12 +1,9 @@
-<form class="form-horizontal">
-  <div class="form-group">
-    <label class="col-lg-5 control-label" for="source">Pollution Source: </label>
-    <div class="col-lg-7">
-      <select id="source">
-        {{#each sourcelist}}
-          <option>{{ this }}</option>
-        {{/each}}
-      </select>
-    </div>
-  </div>
-</form>
+
+<div class="menu-label" for="source">Pollution Source: </div>
+<div class="menu">
+  <select id="source">
+    {{#each sourcelist}}
+      <option>{{ this }}</option>
+    {{/each}}
+  </select>
+</div>
