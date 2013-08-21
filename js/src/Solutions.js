@@ -96,6 +96,9 @@ var SolutionsView = Backbone.View.extend({
   },
   getSocrataStat: function(){
     var self = this;
+    if(self.request) {
+      self.request.abort();
+    }
     if(_.isEmpty(this.model.get('data')) == false) {
       var empty = this.makeEmptyData();
       this.chart.update(empty);
@@ -103,9 +106,12 @@ var SolutionsView = Backbone.View.extend({
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       self.updateLabels([{}]);
       self.addNotes([{}]);
+      var empty = this.makeEmptyData();
+      $('.loader').css('opacity', '0');
+      self.chart.update(empty);
     } else {
     $('.loader').css('opacity', '1');
-      $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
+      self.request = $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
         $('.loader').css('opacity', '0');
         self.updateLabels(res);
         self.addNotes(res[0]);

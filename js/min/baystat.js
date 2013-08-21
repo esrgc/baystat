@@ -143,6 +143,9 @@ var CausesView = Backbone.View.extend({
     },
     getPieStats: function() {
         var self = this;
+        if (self.request1) {
+            self.request1.abort();
+        }
         var empty_data = [ {
             sourcesector: "Farms",
             sum_2012: "1"
@@ -164,7 +167,7 @@ var CausesView = Backbone.View.extend({
             self.pie.update(empty_data);
         } else {
             self.pie.setColors(self.model.get("pie_colors"));
-            $.getJSON("api/bay/stat/sources/" + self.model.get("pollution") + "/" + self.model.get("geo"), function(res) {
+            self.request1 = $.getJSON("api/bay/stat/sources/" + self.model.get("pollution") + "/" + self.model.get("geo"), function(res) {
                 var data = [];
                 var atm = _.where(res, {
                     sourcesector: "Non-Tidal Atm"
@@ -216,11 +219,14 @@ var CausesView = Backbone.View.extend({
     },
     getSocrataStat: function() {
         var self = this;
+        if (self.request2) {
+            self.request2.abort();
+        }
         self.chart.update(self.emptyData);
         self.updateLabels();
         this.chart.setYAxisLabel(self.labels[self.model.get("pollution")]);
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {} else {
-            $.getJSON("api/bay/stat/causes/" + self.model.get("pollution") + "/" + self.model.get("source") + "/" + self.model.get("geo"), function(res) {
+            self.request2 = $.getJSON("api/bay/stat/causes/" + self.model.get("pollution") + "/" + self.model.get("source") + "/" + self.model.get("geo"), function(res) {
                 var data = self.prepareData(res);
                 self.chart.update(data);
                 self.updateLabels();
@@ -501,6 +507,9 @@ var SolutionsView = Backbone.View.extend({
     },
     getSocrataStat: function() {
         var self = this;
+        if (self.request) {
+            self.request.abort();
+        }
         if (_.isEmpty(this.model.get("data")) == false) {
             var empty = this.makeEmptyData();
             this.chart.update(empty);
@@ -508,9 +517,12 @@ var SolutionsView = Backbone.View.extend({
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {
             self.updateLabels([ {} ]);
             self.addNotes([ {} ]);
+            var empty = this.makeEmptyData();
+            $(".loader").css("opacity", "0");
+            self.chart.update(empty);
         } else {
             $(".loader").css("opacity", "1");
-            $.getJSON("api/bay/stat/solutions/" + self.model.get("stat") + "/" + self.model.get("geo"), function(res) {
+            self.request = $.getJSON("api/bay/stat/solutions/" + self.model.get("stat") + "/" + self.model.get("geo"), function(res) {
                 $(".loader").css("opacity", "0");
                 self.updateLabels(res);
                 self.addNotes(res[0]);

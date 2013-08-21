@@ -136,13 +136,16 @@ var CausesView = Backbone.View.extend({
   },
   getPieStats: function() {
     var self = this;
+    if(self.request1){
+      self.request1.abort();
+    }
     var empty_data = [{"sourcesector":"Farms","sum_2012":"1"},{"sourcesector":"Wastewater Treatment Plants","sum_2012":"0"},{"sourcesector":"Stormwater Runoff","sum_2012":"0"},{"sourcesector":"Septic","sum_2012":"0"},{"sourcesector":"Forests","sum_2012":"0"}];
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       self.pie.setColors(['#ccc']);
       self.pie.update(empty_data);
     } else {
       self.pie.setColors(self.model.get('pie_colors'));
-      $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
+      self.request1 = $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
         var data = [];
         var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
         _.each(res, function(source, idx){
@@ -182,13 +185,16 @@ var CausesView = Backbone.View.extend({
   },
   getSocrataStat: function(){
     var self = this;
+    if(self.request2){
+      self.request2.abort();
+    }
     self.chart.update(self.emptyData);
     self.updateLabels();
     this.chart.setYAxisLabel(self.labels[self.model.get('pollution')]);
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       
     } else {
-      $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
+      self.request2 = $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
         var data = self.prepareData(res);
         self.chart.update(data);
         self.updateLabels();
