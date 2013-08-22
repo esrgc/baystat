@@ -8,14 +8,7 @@ var SolutionsModel = Backbone.Model.extend({
     lng: -77.4,
     data: {},
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
-    solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?'
-  },
-  getSolutions: function(geo, stat, next){
-    var url = this.get('solutions_url') + "$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
-    console.log(url);
-    $.getJSON(url, function(json){
-      next(json);
-    });
+    solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
   }
 });
 
@@ -95,38 +88,39 @@ var SolutionsView = Backbone.View.extend({
       {"source":"Farms","percent":46}
     ]);
   },
-  getStats: function() {
-    $.getJSON('api/bay/stats/', function(res){
-      res.forEach(function(stat){
-        //console.log(stat);
-      });
+  getSolutions: function(geo, stat, next){
+    if(this.request) {
+      this.request.abort();
+    }
+    geo = encodeURIComponent(geo);
+    stat = encodeURIComponent(stat);
+    var url = this.model.get('solutions_url') + "&$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
+    this.request = $.getJSON(url, function(json){
+      next(json);
     });
   },
   getSocrataStat: function(){
     var self = this;
-    if(self.request) {
-      self.request.abort();
-    }
     if(_.isEmpty(this.model.get('data')) == false) {
       var empty = this.makeEmptyData();
       this.chart.update(empty);
     }
-    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
-      self.updateLabels([{}]);
-      self.addNotes([{}]);
+    if(_.contains(this.model.get('invalidGeoms'), this.model.get('geo'))) {
+      this.updateLabels([{}]);
+      this.addNotes([{}]);
       var empty = this.makeEmptyData();
       $('.loader').css('opacity', '0');
-      self.chart.update(empty);
+      this.chart.update(empty);
     } else {
     $('.loader').css('opacity', '1');
-      self.request = $.getJSON('api/bay/stat/solutions/' + self.model.get('stat') + '/' + self.model.get('geo'), function(res){
-        $('.loader').css('opacity', '0');
-        self.updateLabels(res);
-        self.addNotes(res[0]);
-        self.model.set({data: res[0]});
-        var data = self.prepareData(res[0]);
-        self.chart.update(data);
-      });
+    this.getSolutions(this.model.get('geo'), this.model.get('stat'), function(res){
+      $('.loader').css('opacity', '0');
+      self.updateLabels(res);
+      self.addNotes(res[0]);
+      self.model.set({data: res[0]});
+      var data = self.prepareData(res[0]);
+      self.chart.update(data);
+    });
     }
   },
   makeEmptyData: function() {

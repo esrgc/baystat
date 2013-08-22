@@ -17,7 +17,12 @@ var CausesModel = Backbone.Model.extend({
       'Forests'
     ],
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
-    pie_colors: ["#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5"]
+    pie_colors: ["#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5"],
+    causes_url: {
+      'Nitrogen': "https://data.maryland.gov/resource/mp2x-4nn6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+      'Phosphorus': "https://data.maryland.gov/resource/hucz-vxqe.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+      'Sediment': "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+    }
   },
   initialize: function(){
     this.set({pollution: this.get('pollutionlist')[0]});
@@ -134,6 +139,80 @@ var CausesView = Backbone.View.extend({
       hover: true
     });
   },
+  combineSources: function(json){
+    var keys = _.keys(json[0]);
+    var combination = {};
+    _.each(keys, function(key, idx){
+      combination[key] = 0;
+    });
+    _.each(json, function(obj, key){
+      _.each(keys, function(key, idx){
+        combination[key] = combination[key] + parseFloat(obj[key]);
+      });
+    });
+    
+    var res = [];
+    res.push(combination);
+    return res;
+  },
+  getSources: function(_pollution, _geo, next){
+    if(this.request) {
+      this.request.abort();
+    }
+    var url = this.model.get('causes_url')[_pollution] + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
+    if(_geo !== 'Maryland') {
+      url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
+    }
+    this.request = $.getJSON(url, function(json){
+      next(json);
+    });
+  },
+  getCauses: function(_pollution, _source, _geo, next){
+    var self = this;
+    if(this.request2) {
+      this.request2.abort();
+    }
+    var geo = encodeURIComponent(_geo),
+        source = encodeURIComponent(_source),
+        pollution = encodeURIComponent(_pollution),
+        url = this.model.get('causes_url')[pollution];
+
+    if(_source === "Farms") {
+      source = "Agriculture";
+    }
+    if(_source === "Forests") {
+      source = "Forest' or sourcesector='Non-Tidal ATM";
+    }
+    if(_source === "Wastewater Treatment Plants") {
+      source = "Wastewater";
+    }
+    if(_source === "Stormwater Runoff") {
+      source = "Stormwater";
+    }
+    
+    if(_geo === 'Maryland') {
+      url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+      if(_source !== 'All Causes') {
+        url += "&$where=sourcesector='" + source + "'";
+      }
+    } else {
+      if(_source === 'All Causes') {
+        url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+        url += "&$where=basinname='" + geo + "'";
+      } else {
+        url += "&$select=wip2017 as milestone2017,_1985,_2007,_2009,_2010,_2011,_2012";
+        url += "&$where=basinname='" + geo + "'";
+        url += " and (sourcesector='" + source + "')";
+      }
+    }
+    
+    this.request2 = $.getJSON(url, function(json){
+      if(json.length > 1){
+        json = self.combineSources(json);
+      }
+      next(json);
+    });
+  },
   getPieStats: function() {
     var self = this;
     if(self.request1){
@@ -145,7 +224,7 @@ var CausesView = Backbone.View.extend({
       self.pie.update(empty_data);
     } else {
       self.pie.setColors(self.model.get('pie_colors'));
-      self.request1 = $.getJSON('api/bay/stat/sources/' + self.model.get('pollution') + '/' + self.model.get('geo'), function(res){
+      self.getSources(self.model.get('pollution'), self.model.get('geo'), function(res){
         var data = [];
         var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
         _.each(res, function(source, idx){
@@ -194,11 +273,16 @@ var CausesView = Backbone.View.extend({
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       
     } else {
-      self.request2 = $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
+      this.getCauses(self.model.get('pollution'), self.model.get('source'), self.model.get('geo'), function(res) {
         var data = self.prepareData(res);
         self.chart.update(data);
         self.updateLabels();
       });
+      // self.request2 = $.getJSON('api/bay/stat/causes/' + self.model.get('pollution') + '/' + self.model.get('source') + '/' + self.model.get('geo'), function(res){
+      //   var data = self.prepareData(res);
+      //   self.chart.update(data);
+      //   self.updateLabels();
+      // });
     }
   },
   updateLabels: function() {
