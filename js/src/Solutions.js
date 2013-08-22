@@ -8,6 +8,14 @@ var SolutionsModel = Backbone.Model.extend({
     lng: -77.4,
     data: {},
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
+    solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?'
+  },
+  getSolutions: function(geo, stat, next){
+    var url = this.get('solutions_url') + "$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
+    console.log(url);
+    $.getJSON(url, function(json){
+      next(json);
+    });
   }
 });
 
