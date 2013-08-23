@@ -8,7 +8,20 @@ var SolutionsModel = Backbone.Model.extend({
     lng: -77.4,
     data: {},
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
-    solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
+    solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
+    request: null
+  },
+  getBMPStatistics: function(_geo, _stat, next){
+    if(this.get('request')) {
+      this.get('request').abort();
+    }
+    var geo = encodeURIComponent(_geo),
+        stat = encodeURIComponent(_stat);
+    var url = this.get('solutions_url') + "&$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
+    var request = $.getJSON(url, function(json){
+      next(json);
+    });
+    this.set("request", request);
   }
 });
 
@@ -41,8 +54,8 @@ var SolutionsView = Backbone.View.extend({
   },
   template: BayStat.templates["templates/solutions-template.handlebars"],
   initialize: function() {
-    this.listenTo(this.model, "change:stat", this.getSocrataStat);
-    this.listenTo(this.model, "change:geo", this.getSocrataStat);
+    this.listenTo(this.model, "change:stat", this.updateLineChart);
+    this.listenTo(this.model, "change:geo", this.updateLineChart);
     this.formatComma = d3.format(",");
     this.render();
   },
@@ -58,7 +71,7 @@ var SolutionsView = Backbone.View.extend({
     var self = this;
     $.getJSON('data/stats.json', function(res){
       self.statsData = res;
-      self.getSocrataStat();
+      self.updateLineChart();
     });
   },
   makeCharts: function(){
@@ -88,18 +101,7 @@ var SolutionsView = Backbone.View.extend({
       {"source":"Farms","percent":46}
     ]);
   },
-  getSolutions: function(geo, stat, next){
-    if(this.request) {
-      this.request.abort();
-    }
-    geo = encodeURIComponent(geo);
-    stat = encodeURIComponent(stat);
-    var url = this.model.get('solutions_url') + "&$where=basinname='"+geo+"'%20and%20bmpname='"+stat+"'";
-    this.request = $.getJSON(url, function(json){
-      next(json);
-    });
-  },
-  getSocrataStat: function(){
+  updateLineChart: function(){
     var self = this;
     if(_.isEmpty(this.model.get('data')) == false) {
       var empty = this.makeEmptyData();
@@ -113,7 +115,7 @@ var SolutionsView = Backbone.View.extend({
       this.chart.update(empty);
     } else {
     $('.loader').css('opacity', '1');
-    this.getSolutions(this.model.get('geo'), this.model.get('stat'), function(res){
+    this.model.getBMPStatistics(this.model.get('geo'), this.model.get('stat'), function(res){
       $('.loader').css('opacity', '0');
       self.updateLabels(res);
       self.addNotes(res[0]);
@@ -184,16 +186,6 @@ var SolutionsView = Backbone.View.extend({
     } else {
       $('.overlay').html('');
     }
-  },
-  setStat: function(e){
-    var self = this;
-    var $target = $(e.target);
-    var stat = $target.html();
-    self.stat = $("<div/>").html(stat).text(); //decode
-    $('a.stat').removeClass('active');
-    $(this).addClass('active');
-    self.getSocrataStat(self.stat, self.geo);
-    return false;
   },
   goToState: function(e){
     this.map.geojsonlayer.setStyle(this.map.style);

@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.0 2013-08-22 
+baystat-dashboards v0.4.1 2013-08-23 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -20,6 +20,75 @@ var CausesModel = Backbone.Model.extend({
             Phosphorus: "https://data.maryland.gov/resource/hucz-vxqe.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
             Sediment: "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
         }
+    },
+    getSources: function(_pollution, _geo, next) {
+        if (this.get("request")) {
+            this.get("request").abort();
+        }
+        var url = this.get("causes_url")[_pollution] + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
+        if (_geo !== "Maryland") {
+            url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
+        }
+        var request = $.getJSON(url, function(json) {
+            next(json);
+        });
+        this.set("request", request);
+    },
+    getCauses: function(_pollution, _source, _geo, next) {
+        var self = this;
+        if (this.get("request2")) {
+            this.get("request2").abort();
+        }
+        var geo = encodeURIComponent(_geo), source = encodeURIComponent(_source), pollution = encodeURIComponent(_pollution), url = this.get("causes_url")[pollution];
+        if (_source === "Farms") {
+            source = "Agriculture";
+        }
+        if (_source === "Forests") {
+            source = "Forest' or sourcesector='Non-Tidal ATM";
+        }
+        if (_source === "Wastewater Treatment Plants") {
+            source = "Wastewater";
+        }
+        if (_source === "Stormwater Runoff") {
+            source = "Stormwater";
+        }
+        if (_geo === "Maryland") {
+            url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+            if (_source !== "All Causes") {
+                url += "&$where=sourcesector='" + source + "'";
+            }
+        } else {
+            if (_source === "All Causes") {
+                url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
+                url += "&$where=basinname='" + geo + "'";
+            } else {
+                url += "&$select=wip2017 as milestone2017,_1985,_2007,_2009,_2010,_2011,_2012";
+                url += "&$where=basinname='" + geo + "'";
+                url += " and (sourcesector='" + source + "')";
+            }
+        }
+        var request2 = $.getJSON(url, function(json) {
+            if (json.length > 1) {
+                json = self.combineSources(json);
+            }
+            next(json);
+        });
+        this.set("request2", request2);
+    },
+    combineSources: function(json) {
+        var keys = _.keys(json[0]);
+        var combination = {};
+        _.each(keys, function(key, idx) {
+            combination[key] = 0;
+        });
+        _.each(json, function(obj, key) {
+            _.each(keys, function(key, idx) {
+                combination[key] = combination[key] + parseFloat(obj[key]);
+            });
+        });
+        var res = [];
+        res.push(combination);
+        return res;
     },
     initialize: function() {
         this.set({
@@ -77,11 +146,11 @@ var CausesView = Backbone.View.extend({
     },
     template: BayStat.templates["templates/causes-template.handlebars"],
     initialize: function() {
-        this.listenTo(this.model, "change:source", this.getSocrataStat);
-        this.listenTo(this.model, "change:geo", this.getSocrataStat);
-        this.listenTo(this.model, "change:pollution", this.getSocrataStat);
-        this.listenTo(this.model, "change:geo", this.getPieStats);
-        this.listenTo(this.model, "change:pollution", this.getPieStats);
+        this.listenTo(this.model, "change:source", this.updateLineChart);
+        this.listenTo(this.model, "change:geo", this.updateLineChart);
+        this.listenTo(this.model, "change:pollution", this.updateLineChart);
+        this.listenTo(this.model, "change:geo", this.updatePieChart);
+        this.listenTo(this.model, "change:pollution", this.updatePieChart);
         var self = this;
         this.formatComma = d3.format(",");
         this.details = {
@@ -104,8 +173,8 @@ var CausesView = Backbone.View.extend({
             sum_2012: "0"
         } ]);
         this.render();
-        this.getSocrataStat();
-        this.getPieStats();
+        this.updateLineChart();
+        this.updatePieChart();
     },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
@@ -146,74 +215,7 @@ var CausesView = Backbone.View.extend({
             hover: true
         });
     },
-    combineSources: function(json) {
-        var keys = _.keys(json[0]);
-        var combination = {};
-        _.each(keys, function(key, idx) {
-            combination[key] = 0;
-        });
-        _.each(json, function(obj, key) {
-            _.each(keys, function(key, idx) {
-                combination[key] = combination[key] + parseFloat(obj[key]);
-            });
-        });
-        var res = [];
-        res.push(combination);
-        return res;
-    },
-    getSources: function(_pollution, _geo, next) {
-        if (this.request) {
-            this.request.abort();
-        }
-        var url = this.model.get("causes_url")[_pollution] + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
-        if (_geo !== "Maryland") {
-            url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
-        }
-        this.request = $.getJSON(url, function(json) {
-            next(json);
-        });
-    },
-    getCauses: function(_pollution, _source, _geo, next) {
-        var self = this;
-        if (this.request2) {
-            this.request2.abort();
-        }
-        var geo = encodeURIComponent(_geo), source = encodeURIComponent(_source), pollution = encodeURIComponent(_pollution), url = this.model.get("causes_url")[pollution];
-        if (_source === "Farms") {
-            source = "Agriculture";
-        }
-        if (_source === "Forests") {
-            source = "Forest' or sourcesector='Non-Tidal ATM";
-        }
-        if (_source === "Wastewater Treatment Plants") {
-            source = "Wastewater";
-        }
-        if (_source === "Stormwater Runoff") {
-            source = "Stormwater";
-        }
-        if (_geo === "Maryland") {
-            url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
-            if (_source !== "All Causes") {
-                url += "&$where=sourcesector='" + source + "'";
-            }
-        } else {
-            if (_source === "All Causes") {
-                url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
-                url += "&$where=basinname='" + geo + "'";
-            } else {
-                url += "&$select=wip2017 as milestone2017,_1985,_2007,_2009,_2010,_2011,_2012";
-                url += "&$where=basinname='" + geo + "'";
-                url += " and (sourcesector='" + source + "')";
-            }
-        }
-        this.request2 = $.getJSON(url, function(json) {
-            if (json.length > 1) {
-                json = self.combineSources(json);
-            }
-            next(json);
-        });
-    },
-    getPieStats: function() {
+    updatePieChart: function() {
         var self = this;
         if (self.request1) {
             self.request1.abort();
@@ -239,7 +241,7 @@ var CausesView = Backbone.View.extend({
             self.pie.update(empty_data);
         } else {
             self.pie.setColors(self.model.get("pie_colors"));
-            self.getSources(self.model.get("pollution"), self.model.get("geo"), function(res) {
+            self.model.getSources(self.model.get("pollution"), self.model.get("geo"), function(res) {
                 var data = [];
                 var atm = _.where(res, {
                     sourcesector: "Non-Tidal Atm"
@@ -289,7 +291,7 @@ var CausesView = Backbone.View.extend({
             });
         }
     },
-    getSocrataStat: function() {
+    updateLineChart: function() {
         var self = this;
         if (self.request2) {
             self.request2.abort();
@@ -298,7 +300,7 @@ var CausesView = Backbone.View.extend({
         self.updateLabels();
         this.chart.setYAxisLabel(self.labels[self.model.get("pollution")]);
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {} else {
-            this.getCauses(self.model.get("pollution"), self.model.get("source"), self.model.get("geo"), function(res) {
+            this.model.getCauses(self.model.get("pollution"), self.model.get("source"), self.model.get("geo"), function(res) {
                 var data = self.prepareData(res);
                 self.chart.update(data);
                 self.updateLabels();
@@ -484,7 +486,19 @@ var SolutionsModel = Backbone.Model.extend({
         lng: -77.4,
         data: {},
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
-        solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+        solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+        request: null
+    },
+    getBMPStatistics: function(_geo, _stat, next) {
+        if (this.get("request")) {
+            this.get("request").abort();
+        }
+        var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
+        var url = this.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
+        var request = $.getJSON(url, function(json) {
+            next(json);
+        });
+        this.set("request", request);
     }
 });
 
@@ -517,8 +531,8 @@ var SolutionsView = Backbone.View.extend({
     },
     template: BayStat.templates["templates/solutions-template.handlebars"],
     initialize: function() {
-        this.listenTo(this.model, "change:stat", this.getSocrataStat);
-        this.listenTo(this.model, "change:geo", this.getSocrataStat);
+        this.listenTo(this.model, "change:stat", this.updateLineChart);
+        this.listenTo(this.model, "change:geo", this.updateLineChart);
         this.formatComma = d3.format(",");
         this.render();
     },
@@ -538,7 +552,7 @@ var SolutionsView = Backbone.View.extend({
         var self = this;
         $.getJSON("data/stats.json", function(res) {
             self.statsData = res;
-            self.getSocrataStat();
+            self.updateLineChart();
         });
     },
     makeCharts: function() {
@@ -573,18 +587,7 @@ var SolutionsView = Backbone.View.extend({
             percent: 46
         } ]);
     },
-    getSolutions: function(geo, stat, next) {
-        if (this.request) {
-            this.request.abort();
-        }
-        geo = encodeURIComponent(geo);
-        stat = encodeURIComponent(stat);
-        var url = this.model.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
-        this.request = $.getJSON(url, function(json) {
-            next(json);
-        });
-    },
-    getSocrataStat: function() {
+    updateLineChart: function() {
         var self = this;
         if (_.isEmpty(this.model.get("data")) == false) {
             var empty = this.makeEmptyData();
@@ -598,7 +601,7 @@ var SolutionsView = Backbone.View.extend({
             this.chart.update(empty);
         } else {
             $(".loader").css("opacity", "1");
-            this.getSolutions(this.model.get("geo"), this.model.get("stat"), function(res) {
+            this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"), function(res) {
                 $(".loader").css("opacity", "0");
                 self.updateLabels(res);
                 self.addNotes(res[0]);
@@ -675,16 +678,6 @@ var SolutionsView = Backbone.View.extend({
         } else {
             $(".overlay").html("");
         }
-    },
-    setStat: function(e) {
-        var self = this;
-        var $target = $(e.target);
-        var stat = $target.html();
-        self.stat = $("<div/>").html(stat).text();
-        $("a.stat").removeClass("active");
-        $(this).addClass("active");
-        self.getSocrataStat(self.stat, self.geo);
-        return false;
     },
     goToState: function(e) {
         this.map.geojsonlayer.setStyle(this.map.style);
