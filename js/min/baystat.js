@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.1 2013-08-26 
+baystat-dashboards v0.4.2 2013-09-06 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -21,7 +21,7 @@ var CausesModel = Backbone.Model.extend({
             Sediment: "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
         }
     },
-    getSources: function(_pollution, _geo, next) {
+    getSources: function(_pollution, _geo) {
         if (this.get("request")) {
             this.get("request").abort();
         }
@@ -29,12 +29,14 @@ var CausesModel = Backbone.Model.extend({
         if (_geo !== "Maryland") {
             url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
         }
-        var request = $.getJSON(url, function(json) {
-            next(json);
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Causes.receivePieData"
         });
         this.set("request", request);
     },
-    getCauses: function(_pollution, _source, _geo, next) {
+    getCauses: function(_pollution, _source, _geo) {
         var self = this;
         if (this.get("request2")) {
             this.get("request2").abort();
@@ -67,11 +69,10 @@ var CausesModel = Backbone.Model.extend({
                 url += " and (sourcesector='" + source + "')";
             }
         }
-        var request2 = $.getJSON(url, function(json) {
-            if (json.length > 1) {
-                json = self.combineSources(json);
-            }
-            next(json);
+        var request2 = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Causes.receiveLineData"
         });
         this.set("request2", request2);
     },
@@ -199,7 +200,7 @@ var CausesView = Backbone.View.extend({
             width: "auto",
             height: "auto",
             colors: [ "#d80000", "#006200" ],
-            interpolate: "linear",
+            interpolate: "monotone",
             axisLabels: true,
             yAxisLabel: "Pounds Per Year"
         });
@@ -241,55 +242,57 @@ var CausesView = Backbone.View.extend({
             self.pie.update(empty_data);
         } else {
             self.pie.setColors(self.model.get("pie_colors"));
-            self.model.getSources(self.model.get("pollution"), self.model.get("geo"), function(res) {
-                var data = [];
-                var atm = _.where(res, {
-                    sourcesector: "Non-Tidal Atm"
-                })[0];
-                _.each(res, function(source, idx) {
-                    if (source.sourcesector === "Forest") {
-                        source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
-                    }
-                    if (source.sourcesector === "Agriculture") {
-                        source.sourcesector = "Farms";
-                    }
-                    if (source.sourcesector === "Forest") {
-                        source.sourcesector = "Forests";
-                    }
-                    if (source.sourcesector === "Stormwater") {
-                        source.sourcesector = "Stormwater Runoff";
-                    }
-                    if (source.sourcesector === "Wastewater") {
-                        source.sourcesector = "Wastewater Treatment Plants";
-                    }
-                    if (source.sourcesector !== "Non-Tidal Atm") {
-                        data.push(source);
-                    }
-                });
-                var sorted_data = [];
-                var obj = _.where(res, {
-                    sourcesector: "Farms"
-                })[0];
-                sorted_data.push(obj);
-                obj = _.where(res, {
-                    sourcesector: "Wastewater Treatment Plants"
-                })[0];
-                sorted_data.push(obj);
-                obj = _.where(res, {
-                    sourcesector: "Stormwater Runoff"
-                })[0];
-                sorted_data.push(obj);
-                obj = _.where(res, {
-                    sourcesector: "Septic"
-                })[0];
-                sorted_data.push(obj);
-                obj = _.where(res, {
-                    sourcesector: "Forests"
-                })[0];
-                sorted_data.push(obj);
-                self.pie.update(sorted_data);
-            });
+            self.model.getSources(self.model.get("pollution"), self.model.get("geo"));
         }
+    },
+    receivePieData: function(res) {
+        var self = this;
+        var data = [];
+        var atm = _.where(res, {
+            sourcesector: "Non-Tidal Atm"
+        })[0];
+        _.each(res, function(source, idx) {
+            if (source.sourcesector === "Forest") {
+                source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
+            }
+            if (source.sourcesector === "Agriculture") {
+                source.sourcesector = "Farms";
+            }
+            if (source.sourcesector === "Forest") {
+                source.sourcesector = "Forests";
+            }
+            if (source.sourcesector === "Stormwater") {
+                source.sourcesector = "Stormwater Runoff";
+            }
+            if (source.sourcesector === "Wastewater") {
+                source.sourcesector = "Wastewater Treatment Plants";
+            }
+            if (source.sourcesector !== "Non-Tidal Atm") {
+                data.push(source);
+            }
+        });
+        var sorted_data = [];
+        var obj = _.where(res, {
+            sourcesector: "Farms"
+        })[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {
+            sourcesector: "Wastewater Treatment Plants"
+        })[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {
+            sourcesector: "Stormwater Runoff"
+        })[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {
+            sourcesector: "Septic"
+        })[0];
+        sorted_data.push(obj);
+        obj = _.where(res, {
+            sourcesector: "Forests"
+        })[0];
+        sorted_data.push(obj);
+        self.pie.update(sorted_data);
     },
     updateLineChart: function() {
         var self = this;
@@ -300,12 +303,13 @@ var CausesView = Backbone.View.extend({
         self.updateLabels();
         this.chart.setYAxisLabel(self.labels[self.model.get("pollution")]);
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {} else {
-            this.model.getCauses(self.model.get("pollution"), self.model.get("source"), self.model.get("geo"), function(res) {
-                var data = self.prepareData(res);
-                self.chart.update(data);
-                self.updateLabels();
-            });
+            this.model.getCauses(self.model.get("pollution"), self.model.get("source"), self.model.get("geo"));
         }
+    },
+    receiveLineData: function(res) {
+        var data = this.prepareData(res);
+        this.chart.update(data);
+        this.updateLabels();
     },
     updateLabels: function() {
         var self = this;
@@ -489,14 +493,16 @@ var SolutionsModel = Backbone.Model.extend({
         solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
         request: null
     },
-    getBMPStatistics: function(_geo, _stat, next) {
+    getBMPStatistics: function(_geo, _stat) {
         if (this.get("request")) {
             this.get("request").abort();
         }
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
         var url = this.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
-        var request = $.getJSON(url, function(json) {
-            next(json);
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Solutions.receiveData"
         });
         this.set("request", request);
     }
@@ -601,17 +607,19 @@ var SolutionsView = Backbone.View.extend({
             this.chart.update(empty);
         } else {
             $(".loader").css("opacity", "1");
-            this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"), function(res) {
-                $(".loader").css("opacity", "0");
-                self.updateLabels(res);
-                self.addNotes(res[0]);
-                self.model.set({
-                    data: res[0]
-                });
-                var data = self.prepareData(res[0]);
-                self.chart.update(data);
-            });
+            this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"));
         }
+    },
+    receiveData: function(data) {
+        var self = this;
+        $(".loader").css("opacity", "0");
+        self.updateLabels(data);
+        self.addNotes(data[0]);
+        self.model.set({
+            data: data[0]
+        });
+        var _data = self.prepareData(data[0]);
+        self.chart.update(_data);
     },
     makeEmptyData: function() {
         var data = this.model.get("data");

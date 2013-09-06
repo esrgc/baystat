@@ -98,6 +98,14 @@ module.exports = function(grunt) {
           'causes.html': 'causes.html'
         }
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          keepalive: true
+        }
+      }
     }
   });
 
@@ -106,8 +114,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-line-remover');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('dev', ['handlebars', 'uglify', 'concat', 'assemble:dev']);
   grunt.registerTask('deploy', ['handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
+  grunt.registerTask('server', ['connect']);
 
 };

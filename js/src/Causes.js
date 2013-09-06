@@ -24,7 +24,7 @@ var CausesModel = Backbone.Model.extend({
       'Sediment': "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
     },
   },
-  getSources: function(_pollution, _geo, next){
+  getSources: function(_pollution, _geo){
     if(this.get('request')) {
       this.get('request').abort();
     }
@@ -32,12 +32,14 @@ var CausesModel = Backbone.Model.extend({
     if(_geo !== 'Maryland') {
       url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
     }
-    var request = $.getJSON(url, function(json){
-      next(json);
+    var request = $.ajax({
+      dataType: "jsonp",
+      jsonp: false,
+      url: url + '&$jsonp=BayStat.Causes.receivePieData'
     });
     this.set("request", request);
   },
-  getCauses: function(_pollution, _source, _geo, next){
+  getCauses: function(_pollution, _source, _geo){
     var self = this;
     if(this.get('request2')) {
       this.get('request2').abort();
@@ -75,12 +77,10 @@ var CausesModel = Backbone.Model.extend({
         url += " and (sourcesector='" + source + "')";
       }
     }
-    
-    var request2 = $.getJSON(url, function(json){
-      if(json.length > 1){
-        json = self.combineSources(json);
-      }
-      next(json);
+    var request2 = $.ajax({
+      dataType: "jsonp",
+      jsonp: false,
+      url: url + '&$jsonp=BayStat.Causes.receiveLineData'
     });
     this.set("request2", request2);
   },
@@ -199,7 +199,7 @@ var CausesView = Backbone.View.extend({
       width: 'auto',
       height: 'auto',
       colors: ['#d80000', '#006200'],
-      interpolate: 'linear',
+      interpolate: 'monotone',
       axisLabels: true,
       yAxisLabel: 'Pounds Per Year'
     });
@@ -226,43 +226,45 @@ var CausesView = Backbone.View.extend({
       self.pie.update(empty_data);
     } else {
       self.pie.setColors(self.model.get('pie_colors'));
-      self.model.getSources(self.model.get('pollution'), self.model.get('geo'), function(res){
-        var data = [];
-        var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
-        _.each(res, function(source, idx){
-          if(source.sourcesector === 'Forest') {
-            source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
-          }
-          if(source.sourcesector === 'Agriculture') {
-            source.sourcesector = 'Farms';
-          }
-          if(source.sourcesector === 'Forest') {
-            source.sourcesector = 'Forests';
-          }
-          if(source.sourcesector === 'Stormwater') {
-            source.sourcesector = 'Stormwater Runoff';
-          }
-          if(source.sourcesector === 'Wastewater') {
-            source.sourcesector = 'Wastewater Treatment Plants';
-          }
-          if(source.sourcesector !== "Non-Tidal Atm"){
-            data.push(source);
-          }
-        });
-        var sorted_data = [];
-        var obj = _.where(res, {sourcesector: "Farms"})[0];
-        sorted_data.push(obj);
-        obj = _.where(res, {sourcesector: "Wastewater Treatment Plants"})[0];
-        sorted_data.push(obj);
-        obj = _.where(res, {sourcesector: "Stormwater Runoff"})[0];
-        sorted_data.push(obj);
-        obj = _.where(res, {sourcesector: "Septic"})[0];
-        sorted_data.push(obj);
-        obj = _.where(res, {sourcesector: "Forests"})[0];
-        sorted_data.push(obj);
-        self.pie.update(sorted_data);
-      });
+      self.model.getSources(self.model.get('pollution'), self.model.get('geo'));
     }
+  },
+  receivePieData: function(res){
+    var self = this;
+    var data = [];
+    var atm = _.where(res, {sourcesector: "Non-Tidal Atm"})[0];
+    _.each(res, function(source, idx){
+      if(source.sourcesector === 'Forest') {
+        source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
+      }
+      if(source.sourcesector === 'Agriculture') {
+        source.sourcesector = 'Farms';
+      }
+      if(source.sourcesector === 'Forest') {
+        source.sourcesector = 'Forests';
+      }
+      if(source.sourcesector === 'Stormwater') {
+        source.sourcesector = 'Stormwater Runoff';
+      }
+      if(source.sourcesector === 'Wastewater') {
+        source.sourcesector = 'Wastewater Treatment Plants';
+      }
+      if(source.sourcesector !== "Non-Tidal Atm"){
+        data.push(source);
+      }
+    });
+    var sorted_data = [];
+    var obj = _.where(res, {sourcesector: "Farms"})[0];
+    sorted_data.push(obj);
+    obj = _.where(res, {sourcesector: "Wastewater Treatment Plants"})[0];
+    sorted_data.push(obj);
+    obj = _.where(res, {sourcesector: "Stormwater Runoff"})[0];
+    sorted_data.push(obj);
+    obj = _.where(res, {sourcesector: "Septic"})[0];
+    sorted_data.push(obj);
+    obj = _.where(res, {sourcesector: "Forests"})[0];
+    sorted_data.push(obj);
+    self.pie.update(sorted_data);
   },
   updateLineChart: function(){
     var self = this;
@@ -275,12 +277,13 @@ var CausesView = Backbone.View.extend({
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       
     } else {
-      this.model.getCauses(self.model.get('pollution'), self.model.get('source'), self.model.get('geo'), function(res) {
-        var data = self.prepareData(res);
-        self.chart.update(data);
-        self.updateLabels();
-      });
+      this.model.getCauses(self.model.get('pollution'), self.model.get('source'), self.model.get('geo'));
     }
+  },
+  receiveLineData: function(res){
+    var data = this.prepareData(res);
+    this.chart.update(data);
+    this.updateLabels();
   },
   updateLabels: function() {
     var self = this;
