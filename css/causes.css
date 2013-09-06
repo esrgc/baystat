@@ -91,16 +91,13 @@
 
 #pie .hoverbox {
   font-size: 11px;
-  position: absolute;
   bottom: 5px;
-  left: 20px;
+  left: 0px;
   top: auto;
   right: auto;
   text-align: center;
-  background: #fff;
-  color: #333;
+  width: 200px;
   padding: 0px 5px 0px 5px;
-  display: block;
 }
 
 #pie .legend {

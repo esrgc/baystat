@@ -1,6 +1,7 @@
 .axis path,
 .axis line {
   fill: none;
+  opacity: 0.6;
   stroke: #c5c5c5;
   shape-rendering: crispEdges;
 }
@@ -14,8 +15,9 @@
 }
 .line {
   fill: none;
+  stroke: #c5c5c5;
 }
-.title {
+.geodash-title {
   height: 20px;
   background: none;
   color: #b1b1b1;
@@ -36,23 +38,9 @@ svg {
   font-size: 11px;
   fill: #333;
 }
-.linehoverbox {
-  font-size: 10px;
-  position: absolute;
-  left: 60px;
-  top: 50px;
-  display: none;
-  /*opacity: 0;*/
-
-  background: black;
-  color: white;
-  padding: 5px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
 .hoverbox {
-  font-size: 10px;
+  font-family: 'arial', sans-serif;
+  font-size: 12px;
   position: absolute;
   right: 5px;
   top: 5px;
@@ -60,7 +48,7 @@ svg {
   opacity: 0.8;
   background: black;
   color: white;
-  padding: 0px 5px 0 5px;
+  padding: 2px 5px 2px 5px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;

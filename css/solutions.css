@@ -173,13 +173,13 @@
   width: 90px;
   height: 90px;
   float: left;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 #pie .legend {
   width: 100px;
   height: 80px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 #pie .sample {
@@ -222,6 +222,7 @@
 
 #res .panel-heading {
   padding: 0px 10px;
+  margin-bottom: 5px;
 }
 
 .legend-container{

@@ -1,10 +1,10 @@
 {
   "name": "baystat-dashboards",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-handlebars": "~0.5.8",
+    "grunt-contrib-handlebars": "~0.5.10",
     "grunt-contrib-watch": "~0.5.1",
     "assemble": "~0.4.3",
     "grunt-replace": "~0.4.4",

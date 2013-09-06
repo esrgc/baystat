@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.2 2013-09-06 
+baystat-dashboards v0.4.3 2013-09-06 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -202,7 +202,20 @@ var CausesView = Backbone.View.extend({
             colors: [ "#d80000", "#006200" ],
             interpolate: "monotone",
             axisLabels: true,
-            yAxisLabel: "Pounds Per Year"
+            yAxisLabel: "Pounds Per Year",
+            dashed: [ {
+                line: 0,
+                span: [ {
+                    start: 0,
+                    end: 1
+                } ]
+            }, {
+                line: 1,
+                span: [ {
+                    start: 0,
+                    end: 1
+                } ]
+            } ]
         });
         this.pie = new GeoDash.PieChart("#pie .chart", {
             label: "sourcesector",
@@ -308,6 +321,7 @@ var CausesView = Backbone.View.extend({
     },
     receiveLineData: function(res) {
         var data = this.prepareData(res);
+        console.log(data);
         this.chart.update(data);
         this.updateLabels();
     },
