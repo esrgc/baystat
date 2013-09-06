@@ -124,7 +124,6 @@ var SolutionsView = Backbone.View.extend({
     }
   },
   receiveData: function(data){
-    console.log(data);
     var self = this;
     $('.loader').css('opacity', '0');
     self.updateLabels(data);
