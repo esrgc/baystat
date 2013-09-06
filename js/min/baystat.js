@@ -200,7 +200,7 @@ var CausesView = Backbone.View.extend({
             width: "auto",
             height: "auto",
             colors: [ "#d80000", "#006200" ],
-            interpolate: "linear",
+            interpolate: "monotone",
             axisLabels: true,
             yAxisLabel: "Pounds Per Year"
         });
