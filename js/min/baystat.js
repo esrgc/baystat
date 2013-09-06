@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.1 2013-08-26 
+baystat-dashboards v0.4.2 2013-09-06 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -489,14 +489,16 @@ var SolutionsModel = Backbone.Model.extend({
         solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
         request: null
     },
-    getBMPStatistics: function(_geo, _stat, next) {
+    getBMPStatistics: function(_geo, _stat) {
         if (this.get("request")) {
             this.get("request").abort();
         }
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
         var url = this.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
-        var request = $.getJSON(url, function(json) {
-            next(json);
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Solutions.receiveData"
         });
         this.set("request", request);
     }
@@ -601,17 +603,20 @@ var SolutionsView = Backbone.View.extend({
             this.chart.update(empty);
         } else {
             $(".loader").css("opacity", "1");
-            this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"), function(res) {
-                $(".loader").css("opacity", "0");
-                self.updateLabels(res);
-                self.addNotes(res[0]);
-                self.model.set({
-                    data: res[0]
-                });
-                var data = self.prepareData(res[0]);
-                self.chart.update(data);
-            });
+            this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"));
         }
+    },
+    receiveData: function(data) {
+        console.log(data);
+        var self = this;
+        $(".loader").css("opacity", "0");
+        self.updateLabels(data);
+        self.addNotes(data[0]);
+        self.model.set({
+            data: data[0]
+        });
+        var _data = self.prepareData(data[0]);
+        self.chart.update(_data);
     },
     makeEmptyData: function() {
         var data = this.model.get("data");
