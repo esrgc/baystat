@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.4 2013-09-10 
+baystat-dashboards v0.4.4 2013-09-11 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -505,7 +505,9 @@ var SolutionsModel = Backbone.Model.extend({
         data: {},
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
         solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-        request: null
+        request: null,
+        start_year: 2e3,
+        end_year: 2013
     },
     getBMPStatistics: function(_geo, _stat) {
         if (this.get("request")) {
@@ -646,35 +648,22 @@ var SolutionsView = Backbone.View.extend({
     prepareData: function(data) {
         var chartData = [];
         var parseDate = d3.time.format("%Y").parse;
-        for (var i = 2e3; i <= 2013; i++) {
-            var year = "_" + i, stat;
-            if (data[year] === undefined) {
-                stat = null;
-            } else {
-                stat = +data[year].replace(",", "").replace("*", "");
-                chartData.push({
-                    date: parseDate(i.toString()),
-                    stat: stat
-                });
-            }
+        var years = [ 2e3, 2013 ];
+        if (_.has(data, "_2013_goal")) {
+            goal = +data["_2013_goal"].replace(",", "").replace("*", "");
+        } else {
+            goal = 0;
         }
-        var idx = 0;
-        for (var year = 2e3; year <= 2013; year++) {
-            var goal;
-            if (_.has(data, "_2013_goal")) {
-                goal = +data["_2013_goal"].replace(",", "").replace("*", "");
-            } else {
-                goal = 0;
-            }
-            if (chartData[idx]) {
-                chartData[idx]["goal"] = goal;
-            } else {
-                chartData.push({
-                    date: parseDate(year.toString()),
-                    goal: goal
-                });
-            }
-            idx++;
+        for (var i = this.model.get("start_year"); i <= this.model.get("end_year"); i++) {
+            var year = "_" + i, stat = null;
+            if (data[year] !== undefined) {
+                stat = +data[year].replace(",", "").replace("*", "");
+            } else {}
+            chartData.push({
+                date: parseDate(i.toString()),
+                stat: stat,
+                goal: goal
+            });
         }
         return chartData;
     },
