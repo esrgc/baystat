@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.5 2013-09-11 
+baystat-dashboards v0.4.5 2013-10-07 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -11,6 +11,8 @@ var CausesModel = Backbone.Model.extend({
         zoom: 8,
         lat: 38.57121,
         lng: -77.31628,
+        activelayer: "Basins",
+        layerlist: [ "Basins", "Major Basins", "Counties" ],
         pollutionlist: [ "Nitrogen", "Phosphorus", "Sediment" ],
         sourcelist: [ "All Causes", "Farms", "Wastewater Treatment Plants", "Stormwater Runoff", "Septic", "Forests" ],
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
@@ -121,6 +123,25 @@ var PollutionMenuView = Backbone.View.extend({
     }
 });
 
+var LayerMenuView = Backbone.View.extend({
+    events: {
+        "change #layers": "setLayer"
+    },
+    template: BayStat.templates["templates/layer-menu-template.handlebars"],
+    initialize: function() {},
+    render: function() {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    },
+    setLayer: function(e) {
+        var $target = $(e.target);
+        var layer = $target.val();
+        this.model.set({
+            activelayer: layer
+        });
+    }
+});
+
 var SourceMenuView = Backbone.View.extend({
     events: {
         "change #source": "setSource"
@@ -183,6 +204,10 @@ var CausesView = Backbone.View.extend({
             model: this.model
         });
         $("#pollution-menu").html(view.render().el);
+        var view = new LayerMenuView({
+            model: this.model
+        });
+        $("#layer-menu").html(view.render().el);
         var view = new SourceMenuView({
             model: this.model
         });
@@ -380,6 +405,7 @@ var CausesView = Backbone.View.extend({
 var MapView = Backbone.View.extend({
     events: {},
     initialize: function() {
+        this.listenTo(this.model, "change:activelayer", this.switchLayer);
         this.defaults = {
             zoom: 7,
             lat: 38,
@@ -432,7 +458,7 @@ var MapView = Backbone.View.extend({
         $(".leaflet-top.leaflet-right").html('<div class="geom-hover"></div>');
         L.tileLayer("http://{s}.tiles.mapbox.com/v3/esrgc.map-4zj131o4/{z}/{x}/{y}.png").addTo(this.map);
         $.getJSON("data/watershed4.geojson", function(geojson) {
-            self.geojsonlayer = L.geoJson(geojson, {
+            self.basinlayer = L.geoJson(geojson, {
                 style: self.style,
                 onEachFeature: function(f, l) {
                     self.onEachFeature(f, l);
@@ -441,7 +467,42 @@ var MapView = Backbone.View.extend({
                     return true;
                 }
             }).addTo(self.map);
+            self.geojsonlayer = self.basinlayer;
         });
+        $.getJSON("data/majorbasins.geojson", function(geojson) {
+            self.majorbasinslayer = L.geoJson(geojson, {
+                style: self.style,
+                onEachFeature: function(f, l) {
+                    self.onEachFeature(f, l);
+                },
+                filter: function(feature, layer) {
+                    return true;
+                }
+            });
+        });
+        $.getJSON("data/mdcnty.geojson", function(geojson) {
+            self.countylayer = L.geoJson(geojson, {
+                style: self.style,
+                onEachFeature: function(f, l) {
+                    self.onEachFeature(f, l);
+                },
+                filter: function(feature, layer) {
+                    return true;
+                }
+            });
+        });
+    },
+    switchLayer: function() {
+        console.log(this.model.get("activelayer"));
+        this.map.removeLayer(this.geojsonlayer);
+        if (this.model.get("activelayer") == "Basins") {
+            this.geojsonlayer = this.basinlayer;
+        } else if (this.model.get("activelayer") == "Major Basins") {
+            this.geojsonlayer = this.majorbasinslayer;
+        } else if (this.model.get("activelayer") == "Counties") {
+            this.geojsonlayer = this.countylayer;
+        }
+        this.map.addLayer(this.geojsonlayer);
     },
     onEachFeature: function(feature, layer) {
         var self = this;
@@ -449,8 +510,8 @@ var MapView = Backbone.View.extend({
             self.activateGeo(feature, layer);
         });
         layer.on("mouseover", function(e) {
-            var hovertext = feature.properties.STRANAME;
-            if (self.model.get("geo") !== feature.properties.STRANAME) {
+            var hovertext = feature.properties.name;
+            if (self.model.get("geo") !== feature.properties.name) {
                 if (feature.properties.ORIG_FID == 5) {
                     layer.setStyle(self.hoverStyleInvalid);
                     hovertext += " (Not in Bay watershed)";
@@ -462,7 +523,7 @@ var MapView = Backbone.View.extend({
         });
         layer.on("mouseout", function(e) {
             $(".geom-hover").html("");
-            if (self.model.get("geo") === feature.properties.STRANAME) {
+            if (self.model.get("geo") === feature.properties.name) {
                 if (feature.properties.ORIG_FID == 5) {
                     layer.setStyle(self.selectedStyleInvalid);
                 } else {
@@ -476,14 +537,14 @@ var MapView = Backbone.View.extend({
     activateGeo: function(feature, layer) {
         var self = this;
         self.geojsonlayer.setStyle(self.style);
-        if (self.model.get("geo") === layer.feature.properties.STRANAME) {
+        if (self.model.get("geo") === layer.feature.properties.name) {
             self.model.set({
                 geo: "Maryland"
             });
             layer.setStyle(self.style);
         } else {
             self.model.set({
-                geo: layer.feature.properties.STRANAME
+                geo: layer.feature.properties.name
             });
             if (feature.properties.ORIG_FID == 5) {
                 layer.setStyle(self.selectedStyleInvalid);

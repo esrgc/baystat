@@ -7,6 +7,8 @@ var CausesModel = Backbone.Model.extend({
     zoom: 8,
     lat: 38.57121,
     lng: -77.31628,
+    activelayer: 'Basins',
+    layerlist: ['Basins', 'Major Basins', 'Counties'],
     pollutionlist: ['Nitrogen', 'Phosphorus', 'Sediment'],
     sourcelist: [
       'All Causes',
@@ -126,6 +128,25 @@ var PollutionMenuView = Backbone.View.extend({
   }
 });
 
+var LayerMenuView = Backbone.View.extend({
+  events: {
+    "change #layers": "setLayer"
+  },
+  template: BayStat.templates["templates/layer-menu-template.handlebars"],
+  initialize: function() {
+
+  },
+  render: function(){
+     this.$el.html(this.template(this.model.toJSON()));
+     return this;
+  },
+  setLayer: function(e) {
+    var $target = $(e.target);
+    var layer = $target.val();
+    this.model.set({activelayer: layer});
+  }
+});
+
 var SourceMenuView = Backbone.View.extend({
   events: {
     "change #source": "setSource"
@@ -186,6 +207,8 @@ var CausesView = Backbone.View.extend({
     this.$el.html(this.template(this.model.toJSON()));
     var view = new PollutionMenuView({model: this.model});
     $("#pollution-menu").html(view.render().el);
+    var view = new LayerMenuView({model: this.model});
+    $("#layer-menu").html(view.render().el);
     var view = new SourceMenuView({model: this.model});
     $("#source-menu").html(view.render().el);
     this.map = new MapView({model: this.model});

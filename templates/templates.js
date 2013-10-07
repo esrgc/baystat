@@ -11,7 +11,28 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</h4>\n</div>\n<div id=\"map-container\">\n  <div class=\"inner\" id=\"map\"></div>\n</div>\n<div id=\"title\"></div>\n<div id=\"map-intro\">\n  <p>Click map to select a basin.</p>\n  <p>Click <a class=\"state\">here</a> for statewide data.</p>\n</div>\n<div id=\"pollution-menu\"></div>\n<div id=\"data-source\">\n  <p>Data source:  EPA Phase 5.3.2 Watershed Model</p>\n</div>\n<div id=\"pie\">\n  <div class=\"chart\"><div class=\"hoverbox\"></div></div>\n  <div class=\"legend\"></div>\n  <div class=\"note\">\n    <p>* Forests naturally contribute a small amount of nutrients and sediment to the Bay, but are not considered to be a pollution source.</p>\n  </div>\n</div>\n<div id=\"source-menu\"></div>\n<div id=\"line\">\n  <div class=\"title\"></div>\n  <div class=\"chart\"></div>\n  <div class=\"legend\">\n    <div class=\"legend-item\"><div class=\"sample primary\"></div><p>Pollution Over Time</p></div>\n    <div class=\"legend-item\"><div class=\"sample secondary\"></div><p>TMDL Goal (2017)</p></div>\n  </div>\n</div>\n<div id=\"details\"></div>\n<div class=\"footer\">\n  <img src=\"img/favicon.png\" /><p>Powered by open data on <a href=\"https://data.maryland.gov/profile/ESRGC/2ryv-bq8b?q=baystat%20%2B%20causes\" target=\"_blank\">https://data.maryland.gov/</a></p>\n</div>";
+    + "</h4>\n</div>\n<div id=\"map-container\">\n  <div class=\"inner\" id=\"map\"></div>\n</div>\n<div id=\"title\"></div>\n<div id=\"map-intro\">\n  <p>Click map to select a basin.</p>\n  <p>Click <a class=\"state\">here</a> for statewide data.</p>\n</div>\n<div id=\"pollution-menu\"></div>\n<div id=\"layer-menu\"></div>\n<div id=\"data-source\">\n  <p>Data source:  EPA Phase 5.3.2 Watershed Model</p>\n</div>\n<div id=\"pie\">\n  <div class=\"chart\"><div class=\"hoverbox\"></div></div>\n  <div class=\"legend\"></div>\n  <div class=\"note\">\n    <p>* Forests naturally contribute a small amount of nutrients and sediment to the Bay, but are not considered to be a pollution source.</p>\n  </div>\n</div>\n<div id=\"source-menu\"></div>\n<div id=\"line\">\n  <div class=\"title\"></div>\n  <div class=\"chart\"></div>\n  <div class=\"legend\">\n    <div class=\"legend-item\"><div class=\"sample primary\"></div><p>Pollution Over Time</p></div>\n    <div class=\"legend-item\"><div class=\"sample secondary\"></div><p>TMDL Goal (2017)</p></div>\n  </div>\n</div>\n<div id=\"details\"></div>\n<div class=\"footer\">\n  <img src=\"img/favicon.png\" /><p>Powered by open data on <a href=\"https://data.maryland.gov/profile/ESRGC/2ryv-bq8b?q=baystat%20%2B%20causes\" target=\"_blank\">https://data.maryland.gov/</a></p>\n</div>";
+  return buffer;
+  });
+
+this["BayStat"]["templates"]["templates/layer-menu-template.handlebars"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "";
+  buffer += "\n      <option>"
+    + escapeExpression((typeof depth0 === functionType ? depth0.apply(depth0) : depth0))
+    + "</option>\n    ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"menu\">\n  <select id=\"layers\">\n    ";
+  stack1 = helpers.each.call(depth0, depth0.layerlist, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  </select>\n</div>\n";
   return buffer;
   });
 
