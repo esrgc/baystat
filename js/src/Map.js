@@ -75,7 +75,7 @@ var MapView = Backbone.View.extend({
         }
       });
     });
-    $.getJSON('data/mdcnty.geojson', function(geojson){
+    $.getJSON('data/mdcnty2.geojson', function(geojson){
       self.countylayer = L.geoJson(geojson, {
         style: self.style,
         onEachFeature: function(f, l) { self.onEachFeature(f, l); },
@@ -86,7 +86,7 @@ var MapView = Backbone.View.extend({
     });
   },
   switchLayer: function(){
-    console.log(this.model.get('activelayer'));
+    var self = this;
     this.map.removeLayer(this.geojsonlayer);
     if(this.model.get('activelayer') == 'Basins') {
       this.geojsonlayer = this.basinlayer;
@@ -96,6 +96,9 @@ var MapView = Backbone.View.extend({
       this.geojsonlayer = this.countylayer;
     }
     this.map.addLayer(this.geojsonlayer);
+    this.geojsonlayer.eachLayer(function(l){
+      l.setStyle(self.style);
+    });
   },
   onEachFeature: function(feature, layer){
     var self = this;

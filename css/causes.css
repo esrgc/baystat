@@ -113,6 +113,7 @@
   height: 100px;
   position: absolute;
   right: 0;
+  top: 10px;
 }
 
 #pie .note {

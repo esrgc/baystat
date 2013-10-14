@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.5 2013-10-07 
+baystat-dashboards v0.4.6 2013-10-14 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -12,24 +12,36 @@ var CausesModel = Backbone.Model.extend({
         lat: 38.57121,
         lng: -77.31628,
         activelayer: "Basins",
-        layerlist: [ "Basins", "Major Basins", "Counties" ],
+        layerlist: [ {
+            name: "Basins",
+            column: "trib_basin_name"
+        }, {
+            name: "Major Basins",
+            column: "major_basin_name"
+        }, {
+            name: "Counties",
+            column: "county"
+        } ],
         pollutionlist: [ "Nitrogen", "Phosphorus", "Sediment" ],
         sourcelist: [ "All Causes", "Farms", "Wastewater Treatment Plants", "Stormwater Runoff", "Septic", "Forests" ],
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
         pie_colors: [ "#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5" ],
         causes_url: {
-            Nitrogen: "https://data.maryland.gov/resource/mp2x-4nn6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            Phosphorus: "https://data.maryland.gov/resource/hucz-vxqe.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            Sediment: "https://data.maryland.gov/resource/bf9r-nark.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+            Nitrogen: "https://data.maryland.gov/resource/rsrj-4w3t.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            Phosphorus: "https://data.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            Sediment: "https://data.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
         }
     },
     getSources: function(_pollution, _geo) {
         if (this.get("request")) {
             this.get("request").abort();
         }
-        var url = this.get("causes_url")[_pollution] + "&$select=sourcesector,sum(_2012)&$group=sourcesector";
+        var url = this.get("causes_url")[_pollution] + "&$select=source_sector,sum(_2012) as sum_2012&$group=source_sector";
+        var geo_column = _.where(this.get("layerlist"), {
+            name: this.get("activelayer")
+        })[0].column;
         if (_geo !== "Maryland") {
-            url += "&$where=basinname='" + encodeURIComponent(_geo) + "'";
+            url += "&$where=" + geo_column + "='" + encodeURIComponent(_geo) + "'";
         }
         var request = $.ajax({
             dataType: "jsonp",
@@ -48,7 +60,7 @@ var CausesModel = Backbone.Model.extend({
             source = "Agriculture";
         }
         if (_source === "Forests") {
-            source = "Forest' or sourcesector='Non-Tidal ATM";
+            source = "Forest' or source_sector='Non-Tidal ATM";
         }
         if (_source === "Wastewater Treatment Plants") {
             source = "Wastewater";
@@ -56,19 +68,20 @@ var CausesModel = Backbone.Model.extend({
         if (_source === "Stormwater Runoff") {
             source = "Stormwater";
         }
+        var geo_column = _.where(self.get("layerlist"), {
+            name: self.get("activelayer")
+        })[0].column;
+        url += "&$select=sum(wip_outcome_2017) as milestone2017,sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
         if (_geo === "Maryland") {
-            url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
             if (_source !== "All Causes") {
-                url += "&$where=sourcesector='" + source + "'";
+                url += "&$where=source_sector='" + source + "'";
             }
         } else {
             if (_source === "All Causes") {
-                url += "&$select=sum(wip2017) as milestone2017,sum(_1985),sum(_2007),sum(_2009),sum(_2010),sum(_2011),sum(_2012)";
-                url += "&$where=basinname='" + geo + "'";
+                url += "&$where=" + geo_column + "='" + geo + "'";
             } else {
-                url += "&$select=wip2017 as milestone2017,_1985,_2007,_2009,_2010,_2011,_2012";
-                url += "&$where=basinname='" + geo + "'";
-                url += " and (sourcesector='" + source + "')";
+                url += "&$where=" + geo_column + "='" + geo + "'";
+                url += " and (source_sector='" + source + "')";
             }
         }
         var request2 = $.ajax({
@@ -243,7 +256,7 @@ var CausesView = Backbone.View.extend({
             } ]
         });
         this.pie = new GeoDash.PieChart("#pie .chart", {
-            label: "sourcesector",
+            label: "source_sector",
             value: "sum_2012",
             colors: self.model.get("pie_colors"),
             innerRadius: 1,
@@ -260,19 +273,19 @@ var CausesView = Backbone.View.extend({
             self.request1.abort();
         }
         var empty_data = [ {
-            sourcesector: "Farms",
+            source_sector: "Farms",
             sum_2012: "1"
         }, {
-            sourcesector: "Wastewater Treatment Plants",
+            source_sector: "Wastewater Treatment Plants",
             sum_2012: "0"
         }, {
-            sourcesector: "Stormwater Runoff",
+            source_sector: "Stormwater Runoff",
             sum_2012: "0"
         }, {
-            sourcesector: "Septic",
+            source_sector: "Septic",
             sum_2012: "0"
         }, {
-            sourcesector: "Forests",
+            source_sector: "Forests",
             sum_2012: "0"
         } ];
         if (_.contains(self.model.get("invalidGeoms"), self.model.get("geo"))) {
@@ -287,47 +300,47 @@ var CausesView = Backbone.View.extend({
         var self = this;
         var data = [];
         var atm = _.where(res, {
-            sourcesector: "Non-Tidal Atm"
+            source_sector: "Non-Tidal Atm"
         })[0];
         _.each(res, function(source, idx) {
-            if (source.sourcesector === "Forest") {
+            if (source.source_sector === "Forest") {
                 source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
             }
-            if (source.sourcesector === "Agriculture") {
-                source.sourcesector = "Farms";
+            if (source.source_sector === "Agriculture") {
+                source.source_sector = "Farms";
             }
-            if (source.sourcesector === "Forest") {
-                source.sourcesector = "Forests";
+            if (source.source_sector === "Forest") {
+                source.source_sector = "Forests";
             }
-            if (source.sourcesector === "Stormwater") {
-                source.sourcesector = "Stormwater Runoff";
+            if (source.source_sector === "Stormwater") {
+                source.source_sector = "Stormwater Runoff";
             }
-            if (source.sourcesector === "Wastewater") {
-                source.sourcesector = "Wastewater Treatment Plants";
+            if (source.source_sector === "Wastewater") {
+                source.source_sector = "Wastewater Treatment Plants";
             }
-            if (source.sourcesector !== "Non-Tidal Atm") {
+            if (source.source_sector !== "Non-Tidal Atm") {
                 data.push(source);
             }
         });
         var sorted_data = [];
         var obj = _.where(res, {
-            sourcesector: "Farms"
+            source_sector: "Farms"
         })[0];
         sorted_data.push(obj);
         obj = _.where(res, {
-            sourcesector: "Wastewater Treatment Plants"
+            source_sector: "Wastewater Treatment Plants"
         })[0];
         sorted_data.push(obj);
         obj = _.where(res, {
-            sourcesector: "Stormwater Runoff"
+            source_sector: "Stormwater Runoff"
         })[0];
         sorted_data.push(obj);
         obj = _.where(res, {
-            sourcesector: "Septic"
+            source_sector: "Septic"
         })[0];
         sorted_data.push(obj);
         obj = _.where(res, {
-            sourcesector: "Forests"
+            source_sector: "Forests"
         })[0];
         sorted_data.push(obj);
         self.pie.update(sorted_data);
@@ -346,7 +359,6 @@ var CausesView = Backbone.View.extend({
     },
     receiveLineData: function(res) {
         var data = this.prepareData(res);
-        console.log(data);
         this.chart.update(data);
         this.updateLabels();
     },
@@ -377,7 +389,7 @@ var CausesView = Backbone.View.extend({
         for (var i = 0; i < data.length; i++) {
             var years = _.omit(data[0], "milestone2017");
             for (var key in years) {
-                var year = key.replace("sum", "").replace("_", "");
+                var year = key.replace("sum_", "");
                 if (year === "1985") year = "2006";
                 chartData.push({
                     date: parseDate(year),
@@ -480,7 +492,7 @@ var MapView = Backbone.View.extend({
                 }
             });
         });
-        $.getJSON("data/mdcnty.geojson", function(geojson) {
+        $.getJSON("data/mdcnty2.geojson", function(geojson) {
             self.countylayer = L.geoJson(geojson, {
                 style: self.style,
                 onEachFeature: function(f, l) {
@@ -493,7 +505,7 @@ var MapView = Backbone.View.extend({
         });
     },
     switchLayer: function() {
-        console.log(this.model.get("activelayer"));
+        var self = this;
         this.map.removeLayer(this.geojsonlayer);
         if (this.model.get("activelayer") == "Basins") {
             this.geojsonlayer = this.basinlayer;
@@ -503,6 +515,9 @@ var MapView = Backbone.View.extend({
             this.geojsonlayer = this.countylayer;
         }
         this.map.addLayer(this.geojsonlayer);
+        this.geojsonlayer.eachLayer(function(l) {
+            l.setStyle(self.style);
+        });
     },
     onEachFeature: function(feature, layer) {
         var self = this;
