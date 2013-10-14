@@ -88,7 +88,7 @@ var MapView = Backbone.View.extend({
   switchLayer: function(){
     var self = this;
     this.map.removeLayer(this.geojsonlayer);
-    if(this.model.get('activelayer') == 'Basins') {
+    if(this.model.get('activelayer') == 'Tributary Basins') {
       this.geojsonlayer = this.basinlayer;
     } else if(this.model.get('activelayer') == 'Major Basins') {
       this.geojsonlayer = this.majorbasinslayer;
