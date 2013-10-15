@@ -24,7 +24,14 @@
   <div class="chart"></div>
   <div class="legend">
     <div class="legend-item"><div class="sample primary"></div><p>Pollution Over Time</p></div>
-    <div class="legend-item"><div class="sample secondary"></div><p>TMDL Goal (2017)</p></div>
+    <div class="legend-item">
+      <div class="sample secondary"></div>
+      <select id="goal-menu">
+        <option value="milestone2017">Goal 2017</option>
+        <option value="milestone2025">Goal 2025</option>
+        <option value="milestone2017,milestone2025">2017+2025</option>
+      </select>
+    </div>
   </div>
 </div>
 <div id="details"></div>

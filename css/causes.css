@@ -211,11 +211,13 @@
 }
 .sample.primary {
   background: #d80000;
-  background: -webkit-linear-gradient(left, #fff, #d80000 20%, #d80000 80%, #fff);
+  opacity: 0.6;
+  /*background: -webkit-linear-gradient(left, #fff, #d80000 20%, #d80000 80%, #fff);*/
 }
 .sample.secondary {
   background: #006200;
-  background: -webkit-linear-gradient(left, #fff, #006200 20%, #006200 80%, #fff);
+  opacity: 0.6;
+  /*background: -webkit-linear-gradient(left, #fff, #006200 20%, #006200 80%, #fff);*/
 }
 
 #details {

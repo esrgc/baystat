@@ -8,6 +8,8 @@ var CausesModel = Backbone.Model.extend({
     lat: 38.57121,
     lng: -77.31628,
     activelayer: 'Tributary Basins',
+    goals: ['milestone2017'],
+    linecolors: ['#d80000', '#006200', '#eb7600'],
     layerlist: [{
       'name': 'Tributary Basins',
       'column': 'trib_basin_name',
@@ -74,7 +76,7 @@ var CausesModel = Backbone.Model.extend({
       source = "Stormwater";
     }
     var geo_column = _.where(self.get('layerlist'), {name: self.get('activelayer')})[0].column;
-    url += "&$select=sum(wip_outcome_2017) as milestone2017,sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
+    url += "&$select=sum(wip_outcome_2017) as milestone2017,sum(wip_outcome_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
     if(_geo === 'Maryland') {
       if(_source !== 'All Causes') {
         url += "&$where=source_sector='" + source + "'";
@@ -177,7 +179,8 @@ var SourceMenuView = Backbone.View.extend({
 var CausesView = Backbone.View.extend({
   el: '.dashboard',
   events: {
-    "click .state": "goToState"
+    "click .state": "goToState",
+    "change #goal-menu": "changeGoal"
   },
   template: BayStat.templates["templates/causes-template.handlebars"],
   initialize: function() {
@@ -186,7 +189,7 @@ var CausesView = Backbone.View.extend({
     this.listenTo(this.model, "change:pollution", this.updateLineChart);
     this.listenTo(this.model, "change:geo", this.updatePieChart);
     this.listenTo(this.model, "change:pollution", this.updatePieChart);
-    var self = this;
+    this.listenTo(this.model, "change:goals", this.updateLineChart);
     this.formatComma = d3.format(",");
     this.details = {
       'Nitrogen': "<b>Nitrogen</b>: Nitrogen pollution fuel the growth of algae, creating dense, harmful algae blooms that rob the Chesapeake Bay's aquatic life of needed sunlight and oxygen. Sources of nitrogen pollution include air pollution from vehicles, coal-burning power plants and industry, fertilizers from farm fields, lawns and golf courses, wastewater from industrial facilities, sewage treatment plants and septic systems, and animal manure from farms. <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
@@ -198,8 +201,9 @@ var CausesView = Backbone.View.extend({
       'Phosphorus': "Pounds Per Year",
       'Sediment': "Tons Per Year"
     };
-    this.emptyData = this.prepareData([ {
+    this.emptyData = this.prepareData([{
       "milestone2017" : "0",
+      "milestone2025" : "0",
       "sum_2009" : "0",
       "sum_2007" : "0",
       "sum_1985" : "0",
@@ -221,6 +225,7 @@ var CausesView = Backbone.View.extend({
     $("#source-menu").html(view.render().el);
     this.map = new MapView({model: this.model});
     this.makeCharts();
+    this.setDashedLines();
   },
   makeCharts: function(){
     var self = this;
@@ -229,23 +234,10 @@ var CausesView = Backbone.View.extend({
       y: 'stat',
       width: 'auto',
       height: 'auto',
-      colors: ['#d80000', '#006200'],
+      colors: this.model.get('linecolors'),
       interpolate: 'monotone',
       axisLabels: true,
-      yAxisLabel: 'Pounds Per Year',
-      dashed: [{
-        line: 0,
-        span: [{
-          start: 0,
-          end: 1
-        }]
-      },{
-        line: 1,
-        span: [{
-          start: 0,
-          end: 1
-        }]
-      }]
+      yAxisLabel: 'Pounds Per Year'
     });
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'source_sector',
@@ -311,17 +303,17 @@ var CausesView = Backbone.View.extend({
     self.pie.update(sorted_data);
   },
   updateLineChart: function(){
-    var self = this;
-    if(self.request2){
-      self.request2.abort();
+    if(this.request2){
+      this.request2.abort();
     }
-    self.chart.update(self.emptyData);
-    self.updateLabels();
-    this.chart.setYAxisLabel(self.labels[self.model.get('pollution')]);
-    if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
+    this.setDashedLines();
+    this.chart.update(this.emptyData);
+    this.updateLabels();
+    this.chart.setYAxisLabel(this.labels[this.model.get('pollution')]);
+    if(_.contains(this.model.get('invalidGeoms'), this.model.get('geo'))) {
       
     } else {
-      this.model.getCauses(self.model.get('pollution'), self.model.get('source'), self.model.get('geo'));
+      this.model.getCauses(this.model.get('pollution'), this.model.get('source'), this.model.get('geo'));
     }
   },
   receiveLineData: function(res){
@@ -352,17 +344,21 @@ var CausesView = Backbone.View.extend({
   prepareData: function(data) {
     var chartData = [];
     var milestone = data[0]["milestone2017"];
+    var milestone2 = data[0]["milestone2025"];
     var parseDate = d3.time.format("%Y").parse;
     for(var i = 0; i < data.length; i++){
-      var years = _.omit(data[0], 'milestone2017');
+      var years = _.omit(data[0], ['milestone2017', 'milestone2025']);
       for(var key in years){
         var year = key.replace("sum_", "");
         if(year === '1985') year = '2006';
-        chartData.push({
+        var p = {
           date: parseDate(year),
-          stat: years[key],
-          goal: milestone
+          stat: years[key]
+        };
+        _.each(this.model.get('goals'), function(goal, idx){
+          p['goal' + idx] = data[0][goal];
         });
+        chartData.push(p);
       }
     }
     chartData.sort(function(a,b){
@@ -372,9 +368,48 @@ var CausesView = Backbone.View.extend({
     });
     return chartData;
   },
+  setDashedLines: function(){
+    var dashed = [];
+    var count = 0;
+    _.each(this.model.get('goals'), function(goal, idx){
+      dashed.push({
+        line: idx,
+        span: [{
+          start: 0,
+          end: 1
+        }]
+      });
+      count = idx;
+    });
+    dashed.push({
+        line: count+1,
+        span: [{
+          start: 0,
+          end: 1
+        }]
+      });
+    this.chart.options.dashed = dashed;
+  },
   goToState: function(e){
     this.map.geojsonlayer.setStyle(this.map.style);
     this.model.set({geo: 'Maryland'});
     return false;
+  },
+  changeGoal: function(e){
+    var $target = $(e.target);
+    var goal = $target.val();
+    var goals = goal.split(',');
+    if(goals[0] === 'milestone2025') {
+      this.chart.options.colors = [this.model.get('linecolors')[0], this.model.get('linecolors')[2]];
+      $('.sample.secondary').css('background', this.model.get('linecolors')[2]);
+    } else {
+      this.chart.options.colors = this.model.get('linecolors');
+      $('.sample.secondary').css('background', this.model.get('linecolors')[1]);
+    }
+    if(goals.length > 1){
+      var bg = '-webkit-gradient(linear, left top, right top, color-stop(50%,'+this.model.get('linecolors')[1]+'), color-stop(50%,#333), color-stop(0%,'+this.model.get('linecolors')[2]+'))';
+      $('.sample.secondary').css('background', '#fff');
+    }
+    this.model.set('goals', goals);
   }
 });
