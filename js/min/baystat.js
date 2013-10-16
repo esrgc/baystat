@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.8 2013-10-16 
+baystat-dashboards v0.4.9 2013-10-16 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
