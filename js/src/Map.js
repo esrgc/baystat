@@ -75,7 +75,7 @@ var MapView = Backbone.View.extend({
         }
       });
     });
-    $.getJSON('data/mdcnty2.geojson', function(geojson){
+    $.getJSON('data/mdcnty3.geojson', function(geojson){
       self.countylayer = L.geoJson(geojson, {
         style: self.style,
         onEachFeature: function(f, l) { self.onEachFeature(f, l); },
