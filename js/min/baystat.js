@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.8 2013-10-15 
+baystat-dashboards v0.4.8 2013-10-16 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -86,6 +86,7 @@ var CausesModel = Backbone.Model.extend({
                 url += " and (source_sector='" + source + "')";
             }
         }
+        console.log(url);
         var request2 = $.ajax({
             dataType: "jsonp",
             jsonp: false,

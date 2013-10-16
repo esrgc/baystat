@@ -89,6 +89,7 @@ var CausesModel = Backbone.Model.extend({
         url += " and (source_sector='" + source + "')";
       }
     }
+    console.log(url);
     var request2 = $.ajax({
       dataType: "jsonp",
       jsonp: false,
