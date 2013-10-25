@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.9 2013-10-16 
+baystat-dashboards v0.4.10 2013-10-25 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -16,10 +16,10 @@ var CausesModel = Backbone.Model.extend({
         linecolors: [ "#d80000", "#006200", "#eb7600" ],
         layerlist: [ {
             name: "Tributary Basins",
-            column: "trib_basin_name"
+            column: "trib_basin"
         }, {
             name: "Major Basins",
-            column: "major_basin_name"
+            column: "major_basin"
         }, {
             name: "Counties",
             column: "county"
