@@ -36,6 +36,11 @@ var CausesModel = Backbone.Model.extend({
       'Phosphorus': "https://data.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
       'Sediment': "https://data.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
     },
+    goal_key: {
+      'Nitrogen': "tn_target",
+      'Phosphorus': "tp_target",
+      'Sediment': "ts_target"
+    }
   },
   getSources: function(_pollution, _geo){
     if(this.get('request')) {
@@ -76,7 +81,7 @@ var CausesModel = Backbone.Model.extend({
       source = "Stormwater";
     }
     var geo_column = _.where(self.get('layerlist'), {name: self.get('activelayer')})[0].column;
-    url += "&$select=sum(wip_outcome_2017) as milestone2017,sum(wip_outcome_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
+    url += "&$select=sum(" + this.get('goal_key')[pollution] + "_2017) as milestone2017,sum(" + this.get('goal_key')[pollution] + "_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
     if(_geo === 'Maryland') {
       if(_source !== 'All Causes') {
         url += "&$where=source_sector='" + source + "'";
