@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.11 2013-11-19 
+baystat-dashboards v0.4.11 2013-11-25 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -198,7 +198,7 @@ var CausesView = Backbone.View.extend({
         this.listenTo(this.model, "change:goals", this.updateLineChart);
         this.formatComma = d3.format(",");
         this.details = {
-            Nitrogen: "<b>Nitrogen</b>: Nitrogen pollution fuel the growth of algae, creating dense, harmful algae blooms that rob the Chesapeake Bay's aquatic life of needed sunlight and oxygen. Sources of nitrogen pollution include air pollution from vehicles, coal-burning power plants and industry, fertilizers from farm fields, lawns and golf courses, wastewater from industrial facilities, sewage treatment plants and septic systems, and animal manure from farms. <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
+            Nitrogen: "<b>Nitrogen</b>:  The 1985 scenario is from EPA CBP Phase 5.3.2 using 1985 atmospheric reduction strategies.  Atmospheric reduction strategies projected to be in place by 2025 would have reduced Maryland's 1985 statewide nitrogen load by 4.8 million lbs/yr.  This reduction is due to actions both within Maryland and in the larger Chesapeake Bay airshed.  Changes in pollution over time are the result of a combination of reduction in atmospheric deposition, reduction due to management practices, and change due to new development. </p><p>Note that the 2017 goal represents 60% progress toward achieving the 2025 goal <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
             Phosphorus: "<b>Phosphorus</b>: Phosphorus pollution fuels the growth of algae, creating dense, harmful algae blooms that rob the Chesapeake Bay's aquatic life of needed sunlight and oxygen. Phosphorus often attaches to soil and sediment particles on land, entering the Bay many years later when stream banks erode or rainwater washes it into streams, rivers, and the Bay. Sources of phosphorus pollution include fertilizers from farmlands, lawns and golf courses, eroding soil and sediment from stream banks in urban and suburban neighborhoods, animal manure from farms, and wastewater from industrial facilities and sewage treatment plants.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
             Sediment: "<b>Sediment</b>: Maryland did not establish TMDL caps for sediments. Excess sediments - direct, clay, silt, and sand - hurt the Bay's water quality by blocking the sunlight needed by underwater plants and grasses. Without enough sunlight, these underwater grasses are not able to grow and provide habitat for young fish and blue crabs. In addition to blocking sunlight, sediment pollution can also carry nutrient and chemical contaminates into the bay, and smother oysters, underwater grasses and other bottom dwelling creatures.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>"
         };
