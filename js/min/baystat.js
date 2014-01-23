@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.12 2014-01-23 
+baystat-dashboards v0.5 2014-01-23 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -202,9 +202,9 @@ var CausesView = Backbone.View.extend({
             Sediment: "<b>Sediment</b>: Maryland did not establish TMDL caps for sediments. Excess sediments - direct, clay, silt, and sand - hurt the Bay's water quality by blocking the sunlight needed by underwater plants and grasses. Without enough sunlight, these underwater grasses are not able to grow and provide habitat for young fish and blue crabs. In addition to blocking sunlight, sediment pollution can also carry nutrient and chemical contaminates into the bay, and smother oysters, underwater grasses and other bottom dwelling creatures.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>"
         };
         this.labels = {
-            Nitrogen: "Pounds Per Year",
-            Phosphorus: "Pounds Per Year",
-            Sediment: "Tons Per Year"
+            Nitrogen: "Pounds",
+            Phosphorus: "Pounds",
+            Sediment: "Tons"
         };
         this.emptyData = this.prepareData([ {
             milestone2017: "0",
@@ -246,6 +246,7 @@ var CausesView = Backbone.View.extend({
             x: "date",
             y: [ "stat" ],
             colors: this.model.get("linecolors"),
+            opacity: .6,
             interpolate: "monotone",
             yLabel: "Pounds Per Year",
             xFormat: d3.time.format("%Y"),
@@ -350,6 +351,7 @@ var CausesView = Backbone.View.extend({
         this.setDashedLines();
         this.chart.update(this.emptyData);
         this.updateLabels();
+        this.chart.options.hoverTemplate = "{{y}} " + this.labels[this.model.get("pollution")];
         this.chart.setYAxisLabel(this.labels[this.model.get("pollution")]);
         if (_.contains(this.model.get("invalidGeoms"), this.model.get("geo"))) {} else {
             this.model.getCauses(this.model.get("pollution"), this.model.get("source"), this.model.get("geo"));
@@ -740,11 +742,18 @@ var SolutionsView = Backbone.View.extend({
             x: "date",
             y: [ "stat", "goal" ],
             colors: [ "#d80000", "#006200" ],
+            opacity: .6,
             interpolate: "monotone",
             yLabel: "Acres",
             xFormat: d3.time.format("%Y"),
             hoverTemplate: "{{y}}",
-            formatter: d3.format(",.0f")
+            formatter: d3.format(",.0f"),
+            margin: {
+                top: 10,
+                right: 10,
+                bottom: 0,
+                left: 0
+            }
         });
         this.pie = new GeoDash.PieChart("#pie .chart", {
             label: "source",
@@ -752,7 +761,8 @@ var SolutionsView = Backbone.View.extend({
             colors: [ "#d80000", "#0B6909", "#f0db4f" ],
             innerRadius: 1,
             opacity: .8,
-            legend: true
+            legend: true,
+            legendWidth: 100
         });
         this.pie.update([ {
             source: "Urban/Suburban",
