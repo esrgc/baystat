@@ -86,7 +86,7 @@ var SolutionsView = Backbone.View.extend({
       x: 'date',
       y: ['stat', 'goal'],
       colors: ['#d80000', '#006200'],
-      opacity: 0.5,
+      opacity: 0.6,
       interpolate: 'monotone',
       yLabel: 'Acres',
       xFormat: d3.time.format('%Y'),

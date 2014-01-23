@@ -239,6 +239,7 @@ var CausesView = Backbone.View.extend({
       x: 'date',
       y: ['stat'],
       colors: this.model.get('linecolors'),
+      opacity: 0.6,
       interpolate: 'monotone',
       yLabel: 'Pounds Per Year',
       xFormat: d3.time.format('%Y'),
