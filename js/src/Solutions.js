@@ -103,7 +103,7 @@ var SolutionsView = Backbone.View.extend({
       label: 'source',
       value: 'percent',
       colors: ["#d80000", "#0B6909", "#f0db4f"],
-      innerRadius: 1,
+      innerRadius: 0,
       opacity: 0.8,
       legend: true,
       legendWidth: 100

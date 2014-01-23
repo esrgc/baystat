@@ -251,7 +251,7 @@ var CausesView = Backbone.View.extend({
       value: 'sum_2012',
       title: false,
       colors: self.model.get('pie_colors'),
-      innerRadius: 1,
+      innerRadius: 0,
       opacity: 0.7,
       legend: true,
       hover: true,
