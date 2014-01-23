@@ -94,36 +94,21 @@
 }
 
 #pie .chart {
-  width: 200px;
+  width: 100%;
   height: 100%;
   float: left;
 }
 
-#pie .hoverbox {
-  font-size: 11px;
-  bottom: 5px;
-  left: 0px;
-  top: auto;
-  right: auto;
-  text-align: center;
-  width: 200px;
-  padding: 0px 5px 0px 5px;
-}
-
-#pie .legend {
-  width: 160px;
-  height: 100px;
-  position: absolute;
-  right: 0;
-  top: 10px;
+#pie .chart .legend .value {
+  color: #333 !important;
 }
 
 #pie .note {
   position: absolute;
   right: 0;
-  top: 100px;
-  width: 150px;
-  height: 90px;
+  bottom: 10px;
+  width: 130px;
+  height: 70px;
   font-size: 11px;
   color: #9f9f9f;
   line-height: 11px;
@@ -172,7 +157,7 @@
 }
 
 #line .title {
-  height: 40px;
+  height: 30px;
   margin-left: 50px;
   line-height: 15px;
   font-size: 14px;
@@ -185,8 +170,9 @@
 #line .chart {
   margin-top: 0px;
   width: 100%;
-  height: 160px;
+  height: 165px;
   float: right;
+  background: #fff;
 }
 
 #line .legend {
