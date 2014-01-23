@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.4.11 2013-11-25 
+baystat-dashboards v0.4.12 2014-01-23 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -91,7 +91,6 @@ var CausesModel = Backbone.Model.extend({
                 url += " and (source_sector='" + source + "')";
             }
         }
-        console.log(url);
         var request2 = $.ajax({
             dataType: "jsonp",
             jsonp: false,
@@ -356,6 +355,9 @@ var CausesView = Backbone.View.extend({
         }
     },
     receiveLineData: function(res) {
+        if (this.model.get("geo") == "Maryland") {
+            res = this.addCurrentYear(res);
+        }
         var data = this.prepareData(res);
         this.chart.update(data);
         this.updateLabels();
@@ -406,6 +408,38 @@ var CausesView = Backbone.View.extend({
             return a < b ? -1 : a > b ? 1 : 0;
         });
         return chartData;
+    },
+    addCurrentYear: function(data) {
+        var self = this;
+        var currentyear = {
+            Nitrogen: {
+                "All Causes": "48410484",
+                Farms: "18002999",
+                Forests: "5990714",
+                Septic: "2950094",
+                "Stormwater Runoff": "9529595",
+                "Wastewater Treatment Plants": "11937083"
+            },
+            Phosphorus: {
+                "All Causes": "3021448",
+                Farms: "1582315",
+                Forests: "193267",
+                Septic: "0",
+                "Stormwater Runoff": "638059",
+                "Wastewater Treatment Plants": "607807"
+            },
+            Sediment: {
+                "All Causes": "1288177644",
+                Farms: "659188677",
+                Forests: "127443259",
+                Septic: "0",
+                "Stormwater Runoff": "490646155",
+                "Wastewater Treatment Plants": "10899553"
+            }
+        };
+        var stat = currentyear[self.model.get("pollution")][self.model.get("source")];
+        data[0]["sum_2013"] = stat;
+        return data;
     },
     setDashedLines: function() {
         var dashed = [];
