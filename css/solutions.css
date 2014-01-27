@@ -350,18 +350,7 @@
   height: 38px;
   float: left;
 }
-.legend {
-  width:120px;
-  font-size: 11px;
-  float: right;
-}
-.legend-item {
-  height: 19px;
-}
-.legend-item p {
-  margin: 0;
-  line-height: 19px;
-}
+
 .sample {
   height: 2px;
   width: 40px;

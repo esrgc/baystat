@@ -745,12 +745,12 @@ var SolutionsView = Backbone.View.extend({
             opacity: .6,
             interpolate: "monotone",
             yLabel: "Acres",
-            xFormat: d3.time.format("%Y"),
-            hoverTemplate: "{{y}}",
+            xFormat: d3.time.format("%y"),
+            hoverTemplate: "{{x}}: {{y}}",
             formatter: d3.format(",.0f"),
             margin: {
                 top: 10,
-                right: 10,
+                right: 0,
                 bottom: 0,
                 left: 0
             }
@@ -801,6 +801,7 @@ var SolutionsView = Backbone.View.extend({
             data: data[0]
         });
         var _data = self.prepareData(data[0]);
+        console.log(_data);
         self.chart.update(_data);
     },
     makeEmptyData: function() {
@@ -829,8 +830,16 @@ var SolutionsView = Backbone.View.extend({
                     stat: stat,
                     goal: goal
                 });
-            } else {}
+            } else {
+                stat = 0;
+            }
         }
+        chartData.push({
+            date: parseDate("2014"),
+            stat: 45e4,
+            goal: goal
+        });
+        console.log(chartData);
         return chartData;
     },
     updateLabels: function(data) {
@@ -847,7 +856,7 @@ var SolutionsView = Backbone.View.extend({
         var units_abbr = _.where(self.statsData, {
             stat: self.model.get("stat")
         })[0].units_abbr;
-        this.chart.options.hoverTemplate = "{{y}} " + units_abbr;
+        this.chart.options.hoverTemplate = "{{x}}: {{y}} " + units_abbr;
         this.chart.setYAxisLabel(units_abbr);
         if (_.has(data[0], "_2013_goal")) {
             var overlaytext = "<p>2013: " + this.formatComma(+data[0]["_2013"].replace(",", "").replace("*", "")) + "</p>";

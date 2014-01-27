@@ -437,7 +437,6 @@ var CausesView = Backbone.View.extend({
           howMany: 1
         }
       });
-    console.log('dashed', dashed)
     this.chart.options.dashed = dashed;
   },
   goToState: function(e){
@@ -460,7 +459,6 @@ var CausesView = Backbone.View.extend({
       var bg = '-webkit-gradient(linear, left top, right top, color-stop(50%,'+this.model.get('linecolors')[1]+'), color-stop(50%,#333), color-stop(0%,'+this.model.get('linecolors')[2]+'))';
       $('.sample.secondary').css('background', '#fff');
     }
-    console.log(goals)
     this.model.set('goals', goals);
   }
 });

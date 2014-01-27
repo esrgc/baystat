@@ -6,8 +6,6 @@ var js_dependencies = [
   'js/lib/underscore-min.js',
   'js/lib/backbone-min.js',
   'js/lib/bootstrap.min.js',
-  //'js/lib/d3.v3.min.js',
-  'js/lib/geodash/geodash.min.js',
   'js/lib/handlebars.min.js',
   'js/lib/leaflet.js',
   'templates/templates.js',

@@ -86,7 +86,7 @@ a.stat {
   | SVG |
   |_____|
 */
-
+/*
 svg {
   margin: 0 auto;
 }
@@ -120,16 +120,6 @@ path.domain {
   opacity: 0;
 }
 
-.dot {
-  fill: #d80000;
-  stroke: #333;
-  stroke-width: 1;
-}
-
-.dot.secondary {
-  fill: #009500;
-}
-
 #pie path {
   stroke-width: 1;
   stroke: #fff;
@@ -137,7 +127,7 @@ path.domain {
 
 .axis text {
   fill: #333;
-}
+}*/
 
 div {
   /*border: 1px dashed #76E9FF;*/
