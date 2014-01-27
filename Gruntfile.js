@@ -7,7 +7,7 @@ var js_dependencies = [
   'js/lib/backbone-min.js',
   'js/lib/bootstrap.min.js',
   'js/lib/handlebars.min.js',
-  'js/lib/leaflet.js',
+  'js/lib/leaflet-0.7.2/leaflet.js',
   'templates/templates.js',
   'js/src/Map.js',
   'js/src/Causes.js',

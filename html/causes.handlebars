@@ -7,8 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" /><![endif]--> 
+    <link rel="stylesheet" href="js/lib/leaflet-0.7.2/leaflet.css" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 {{#if deploy}}
     <link rel="stylesheet" href="css/min/baystat-dashboards.{{version}}.min.css" />
@@ -20,14 +19,9 @@
     <link rel="stylesheet" href="css/causes.css?v={{version}}" />
   </head>
   <body>
-    <div class="dashboard">
-      <!--[if lte IE 8]>
-        <p>This dashboard does not support your browser.</p>
-        <p>Please <a href="http://windows.microsoft.com/en-us/internet-explorer/ie-9-worldwide-languages" target="_blank">update Internet Explorer</a></p>
-      <![endif]-->
-    </div>
+    <div class="dashboard"></div>
     <!--[if lt IE 9]>
-      <script src="./dist/geodash.ie8.min.js" charset="utf-8"></script>
+      <script src="js/lib/geodash/geodash.ie8.min.js" charset="utf-8"></script>
     <![endif]-->
     <!--[if (gte IE 9)|!(IE)]><!-->
       <script src="js/lib/geodash/geodash.min.js"></script>
