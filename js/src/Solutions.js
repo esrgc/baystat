@@ -12,7 +12,7 @@ var SolutionsModel = Backbone.Model.extend({
     solutions_url: 'https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
     request: null,
     start_year: 2000,
-    end_year: 2013
+    end_year: 2014
   },
   getBMPStatistics: function(_geo, _stat){
     if(this.get('request')) {
@@ -138,7 +138,6 @@ var SolutionsView = Backbone.View.extend({
     self.addNotes(data[0]);
     self.model.set({data: data[0]});
     var _data = self.prepareData(data[0]);
-    console.log(_data)
     self.chart.update(_data);
   },
   makeEmptyData: function() {
@@ -160,17 +159,17 @@ var SolutionsView = Backbone.View.extend({
     }
     for(var i = this.model.get('start_year'); i <= this.model.get('end_year'); i++) {
       var year = "_" + i, stat = null;
-      //console.log(year, data[year]);
       if(data[year] !== undefined) {
         stat = +data[year].replace(",", "").replace("*", "");
+        chartData.push({
+          date: parseDate(i.toString()),
+          stat: stat,
+          goal: goal
+        });
       } else {
 
       }
-      chartData.push({
-        date: parseDate(i.toString()),
-        stat: stat,
-        goal: goal
-      });
+
     }
     return chartData;
   },
