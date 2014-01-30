@@ -89,7 +89,7 @@ var SolutionsView = Backbone.View.extend({
       opacity: 0.6,
       interpolate: 'monotone',
       yLabel: 'Acres',
-      xFormat: d3.time.format('%y'),
+      xFormat: d3.time.format("'%y"),
       hoverTemplate: '{{y}}',
       formatter: d3.format(",.0f"),
       margin: {

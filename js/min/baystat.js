@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.2 2014-01-27 
+baystat-dashboards v0.5.3 2014-01-30 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -743,7 +743,7 @@ var SolutionsView = Backbone.View.extend({
             opacity: .6,
             interpolate: "monotone",
             yLabel: "Acres",
-            xFormat: d3.time.format("%y"),
+            xFormat: d3.time.format("'%y"),
             hoverTemplate: "{{y}}",
             formatter: d3.format(",.0f"),
             margin: {
