@@ -20,12 +20,12 @@
   </head>
   <body>
     <div class="dashboard"></div>
-  <!--[if lt IE 9]>
-    <script src="js/lib/geodash/geodash.ie8.min.js" charset="utf-8"></script>
-  <![endif]-->
-  <!--[if (gte IE 9)|!(IE)]><!-->
-    <script src="js/lib/geodash/geodash.min.js"></script>
-  <!--<![endif]-->
+      <!--[if lt IE 9]>
+      <script src="js/lib/geodash/geodash.ie8.min.js?v={{version}}" charset="utf-8"></script>
+      <![endif]-->
+      <!--[if (gte IE 9)|!(IE)]><!-->
+      <script src="js/lib/geodash/geodash.min.js?v={{version}}"></script>
+      <!--<![endif]-->
 
       {{#if deploy}}
         <script src="js/min/baystat-dashboards.{{version}}.min.js"></script>
