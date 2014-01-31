@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.3 2014-01-30 
+baystat-dashboards v0.5.4 2014-01-31 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -249,9 +249,11 @@ var CausesView = Backbone.View.extend({
             opacity: .6,
             interpolate: "monotone",
             yLabel: "Pounds Per Year",
-            xFormat: d3.time.format("%Y"),
+            xTickFormat: d3.time.format("%Y"),
+            yTickFormat: d3.format(".3s"),
+            yAxisWidth: 30,
             hoverTemplate: "{{y}}",
-            formatter: d3.format(",.0f")
+            valueFormat: d3.format(",.0f")
         });
         this.pie = new GeoDash.PieChart("#pie .chart", {
             label: "source_sector",
@@ -348,14 +350,14 @@ var CausesView = Backbone.View.extend({
         if (this.request2) {
             this.request2.abort();
         }
-        this.setDashedLines();
-        this.chart.update(this.emptyData);
-        this.updateLabels();
         this.chart.options.hoverTemplate = "{{y}} " + this.labels[this.model.get("pollution")];
         this.chart.setYAxisLabel(this.labels[this.model.get("pollution")]);
         if (_.contains(this.model.get("invalidGeoms"), this.model.get("geo"))) {} else {
             this.model.getCauses(this.model.get("pollution"), this.model.get("source"), this.model.get("geo"));
         }
+        this.chart.update(this.emptyData);
+        this.updateLabels();
+        this.setDashedLines();
     },
     receiveLineData: function(res) {
         var self = this;
@@ -743,11 +745,12 @@ var SolutionsView = Backbone.View.extend({
             opacity: .6,
             interpolate: "monotone",
             yLabel: "Acres",
-            xFormat: d3.time.format("'%y"),
-            yFormat: d3.format(","),
+            xTickFormat: d3.time.format("'%y"),
+            yTickFormat: d3.format(".3s"),
+            yAxisWidth: 30,
             yaxisLabelPadding: 50,
             hoverTemplate: "{{y}}",
-            formatter: d3.format(",.0f"),
+            valueFormat: d3.format(",.0f"),
             margin: {
                 top: 10,
                 right: 0,
@@ -844,7 +847,6 @@ var SolutionsView = Backbone.View.extend({
             yaxisLabelPadding = 40;
         }
         if (yaxisLabelPadding !== this.chart.options.yaxisLabelPadding) {
-            this.chart.options.yaxisLabelPadding = yaxisLabelPadding;
             this.chart.drawChart();
         }
         if (max < 10 && max > 0) {
