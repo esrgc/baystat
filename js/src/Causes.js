@@ -134,7 +134,8 @@ var PollutionMenuView = Backbone.View.extend({
   },
   render: function(){
      this.$el.html(this.template(this.model.toJSON()));
-     this.$el.find(".pollutionRadio").first().prop("checked", true);
+     this.$el.find('input[value="' + this.model.get("pollution") +'"]').prop("checked", true);
+     //this.$el.find(".pollutionRadio").first().prop("checked", true);
      return this;
   },
   setPollution: function(e) {
