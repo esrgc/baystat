@@ -242,9 +242,11 @@ var CausesView = Backbone.View.extend({
       opacity: 0.6,
       interpolate: 'monotone',
       yLabel: 'Pounds Per Year',
-      xFormat: d3.time.format('%Y'),
+      xTickFormat: d3.time.format('%Y'),
+      yTickFormat: d3.format('.3s'),
+      yAxisWidth: 30,
       hoverTemplate: '{{y}}',
-      formatter: d3.format(",.0f")
+      valueFormat: d3.format(",.0f")
     });
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'source_sector',
@@ -314,9 +316,6 @@ var CausesView = Backbone.View.extend({
     if(this.request2){
       this.request2.abort();
     }
-    this.setDashedLines();
-    this.chart.update(this.emptyData);
-    this.updateLabels();
     this.chart.options.hoverTemplate = '{{y}} ' + this.labels[this.model.get('pollution')]
     this.chart.setYAxisLabel(this.labels[this.model.get('pollution')]);
     if(_.contains(this.model.get('invalidGeoms'), this.model.get('geo'))) {
@@ -324,6 +323,9 @@ var CausesView = Backbone.View.extend({
     } else {
       this.model.getCauses(this.model.get('pollution'), this.model.get('source'), this.model.get('geo'));
     }
+    this.chart.update(this.emptyData);
+    this.updateLabels();
+    this.setDashedLines();
   },
   receiveLineData: function(res){
     var self = this

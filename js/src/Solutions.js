@@ -89,11 +89,12 @@ var SolutionsView = Backbone.View.extend({
       opacity: 0.6,
       interpolate: 'monotone',
       yLabel: 'Acres',
-      xFormat: d3.time.format("'%y")
-      , yFormat: d3.format(","),
+      xTickFormat: d3.time.format("'%y"),
+      yTickFormat: d3.format('.3s'),
+      yAxisWidth: 30,
       yaxisLabelPadding: 50,
       hoverTemplate: '{{y}}',
-      formatter: d3.format(",.0f"),
+      valueFormat: d3.format(",.0f"),
       margin: {
         top: 10,
         right: 0,
@@ -183,7 +184,7 @@ var SolutionsView = Backbone.View.extend({
       yaxisLabelPadding = 40
     }
     if(yaxisLabelPadding !== this.chart.options.yaxisLabelPadding) {
-      this.chart.options.yaxisLabelPadding = yaxisLabelPadding;
+      //this.chart.options.yaxisLabelPadding = yaxisLabelPadding;
       this.chart.drawChart()
     }
     if(max < 10 && max > 0){
