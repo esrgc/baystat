@@ -76,7 +76,7 @@ expose()
 
 }());
 
-!function(exports){var aight=exports.aight=function(){var nav=navigator.appName,version=navigator.appVersion,ie=nav=="Microsoft Internet Explorer";if(ie){var match=navigator.userAgent.match(/MSIE ([0-9]{1,}[\.0-9]{0,})/);version=match?parseFloat(match[1]):0}return{browser:{name:nav,version:version,ie:ie,ie10:ie&&version>=10,ie9:ie&&version>=9&&version<10,ie8:ie&&version>=8&&version<9,ie7:ie&&version>=7&&version<8,ie6:ie&&version>=6&&version<7}}}()}(this);if(typeof document!=="undefined"&&!("classList"in document.createElement("a"))){!function(view){"use strict";if(!("HTMLElement"in view)&&!("Element"in view))return;var classListProp="classList",protoProp="prototype",elemCtrProto=(view.HTMLElement||view.Element)[protoProp],objCtr=Object,strTrim=String[protoProp].trim||function(){return this.replace(/^\s+|\s+$/g,"")},arrIndexOf=Array[protoProp].indexOf||function(item){var i=0,len=this.length;for(;i<len;i++){if(i in this&&this[i]===item){return i}}return-1},DOMEx=function(type,message){this.name=type;this.code=DOMException[type];this.message=message},checkTokenAndGetIndex=function(classList,token){if(token===""){throw new DOMEx("SYNTAX_ERR","An invalid or illegal string was specified")}if(/\s/.test(token)){throw new DOMEx("INVALID_CHARACTER_ERR","String contains an invalid character")}return arrIndexOf.call(classList,token)},ClassList=function(elem){var trimmedClasses=strTrim.call(elem.className),classes=trimmedClasses?trimmedClasses.split(/\s+/):[],i=0,len=classes.length;for(;i<len;i++){this.push(classes[i])}this._updateClassName=function(){elem.className=this.toString()}},classListProto=ClassList[protoProp]=[],classListGetter=function(){return new ClassList(this)};DOMEx[protoProp]=Error[protoProp];classListProto.item=function(i){return this[i]||null};classListProto.contains=function(token){token+="";return checkTokenAndGetIndex(this,token)!==-1};classListProto.add=function(){var tokens=arguments,i=0,l=tokens.length,token,updated=false;do{token=tokens[i]+"";if(checkTokenAndGetIndex(this,token)===-1){this.push(token);updated=true}}while(++i<l);if(updated){this._updateClassName()}};classListProto.remove=function(){var tokens=arguments,i=0,l=tokens.length,token,updated=false;do{token=tokens[i]+"";var index=checkTokenAndGetIndex(this,token);if(index!==-1){this.splice(index,1);updated=true}}while(++i<l);if(updated){this._updateClassName()}};classListProto.toggle=function(token,forse){token+="";var result=this.contains(token),method=result?forse!==true&&"remove":forse!==false&&"add";if(method){this[method](token)}return!result};classListProto.toString=function(){return this.join(" ")};if(objCtr.defineProperty){var classListPropDesc={get:classListGetter,enumerable:true,configurable:true};try{objCtr.defineProperty(elemCtrProto,classListProp,classListPropDesc)}catch(ex){if(ex.number===-2146823252){classListPropDesc.enumerable=false;objCtr.defineProperty(elemCtrProto,classListProp,classListPropDesc)}}}else if(objCtr[protoProp].__defineGetter__){elemCtrProto.__defineGetter__(classListProp,classListGetter)}}(self)}!function(definition){if(typeof define=="function"){define(definition)}else if(typeof YUI=="function"){YUI.add("es5",definition)}else{definition()}}(function(){function Empty(){}if(!Function.prototype.bind){Function.prototype.bind=function bind(that){var target=this;if(typeof target!="function"){throw new TypeError("Function.prototype.bind called on incompatible "+target)}var args=_Array_slice_.call(arguments,1);var bound=function(){if(this instanceof bound){var result=target.apply(this,args.concat(_Array_slice_.call(arguments)));if(Object(result)===result){return result}return this}else{return target.apply(that,args.concat(_Array_slice_.call(arguments)))}};if(target.prototype){Empty.prototype=target.prototype;bound.prototype=new Empty;Empty.prototype=null}return bound}}var call=Function.prototype.call;var prototypeOfArray=Array.prototype;var prototypeOfObject=Object.prototype;var _Array_slice_=prototypeOfArray.slice;var _toString=call.bind(prototypeOfObject.toString);var owns=call.bind(prototypeOfObject.hasOwnProperty);var defineGetter;var defineSetter;var lookupGetter;var lookupSetter;var supportsAccessors;if(supportsAccessors=owns(prototypeOfObject,"__defineGetter__")){defineGetter=call.bind(prototypeOfObject.__defineGetter__);defineSetter=call.bind(prototypeOfObject.__defineSetter__);lookupGetter=call.bind(prototypeOfObject.__lookupGetter__);lookupSetter=call.bind(prototypeOfObject.__lookupSetter__)}if([1,2].splice(0).length!=2){var array_splice=Array.prototype.splice;if(function(){function makeArray(l){var a=[];while(l--){a.unshift(l)}return a}var array=[],lengthBefore;array.splice.bind(array,0,0).apply(null,makeArray(20));array.splice.bind(array,0,0).apply(null,makeArray(26));lengthBefore=array.length;array.splice(5,0,"XXX");if(lengthBefore+1==array.length){return true}}()){Array.prototype.splice=function(start,deleteCount){if(!arguments.length){return[]}else{return array_splice.apply(this,[start===void 0?0:start,deleteCount===void 0?this.length-start:deleteCount].concat(_Array_slice_.call(arguments,2)))}}}else{Array.prototype.splice=function(start,deleteCount){var result,args=_Array_slice_.call(arguments,2),addElementsCount=args.length;if(!arguments.length){return[]}if(start===void 0){start=0}if(deleteCount===void 0){deleteCount=this.length-start}if(addElementsCount>0){if(deleteCount<=0){if(start==this.length){this.push.apply(this,args);return[]}if(start==0){this.unshift.apply(this,args);return[]}}result=_Array_slice_.call(this,start,start+deleteCount);args.push.apply(args,_Array_slice_.call(this,start+deleteCount,this.length));args.unshift.apply(args,_Array_slice_.call(this,0,start));args.unshift(0,this.length);array_splice.apply(this,args);return result}return array_splice.call(this,start,deleteCount)}}}if([].unshift(0)!=1){var array_unshift=Array.prototype.unshift;Array.prototype.unshift=function(){array_unshift.apply(this,arguments);return this.length}}if(!Array.isArray){Array.isArray=function isArray(obj){return _toString(obj)=="[object Array]"}}var boxedString=Object("a"),splitString=boxedString[0]!="a"||!(0 in boxedString);if(!Array.prototype.forEach){Array.prototype.forEach=function forEach(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,thisp=arguments[1],i=-1,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError}while(++i<length){if(i in self){fun.call(thisp,self[i],i,object)}}}}if(!Array.prototype.map){Array.prototype.map=function map(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,result=Array(length),thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self)result[i]=fun.call(thisp,self[i],i,object)}return result}}if(!Array.prototype.filter){Array.prototype.filter=function filter(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,result=[],value,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self){value=self[i];if(fun.call(thisp,value,i,object)){result.push(value)}}}return result}}if(!Array.prototype.every){Array.prototype.every=function every(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self&&!fun.call(thisp,self[i],i,object)){return false}}return true}}if(!Array.prototype.some){Array.prototype.some=function some(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self&&fun.call(thisp,self[i],i,object)){return true}}return false}}if(!Array.prototype.reduce){Array.prototype.reduce=function reduce(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}if(!length&&arguments.length==1){throw new TypeError("reduce of empty array with no initial value")}var i=0;var result;if(arguments.length>=2){result=arguments[1]}else{do{if(i in self){result=self[i++];break}if(++i>=length){throw new TypeError("reduce of empty array with no initial value")}}while(true)}for(;i<length;i++){if(i in self){result=fun.call(void 0,result,self[i],i,object)}}return result}}if(!Array.prototype.reduceRight){Array.prototype.reduceRight=function reduceRight(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}if(!length&&arguments.length==1){throw new TypeError("reduceRight of empty array with no initial value")}var result,i=length-1;if(arguments.length>=2){result=arguments[1]}else{do{if(i in self){result=self[i--];break}if(--i<0){throw new TypeError("reduceRight of empty array with no initial value")}}while(true)}if(i<0){return result}do{if(i in this){result=fun.call(void 0,result,self[i],i,object)}}while(i--);return result}}if(!Array.prototype.indexOf||[0,1].indexOf(1,2)!=-1){Array.prototype.indexOf=function indexOf(sought){var self=splitString&&_toString(this)=="[object String]"?this.split(""):toObject(this),length=self.length>>>0;if(!length){return-1}var i=0;if(arguments.length>1){i=toInteger(arguments[1])}i=i>=0?i:Math.max(0,length+i);for(;i<length;i++){if(i in self&&self[i]===sought){return i}}return-1}}if(!Array.prototype.lastIndexOf||[0,1].lastIndexOf(0,-3)!=-1){Array.prototype.lastIndexOf=function lastIndexOf(sought){var self=splitString&&_toString(this)=="[object String]"?this.split(""):toObject(this),length=self.length>>>0;if(!length){return-1}var i=length-1;if(arguments.length>1){i=Math.min(i,toInteger(arguments[1]))}i=i>=0?i:length-Math.abs(i);for(;i>=0;i--){if(i in self&&sought===self[i]){return i}}return-1}}if(!Object.keys){var hasDontEnumBug=true,dontEnums=["toString","toLocaleString","valueOf","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","constructor"],dontEnumsLength=dontEnums.length;for(var key in{toString:null}){hasDontEnumBug=false}Object.keys=function keys(object){if(typeof object!="object"&&typeof object!="function"||object===null){throw new TypeError("Object.keys called on a non-object")}var keys=[];for(var name in object){if(owns(object,name)){keys.push(name)}}if(hasDontEnumBug){for(var i=0,ii=dontEnumsLength;i<ii;i++){var dontEnum=dontEnums[i];if(owns(object,dontEnum)){keys.push(dontEnum)}}}return keys}}var negativeDate=-621987552e5,negativeYearString="-000001";if(!Date.prototype.toISOString||new Date(negativeDate).toISOString().indexOf(negativeYearString)===-1){Date.prototype.toISOString=function toISOString(){var result,length,value,year,month;if(!isFinite(this)){throw new RangeError("Date.prototype.toISOString called on non-finite value.")}year=this.getUTCFullYear();month=this.getUTCMonth();year+=Math.floor(month/12);month=(month%12+12)%12;result=[month+1,this.getUTCDate(),this.getUTCHours(),this.getUTCMinutes(),this.getUTCSeconds()];year=(year<0?"-":year>9999?"+":"")+("00000"+Math.abs(year)).slice(0<=year&&year<=9999?-4:-6);length=result.length;while(length--){value=result[length];if(value<10){result[length]="0"+value}}return year+"-"+result.slice(0,2).join("-")+"T"+result.slice(2).join(":")+"."+("000"+this.getUTCMilliseconds()).slice(-3)+"Z"}}var dateToJSONIsSupported=false;try{dateToJSONIsSupported=Date.prototype.toJSON&&new Date(NaN).toJSON()===null&&new Date(negativeDate).toJSON().indexOf(negativeYearString)!==-1&&Date.prototype.toJSON.call({toISOString:function(){return true}})}catch(e){}if(!dateToJSONIsSupported){Date.prototype.toJSON=function toJSON(key){var o=Object(this),tv=toPrimitive(o),toISO;if(typeof tv==="number"&&!isFinite(tv)){return null}toISO=o.toISOString;if(typeof toISO!="function"){throw new TypeError("toISOString property is not callable")}return toISO.call(o)}}if(!Date.parse||"Date.parse is buggy"){Date=function(NativeDate){function Date(Y,M,D,h,m,s,ms){var length=arguments.length;if(this instanceof NativeDate){var date=length==1&&String(Y)===Y?new NativeDate(Date.parse(Y)):length>=7?new NativeDate(Y,M,D,h,m,s,ms):length>=6?new NativeDate(Y,M,D,h,m,s):length>=5?new NativeDate(Y,M,D,h,m):length>=4?new NativeDate(Y,M,D,h):length>=3?new NativeDate(Y,M,D):length>=2?new NativeDate(Y,M):length>=1?new NativeDate(Y):new NativeDate;date.constructor=Date;return date}return NativeDate.apply(this,arguments)}var isoDateExpression=new RegExp("^"+"(\\d{4}|[+-]\\d{6})"+"(?:-(\\d{2})"+"(?:-(\\d{2})"+"(?:"+"T(\\d{2})"+":(\\d{2})"+"(?:"+":(\\d{2})"+"(?:(\\.\\d{1,}))?"+")?"+"("+"Z|"+"(?:"+"([-+])"+"(\\d{2})"+":(\\d{2})"+")"+")?)?)?)?"+"$");var months=[0,31,59,90,120,151,181,212,243,273,304,334,365];function dayFromMonth(year,month){var t=month>1?1:0;return months[month]+Math.floor((year-1969+t)/4)-Math.floor((year-1901+t)/100)+Math.floor((year-1601+t)/400)+365*(year-1970)}function toUTC(t){return Number(new NativeDate(1970,0,1,0,0,0,t))}for(var key in NativeDate){Date[key]=NativeDate[key]}Date.now=NativeDate.now;Date.UTC=NativeDate.UTC;Date.prototype=NativeDate.prototype;Date.prototype.constructor=Date;Date.parse=function parse(string){var match=isoDateExpression.exec(string);if(match){var year=Number(match[1]),month=Number(match[2]||1)-1,day=Number(match[3]||1)-1,hour=Number(match[4]||0),minute=Number(match[5]||0),second=Number(match[6]||0),millisecond=Math.floor(Number(match[7]||0)*1e3),isLocalTime=Boolean(match[4]&&!match[8]),signOffset=match[9]==="-"?1:-1,hourOffset=Number(match[10]||0),minuteOffset=Number(match[11]||0),result;if(hour<(minute>0||second>0||millisecond>0?24:25)&&minute<60&&second<60&&millisecond<1e3&&month>-1&&month<12&&hourOffset<24&&minuteOffset<60&&day>-1&&day<dayFromMonth(year,month+1)-dayFromMonth(year,month)){result=((dayFromMonth(year,month)+day)*24+hour+hourOffset*signOffset)*60;result=((result+minute+minuteOffset*signOffset)*60+second)*1e3+millisecond;if(isLocalTime){result=toUTC(result)}if(-864e13<=result&&result<=864e13){return result}}return NaN}return NativeDate.parse.apply(this,arguments)};return Date}(Date)}if(!Date.now){Date.now=function now(){return(new Date).getTime()}}if(!Number.prototype.toFixed||8e-5.toFixed(3)!=="0.000"||.9.toFixed(0)==="0"||1.255.toFixed(2)!=="1.25"||0xde0b6b3a7640080.toFixed(0)!=="1000000000000000128"){!function(){var base,size,data,i;base=1e7;size=6;data=[0,0,0,0,0,0];function multiply(n,c){var i=-1;while(++i<size){c+=n*data[i];data[i]=c%base;c=Math.floor(c/base)}}function divide(n){var i=size,c=0;while(--i>=0){c+=data[i];data[i]=Math.floor(c/n);c=c%n*base}}function toString(){var i=size;var s="";while(--i>=0){if(s!==""||i===0||data[i]!==0){var t=String(data[i]);if(s===""){s=t}else{s+="0000000".slice(0,7-t.length)+t}}}return s}function pow(x,n,acc){return n===0?acc:n%2===1?pow(x,n-1,acc*x):pow(x*x,n/2,acc)}function log(x){var n=0;while(x>=4096){n+=12;x/=4096}while(x>=2){n+=1;x/=2}return n}Number.prototype.toFixed=function(fractionDigits){var f,x,s,m,e,z,j,k;f=Number(fractionDigits);f=f!==f?0:Math.floor(f);if(f<0||f>20){throw new RangeError("Number.toFixed called with invalid number of decimals")}x=Number(this);if(x!==x){return"NaN"}if(x<=-1e21||x>=1e21){return String(x)}s="";if(x<0){s="-";x=-x}m="0";if(x>1e-21){e=log(x*pow(2,69,1))-69;z=e<0?x*pow(2,-e,1):x/pow(2,e,1);z*=4503599627370496;e=52-e;if(e>0){multiply(0,z);j=f;while(j>=7){multiply(1e7,0);j-=7}multiply(pow(10,j,1),0);j=e-1;while(j>=23){divide(1<<23);j-=23}divide(1<<j);multiply(1,1);divide(2);m=toString()}else{multiply(0,z);multiply(1<<-e,0);m=toString()+"0.00000000000000000000".slice(2,2+f)}}if(f>0){k=m.length;if(k<=f){m=s+"0.0000000000000000000".slice(0,f-k+2)+m}else{m=s+m.slice(0,k-f)+"."+m.slice(k-f)}}else{m=s+m}return m}}()}var string_split=String.prototype.split;if("ab".split(/(?:ab)*/).length!==2||".".split(/(.?)(.?)/).length!==4||"tesst".split(/(s)*/)[1]==="t"||"".split(/.?/).length===0||".".split(/()()/).length>1){!function(){var compliantExecNpcg=/()??/.exec("")[1]===void 0;String.prototype.split=function(separator,limit){var string=this;if(separator===void 0&&limit===0)return[];if(Object.prototype.toString.call(separator)!=="[object RegExp]"){return string_split.apply(this,arguments)}var output=[],flags=(separator.ignoreCase?"i":"")+(separator.multiline?"m":"")+(separator.extended?"x":"")+(separator.sticky?"y":""),lastLastIndex=0,separator=new RegExp(separator.source,flags+"g"),separator2,match,lastIndex,lastLength;string+="";if(!compliantExecNpcg){separator2=new RegExp("^"+separator.source+"$(?!\\s)",flags)}limit=limit===void 0?-1>>>0:limit>>>0;while(match=separator.exec(string)){lastIndex=match.index+match[0].length;if(lastIndex>lastLastIndex){output.push(string.slice(lastLastIndex,match.index));if(!compliantExecNpcg&&match.length>1){match[0].replace(separator2,function(){for(var i=1;i<arguments.length-2;i++){if(arguments[i]===void 0){match[i]=void 0}}})}if(match.length>1&&match.index<string.length){Array.prototype.push.apply(output,match.slice(1))}lastLength=match[0].length;lastLastIndex=lastIndex;if(output.length>=limit){break}}if(separator.lastIndex===match.index){separator.lastIndex++}}if(lastLastIndex===string.length){if(lastLength||!separator.test("")){output.push("")}}else{output.push(string.slice(lastLastIndex))}return output.length>limit?output.slice(0,limit):output}}()}else if("0".split(void 0,0).length){String.prototype.split=function(separator,limit){if(separator===void 0&&limit===0)return[];return string_split.apply(this,arguments)}}if("".substr&&"0b".substr(-1)!=="b"){var string_substr=String.prototype.substr;String.prototype.substr=function(start,length){return string_substr.call(this,start<0?(start=this.length+start)<0?0:start:start,length)}}var ws="	\n\f\r   ᠎    "+"         　\u2028"+"\u2029﻿";if(!String.prototype.trim||ws.trim()){ws="["+ws+"]";var trimBeginRegexp=new RegExp("^"+ws+ws+"*"),trimEndRegexp=new RegExp(ws+ws+"*$");String.prototype.trim=function trim(){if(this===void 0||this===null){throw new TypeError("can't convert "+this+" to object")}return String(this).replace(trimBeginRegexp,"").replace(trimEndRegexp,"")}}function toInteger(n){n=+n;if(n!==n){n=0}else if(n!==0&&n!==1/0&&n!==-(1/0)){n=(n>0||-1)*Math.floor(Math.abs(n))}return n}function isPrimitive(input){var type=typeof input;return input===null||type==="undefined"||type==="boolean"||type==="number"||type==="string"}function toPrimitive(input){var val,valueOf,toString;if(isPrimitive(input)){return input}valueOf=input.valueOf;if(typeof valueOf==="function"){val=valueOf.call(input);if(isPrimitive(val)){return val}}toString=input.toString;if(typeof toString==="function"){val=toString.call(input);if(isPrimitive(val)){return val}}throw new TypeError}var toObject=function(o){if(o==null){throw new TypeError("can't convert "+o+" to object")}return Object(o)}});!("getComputedStyle"in Window.prototype)&&(Window.prototype.getComputedStyle=function(){var Push=Array.prototype.push;function getComputedStylePixel(element,property,fontSize){var value=element.currentStyle[property].match(/([\d\.]+)(%|cm|em|in|mm|pc|pt|)/)||[0,0,""],size=value[1],suffix=value[2],rootSize;fontSize=fontSize!=null?fontSize:/%|em/.test(suffix)&&element.parentElement?getComputedStylePixel(element.parentElement,"fontSize",null):16;rootSize=property=="fontSize"?fontSize:/width/i.test(property)?element.clientWidth:element.clientHeight;return suffix=="%"?size/100*rootSize:suffix=="cm"?size*.3937*96:suffix=="em"?size*fontSize:suffix=="in"?size*96:suffix=="mm"?size*.3937*96/10:suffix=="pc"?size*12*96/72:suffix=="pt"?size*96/72:size}function setShortStyleProperty(style,property){var borderSuffix=property=="border"?"Width":"",t=property+"Top"+borderSuffix,r=property+"Right"+borderSuffix,b=property+"Bottom"+borderSuffix,l=property+"Left"+borderSuffix;style[property]=(style[t]==style[r]&&style[t]==style[b]&&style[t]==style[l]?[style[t]]:style[t]==style[b]&&style[l]==style[r]?[style[t],style[r]]:style[l]==style[r]?[style[t],style[r],style[b]]:[style[t],style[r],style[b],style[l]]).join(" ")}function CSSStyleDeclaration(element){var style=this,currentStyle=element.currentStyle,fontSize=getComputedStylePixel(element,"fontSize");for(property in currentStyle){Push.call(style,property=="styleFloat"?"float":property.replace(/[A-Z]/,function(match){return"-"+match.toLowerCase()}));if(property=="width")style[property]=element.offsetWidth+"px";else if(property=="height")style[property]=element.offsetHeight+"px";else if(property=="styleFloat")style["float"]=currentStyle[property];else if(/margin.|padding.|border.+W/.test(property)&&style[property]!="auto")style[property]=Math.round(getComputedStylePixel(element,property,fontSize))+"px";else style[property]=currentStyle[property]}setShortStyleProperty(style,"margin");setShortStyleProperty(style,"padding");setShortStyleProperty(style,"border");style.fontSize=Math.round(fontSize)+"px"}CSSStyleDeclaration.prototype={constructor:CSSStyleDeclaration,getPropertyPriority:function(){throw Error("NotSupportedError: DOM Exception 9")},getPropertyValue:function(property){if(property===undefined){throw Error("TypeError: Not enough arguments to CSSStyleDeclaration.getPropertyValue")}property=property.replace(/-\w/g,function(match){return match[1].toUpperCase()});return typeof this[property]==="function"||property.match(/^(?:cssText|length|\d+)$/)?"":this[property]},item:function(index){if(property===undefined){throw Error("TypeError: Not enough arguments to CSSStyleDeclaration.item")}return this[parseInt(index,10)]},removeProperty:function(){throw Error("NoModificationAllowedError: DOM Exception 7")},setProperty:function(){throw Error("NoModificationAllowedError: DOM Exception 7")},getPropertyCSSValue:function(){throw Error("NotSupportedError: DOM Exception 9")}};return function(element){return new CSSStyleDeclaration(element)}}());if(!CSSStyleDeclaration.prototype.getPropertyValue){CSSStyleDeclaration.prototype.getPropertyValue=function(a){return this.getAttribute(a)};CSSStyleDeclaration.prototype.setProperty=function(a,b){return this.setAttribute(String(a),b)};CSSStyleDeclaration.prototype.removeProperty=function(a){return this.removeAttribute(a)}}if(!document.createElementNS){document.createElementNS=function(ns,name){if(ns)throw"sorry, this browser does not support namespaces";return document.createElement(name)}}!window.addEventListener&&function(WindowPrototype,DocumentPrototype,ElementPrototype,addEventListener,removeEventListener,dispatchEvent,registry){WindowPrototype[addEventListener]=DocumentPrototype[addEventListener]=ElementPrototype[addEventListener]=function(type,listener){var target=this;registry.unshift([target,type,listener,function(event){event.currentTarget=target;event.preventDefault=function(){event.returnValue=false};event.stopPropagation=function(){event.cancelBubble=true};event.target=event.srcElement||target;listener.call(target,event)}]);this.attachEvent("on"+type,registry[0][3])};WindowPrototype[removeEventListener]=DocumentPrototype[removeEventListener]=ElementPrototype[removeEventListener]=function(type,listener){for(var index=0,register;register=registry[index];++index){if(register[0]==this&&register[1]==type&&register[2]==listener){return this.detachEvent("on"+type,registry.splice(index,1)[0][3])}}};WindowPrototype[dispatchEvent]=DocumentPrototype[dispatchEvent]=ElementPrototype[dispatchEvent]=function(eventObject){return this.fireEvent("on"+eventObject.type,eventObject)}}(Window.prototype,HTMLDocument.prototype,Element.prototype,"addEventListener","removeEventListener","dispatchEvent",[]);!function(){try{if(Object.defineProperty&&Object.getOwnPropertyDescriptor&&Object.getOwnPropertyDescriptor(Element.prototype,"textContent")&&!Object.getOwnPropertyDescriptor(Element.prototype,"textContent").get){var innerText=Object.getOwnPropertyDescriptor(Element.prototype,"innerText");Object.defineProperty(Element.prototype,"textContent",{get:function(){return innerText.get.call(this)},set:function(x){return innerText.set.call(this,x)}})}}catch(e){}}();
+!function(exports){var aight=exports.aight=function(){var nav=navigator.appName,version=navigator.appVersion,ie=nav=="Microsoft Internet Explorer";if(ie){var match=navigator.userAgent.match(/MSIE ([0-9]{1,}[\.0-9]{0,})/);version=match?parseFloat(match[1]):0}return{browser:{name:nav,version:version,ie:ie,ie10:ie&&version>=10,ie9:ie&&version>=9&&version<10,ie8:ie&&version>=8&&version<9,ie7:ie&&version>=7&&version<8,ie6:ie&&version>=6&&version<7}}}()}(this);if(typeof document!=="undefined"&&!("classList"in document.createElement("a"))){!function(view){"use strict";if(!("HTMLElement"in view)&&!("Element"in view))return;var classListProp="classList",protoProp="prototype",elemCtrProto=(view.HTMLElement||view.Element)[protoProp],objCtr=Object,strTrim=String[protoProp].trim||function(){return this.replace(/^\s+|\s+$/g,"")},arrIndexOf=Array[protoProp].indexOf||function(item){var i=0,len=this.length;for(;i<len;i++){if(i in this&&this[i]===item){return i}}return-1},DOMEx=function(type,message){this.name=type;this.code=DOMException[type];this.message=message},checkTokenAndGetIndex=function(classList,token){if(token===""){throw new DOMEx("SYNTAX_ERR","An invalid or illegal string was specified")}if(/\s/.test(token)){throw new DOMEx("INVALID_CHARACTER_ERR","String contains an invalid character")}return arrIndexOf.call(classList,token)},ClassList=function(elem){var trimmedClasses=strTrim.call(elem.className),classes=trimmedClasses?trimmedClasses.split(/\s+/):[],i=0,len=classes.length;for(;i<len;i++){this.push(classes[i])}this._updateClassName=function(){elem.className=this.toString()}},classListProto=ClassList[protoProp]=[],classListGetter=function(){return new ClassList(this)};DOMEx[protoProp]=Error[protoProp];classListProto.item=function(i){return this[i]||null};classListProto.contains=function(token){token+="";return checkTokenAndGetIndex(this,token)!==-1};classListProto.add=function(){var tokens=arguments,i=0,l=tokens.length,token,updated=false;do{token=tokens[i]+"";if(checkTokenAndGetIndex(this,token)===-1){this.push(token);updated=true}}while(++i<l);if(updated){this._updateClassName()}};classListProto.remove=function(){var tokens=arguments,i=0,l=tokens.length,token,updated=false;do{token=tokens[i]+"";var index=checkTokenAndGetIndex(this,token);if(index!==-1){this.splice(index,1);updated=true}}while(++i<l);if(updated){this._updateClassName()}};classListProto.toggle=function(token,forse){token+="";var result=this.contains(token),method=result?forse!==true&&"remove":forse!==false&&"add";if(method){this[method](token)}return!result};classListProto.toString=function(){return this.join(" ")};if(objCtr.defineProperty){var classListPropDesc={get:classListGetter,enumerable:true,configurable:true};try{objCtr.defineProperty(elemCtrProto,classListProp,classListPropDesc)}catch(ex){if(ex.number===-2146823252){classListPropDesc.enumerable=false;objCtr.defineProperty(elemCtrProto,classListProp,classListPropDesc)}}}else if(objCtr[protoProp].__defineGetter__){elemCtrProto.__defineGetter__(classListProp,classListGetter)}}(self)}!function(definition){if(typeof define=="function"){define(definition)}else if(typeof YUI=="function"){YUI.add("es5",definition)}else{definition()}}(function(){function Empty(){}if(!Function.prototype.bind){Function.prototype.bind=function bind(that){var target=this;if(typeof target!="function"){throw new TypeError("Function.prototype.bind called on incompatible "+target)}var args=_Array_slice_.call(arguments,1);var bound=function(){if(this instanceof bound){var result=target.apply(this,args.concat(_Array_slice_.call(arguments)));if(Object(result)===result){return result}return this}else{return target.apply(that,args.concat(_Array_slice_.call(arguments)))}};if(target.prototype){Empty.prototype=target.prototype;bound.prototype=new Empty;Empty.prototype=null}return bound}}var call=Function.prototype.call;var prototypeOfArray=Array.prototype;var prototypeOfObject=Object.prototype;var _Array_slice_=prototypeOfArray.slice;var _toString=call.bind(prototypeOfObject.toString);var owns=call.bind(prototypeOfObject.hasOwnProperty);var defineGetter;var defineSetter;var lookupGetter;var lookupSetter;var supportsAccessors;if(supportsAccessors=owns(prototypeOfObject,"__defineGetter__")){defineGetter=call.bind(prototypeOfObject.__defineGetter__);defineSetter=call.bind(prototypeOfObject.__defineSetter__);lookupGetter=call.bind(prototypeOfObject.__lookupGetter__);lookupSetter=call.bind(prototypeOfObject.__lookupSetter__)}if([1,2].splice(0).length!=2){var array_splice=Array.prototype.splice;if(function(){function makeArray(l){var a=[];while(l--){a.unshift(l)}return a}var array=[],lengthBefore;array.splice.bind(array,0,0).apply(null,makeArray(20));array.splice.bind(array,0,0).apply(null,makeArray(26));lengthBefore=array.length;array.splice(5,0,"XXX");if(lengthBefore+1==array.length){return true}}()){Array.prototype.splice=function(start,deleteCount){if(!arguments.length){return[]}else{return array_splice.apply(this,[start===void 0?0:start,deleteCount===void 0?this.length-start:deleteCount].concat(_Array_slice_.call(arguments,2)))}}}else{Array.prototype.splice=function(start,deleteCount){var result,args=_Array_slice_.call(arguments,2),addElementsCount=args.length;if(!arguments.length){return[]}if(start===void 0){start=0}if(deleteCount===void 0){deleteCount=this.length-start}if(addElementsCount>0){if(deleteCount<=0){if(start==this.length){this.push.apply(this,args);return[]}if(start==0){this.unshift.apply(this,args);return[]}}result=_Array_slice_.call(this,start,start+deleteCount);args.push.apply(args,_Array_slice_.call(this,start+deleteCount,this.length));args.unshift.apply(args,_Array_slice_.call(this,0,start));args.unshift(0,this.length);array_splice.apply(this,args);return result}return array_splice.call(this,start,deleteCount)}}}if([].unshift(0)!=1){var array_unshift=Array.prototype.unshift;Array.prototype.unshift=function(){array_unshift.apply(this,arguments);return this.length}}if(!Array.isArray){Array.isArray=function isArray(obj){return _toString(obj)=="[object Array]"}}var boxedString=Object("a"),splitString=boxedString[0]!="a"||!(0 in boxedString);if(!Array.prototype.forEach){Array.prototype.forEach=function forEach(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,thisp=arguments[1],i=-1,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError}while(++i<length){if(i in self){fun.call(thisp,self[i],i,object)}}}}if(!Array.prototype.map){Array.prototype.map=function map(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,result=Array(length),thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self)result[i]=fun.call(thisp,self[i],i,object)}return result}}if(!Array.prototype.filter){Array.prototype.filter=function filter(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,result=[],value,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self){value=self[i];if(fun.call(thisp,value,i,object)){result.push(value)}}}return result}}if(!Array.prototype.every){Array.prototype.every=function every(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self&&!fun.call(thisp,self[i],i,object)){return false}}return true}}if(!Array.prototype.some){Array.prototype.some=function some(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0,thisp=arguments[1];if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}for(var i=0;i<length;i++){if(i in self&&fun.call(thisp,self[i],i,object)){return true}}return false}}if(!Array.prototype.reduce){Array.prototype.reduce=function reduce(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}if(!length&&arguments.length==1){throw new TypeError("reduce of empty array with no initial value")}var i=0;var result;if(arguments.length>=2){result=arguments[1]}else{do{if(i in self){result=self[i++];break}if(++i>=length){throw new TypeError("reduce of empty array with no initial value")}}while(true)}for(;i<length;i++){if(i in self){result=fun.call(void 0,result,self[i],i,object)}}return result}}if(!Array.prototype.reduceRight){Array.prototype.reduceRight=function reduceRight(fun){var object=toObject(this),self=splitString&&_toString(this)=="[object String]"?this.split(""):object,length=self.length>>>0;if(_toString(fun)!="[object Function]"){throw new TypeError(fun+" is not a function")}if(!length&&arguments.length==1){throw new TypeError("reduceRight of empty array with no initial value")}var result,i=length-1;if(arguments.length>=2){result=arguments[1]}else{do{if(i in self){result=self[i--];break}if(--i<0){throw new TypeError("reduceRight of empty array with no initial value")}}while(true)}if(i<0){return result}do{if(i in this){result=fun.call(void 0,result,self[i],i,object)}}while(i--);return result}}if(!Array.prototype.indexOf||[0,1].indexOf(1,2)!=-1){Array.prototype.indexOf=function indexOf(sought){var self=splitString&&_toString(this)=="[object String]"?this.split(""):toObject(this),length=self.length>>>0;if(!length){return-1}var i=0;if(arguments.length>1){i=toInteger(arguments[1])}i=i>=0?i:Math.max(0,length+i);for(;i<length;i++){if(i in self&&self[i]===sought){return i}}return-1}}if(!Array.prototype.lastIndexOf||[0,1].lastIndexOf(0,-3)!=-1){Array.prototype.lastIndexOf=function lastIndexOf(sought){var self=splitString&&_toString(this)=="[object String]"?this.split(""):toObject(this),length=self.length>>>0;if(!length){return-1}var i=length-1;if(arguments.length>1){i=Math.min(i,toInteger(arguments[1]))}i=i>=0?i:length-Math.abs(i);for(;i>=0;i--){if(i in self&&sought===self[i]){return i}}return-1}}if(!Object.keys){var hasDontEnumBug=true,dontEnums=["toString","toLocaleString","valueOf","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","constructor"],dontEnumsLength=dontEnums.length;for(var key in{toString:null}){hasDontEnumBug=false}Object.keys=function keys(object){if(typeof object!="object"&&typeof object!="function"||object===null){throw new TypeError("Object.keys called on a non-object")}var keys=[];for(var name in object){if(owns(object,name)){keys.push(name)}}if(hasDontEnumBug){for(var i=0,ii=dontEnumsLength;i<ii;i++){var dontEnum=dontEnums[i];if(owns(object,dontEnum)){keys.push(dontEnum)}}}return keys}}var negativeDate=-621987552e5,negativeYearString="-000001";if(!Date.prototype.toISOString||new Date(negativeDate).toISOString().indexOf(negativeYearString)===-1){Date.prototype.toISOString=function toISOString(){var result,length,value,year,month;if(!isFinite(this)){throw new RangeError("Date.prototype.toISOString called on non-finite value.")}year=this.getUTCFullYear();month=this.getUTCMonth();year+=Math.floor(month/12);month=(month%12+12)%12;result=[month+1,this.getUTCDate(),this.getUTCHours(),this.getUTCMinutes(),this.getUTCSeconds()];year=(year<0?"-":year>9999?"+":"")+("00000"+Math.abs(year)).slice(0<=year&&year<=9999?-4:-6);length=result.length;while(length--){value=result[length];if(value<10){result[length]="0"+value}}return year+"-"+result.slice(0,2).join("-")+"T"+result.slice(2).join(":")+"."+("000"+this.getUTCMilliseconds()).slice(-3)+"Z"}}var dateToJSONIsSupported=false;try{dateToJSONIsSupported=Date.prototype.toJSON&&new Date(NaN).toJSON()===null&&new Date(negativeDate).toJSON().indexOf(negativeYearString)!==-1&&Date.prototype.toJSON.call({toISOString:function(){return true}})}catch(e){}if(!dateToJSONIsSupported){Date.prototype.toJSON=function toJSON(key){var o=Object(this),tv=toPrimitive(o),toISO;if(typeof tv==="number"&&!isFinite(tv)){return null}toISO=o.toISOString;if(typeof toISO!="function"){throw new TypeError("toISOString property is not callable")}return toISO.call(o)}}if(!Date.parse||"Date.parse is buggy"){Date=function(NativeDate){function Date(Y,M,D,h,m,s,ms){var length=arguments.length;if(this instanceof NativeDate){var date=length==1&&String(Y)===Y?new NativeDate(Date.parse(Y)):length>=7?new NativeDate(Y,M,D,h,m,s,ms):length>=6?new NativeDate(Y,M,D,h,m,s):length>=5?new NativeDate(Y,M,D,h,m):length>=4?new NativeDate(Y,M,D,h):length>=3?new NativeDate(Y,M,D):length>=2?new NativeDate(Y,M):length>=1?new NativeDate(Y):new NativeDate;date.constructor=Date;return date}return NativeDate.apply(this,arguments)}var isoDateExpression=new RegExp("^"+"(\\d{4}|[+-]\\d{6})"+"(?:-(\\d{2})"+"(?:-(\\d{2})"+"(?:"+"T(\\d{2})"+":(\\d{2})"+"(?:"+":(\\d{2})"+"(?:(\\.\\d{1,}))?"+")?"+"("+"Z|"+"(?:"+"([-+])"+"(\\d{2})"+":(\\d{2})"+")"+")?)?)?)?"+"$");var months=[0,31,59,90,120,151,181,212,243,273,304,334,365];function dayFromMonth(year,month){var t=month>1?1:0;return months[month]+Math.floor((year-1969+t)/4)-Math.floor((year-1901+t)/100)+Math.floor((year-1601+t)/400)+365*(year-1970)}function toUTC(t){return Number(new NativeDate(1970,0,1,0,0,0,t))}for(var key in NativeDate){Date[key]=NativeDate[key]}Date.now=NativeDate.now;Date.UTC=NativeDate.UTC;Date.prototype=NativeDate.prototype;Date.prototype.constructor=Date;Date.parse=function parse(string){var match=isoDateExpression.exec(string);if(match){var year=Number(match[1]),month=Number(match[2]||1)-1,day=Number(match[3]||1)-1,hour=Number(match[4]||0),minute=Number(match[5]||0),second=Number(match[6]||0),millisecond=Math.floor(Number(match[7]||0)*1e3),isLocalTime=Boolean(match[4]&&!match[8]),signOffset=match[9]==="-"?1:-1,hourOffset=Number(match[10]||0),minuteOffset=Number(match[11]||0),result;if(hour<(minute>0||second>0||millisecond>0?24:25)&&minute<60&&second<60&&millisecond<1e3&&month>-1&&month<12&&hourOffset<24&&minuteOffset<60&&day>-1&&day<dayFromMonth(year,month+1)-dayFromMonth(year,month)){result=((dayFromMonth(year,month)+day)*24+hour+hourOffset*signOffset)*60;result=((result+minute+minuteOffset*signOffset)*60+second)*1e3+millisecond;if(isLocalTime){result=toUTC(result)}if(-864e13<=result&&result<=864e13){return result}}return NaN}return NativeDate.parse.apply(this,arguments)};return Date}(Date)}if(!Date.now){Date.now=function now(){return(new Date).getTime()}}if(!Number.prototype.toFixed||8e-5.toFixed(3)!=="0.000"||.9.toFixed(0)==="0"||1.255.toFixed(2)!=="1.25"||0xde0b6b3a7640080.toFixed(0)!=="1000000000000000128"){!function(){var base,size,data,i;base=1e7;size=6;data=[0,0,0,0,0,0];function multiply(n,c){var i=-1;while(++i<size){c+=n*data[i];data[i]=c%base;c=Math.floor(c/base)}}function divide(n){var i=size,c=0;while(--i>=0){c+=data[i];data[i]=Math.floor(c/n);c=c%n*base}}function toString(){var i=size;var s="";while(--i>=0){if(s!==""||i===0||data[i]!==0){var t=String(data[i]);if(s===""){s=t}else{s+="0000000".slice(0,7-t.length)+t}}}return s}function pow(x,n,acc){return n===0?acc:n%2===1?pow(x,n-1,acc*x):pow(x*x,n/2,acc)}function log(x){var n=0;while(x>=4096){n+=12;x/=4096}while(x>=2){n+=1;x/=2}return n}Number.prototype.toFixed=function(fractionDigits){var f,x,s,m,e,z,j,k;f=Number(fractionDigits);f=f!==f?0:Math.floor(f);if(f<0||f>20){throw new RangeError("Number.toFixed called with invalid number of decimals")}x=Number(this);if(x!==x){return"NaN"}if(x<=-1e21||x>=1e21){return String(x)}s="";if(x<0){s="-";x=-x}m="0";if(x>1e-21){e=log(x*pow(2,69,1))-69;z=e<0?x*pow(2,-e,1):x/pow(2,e,1);z*=4503599627370496;e=52-e;if(e>0){multiply(0,z);j=f;while(j>=7){multiply(1e7,0);j-=7}multiply(pow(10,j,1),0);j=e-1;while(j>=23){divide(1<<23);j-=23}divide(1<<j);multiply(1,1);divide(2);m=toString()}else{multiply(0,z);multiply(1<<-e,0);m=toString()+"0.00000000000000000000".slice(2,2+f)}}if(f>0){k=m.length;if(k<=f){m=s+"0.0000000000000000000".slice(0,f-k+2)+m}else{m=s+m.slice(0,k-f)+"."+m.slice(k-f)}}else{m=s+m}return m}}()}var string_split=String.prototype.split;if("ab".split(/(?:ab)*/).length!==2||".".split(/(.?)(.?)/).length!==4||"tesst".split(/(s)*/)[1]==="t"||"".split(/.?/).length===0||".".split(/()()/).length>1){!function(){var compliantExecNpcg=/()??/.exec("")[1]===void 0;String.prototype.split=function(separator,limit){var string=this;if(separator===void 0&&limit===0)return[];if(Object.prototype.toString.call(separator)!=="[object RegExp]"){return string_split.apply(this,arguments)}var output=[],flags=(separator.ignoreCase?"i":"")+(separator.multiline?"m":"")+(separator.extended?"x":"")+(separator.sticky?"y":""),lastLastIndex=0,separator=new RegExp(separator.source,flags+"g"),separator2,match,lastIndex,lastLength;string+="";if(!compliantExecNpcg){separator2=new RegExp("^"+separator.source+"$(?!\\s)",flags)}limit=limit===void 0?-1>>>0:limit>>>0;while(match=separator.exec(string)){lastIndex=match.index+match[0].length;if(lastIndex>lastLastIndex){output.push(string.slice(lastLastIndex,match.index));if(!compliantExecNpcg&&match.length>1){match[0].replace(separator2,function(){for(var i=1;i<arguments.length-2;i++){if(arguments[i]===void 0){match[i]=void 0}}})}if(match.length>1&&match.index<string.length){Array.prototype.push.apply(output,match.slice(1))}lastLength=match[0].length;lastLastIndex=lastIndex;if(output.length>=limit){break}}if(separator.lastIndex===match.index){separator.lastIndex++}}if(lastLastIndex===string.length){if(lastLength||!separator.test("")){output.push("")}}else{output.push(string.slice(lastLastIndex))}return output.length>limit?output.slice(0,limit):output}}()}else if("0".split(void 0,0).length){String.prototype.split=function(separator,limit){if(separator===void 0&&limit===0)return[];return string_split.apply(this,arguments)}}if("".substr&&"0b".substr(-1)!=="b"){var string_substr=String.prototype.substr;String.prototype.substr=function(start,length){return string_substr.call(this,start<0?(start=this.length+start)<0?0:start:start,length)}}var ws="	\n\f\r   ᠎    "+"         　\u2028"+"\u2029﻿";if(!String.prototype.trim||ws.trim()){ws="["+ws+"]";var trimBeginRegexp=new RegExp("^"+ws+ws+"*"),trimEndRegexp=new RegExp(ws+ws+"*$");String.prototype.trim=function trim(){if(this===void 0||this===null){throw new TypeError("can't convert "+this+" to object")}return String(this).replace(trimBeginRegexp,"").replace(trimEndRegexp,"")}}function toInteger(n){n=+n;if(n!==n){n=0}else if(n!==0&&n!==1/0&&n!==-(1/0)){n=(n>0||-1)*Math.floor(Math.abs(n))}return n}function isPrimitive(input){var type=typeof input;return input===null||type==="undefined"||type==="boolean"||type==="number"||type==="string"}function toPrimitive(input){var val,valueOf,toString;if(isPrimitive(input)){return input}valueOf=input.valueOf;if(typeof valueOf==="function"){val=valueOf.call(input);if(isPrimitive(val)){return val}}toString=input.toString;if(typeof toString==="function"){val=toString.call(input);if(isPrimitive(val)){return val}}throw new TypeError}var toObject=function(o){if(o==null){throw new TypeError("can't convert "+o+" to object")}return Object(o)}});!("getComputedStyle"in Window.prototype)&&(Window.prototype.getComputedStyle=function(){var Push=Array.prototype.push;function getComputedStylePixel(element,property,fontSize){var value=element.currentStyle[property].match(/([\d\.]+)(%|cm|em|in|mm|pc|pt|)/)||[0,0,""],size=value[1],suffix=value[2],rootSize;fontSize=fontSize!=null?fontSize:/%|em/.test(suffix)&&element.parentElement?getComputedStylePixel(element.parentElement,"fontSize",null):16;rootSize=property=="fontSize"?fontSize:/width/i.test(property)?element.clientWidth:element.clientHeight;return suffix=="%"?size/100*rootSize:suffix=="cm"?size*.3937*96:suffix=="em"?size*fontSize:suffix=="in"?size*96:suffix=="mm"?size*.3937*96/10:suffix=="pc"?size*12*96/72:suffix=="pt"?size*96/72:size}function setShortStyleProperty(style,property){var borderSuffix=property=="border"?"Width":"",t=property+"Top"+borderSuffix,r=property+"Right"+borderSuffix,b=property+"Bottom"+borderSuffix,l=property+"Left"+borderSuffix;style[property]=(style[t]==style[r]&&style[t]==style[b]&&style[t]==style[l]?[style[t]]:style[t]==style[b]&&style[l]==style[r]?[style[t],style[r]]:style[l]==style[r]?[style[t],style[r],style[b]]:[style[t],style[r],style[b],style[l]]).join(" ")}function CSSStyleDeclaration(element){var style=this,currentStyle=element.currentStyle,fontSize=getComputedStylePixel(element,"fontSize");for(property in currentStyle){Push.call(style,property=="styleFloat"?"float":property.replace(/[A-Z]/,function(match){return"-"+match.toLowerCase()}));if(property=="width")style[property]=element.offsetWidth+"px";else if(property=="height")style[property]=element.offsetHeight+"px";else if(property=="styleFloat")style["float"]=currentStyle[property];else if(/margin.|padding.|border.+W/.test(property)&&style[property]!="auto")style[property]=Math.round(getComputedStylePixel(element,property,fontSize))+"px";else style[property]=currentStyle[property]}setShortStyleProperty(style,"margin");setShortStyleProperty(style,"padding");setShortStyleProperty(style,"border");style.fontSize=Math.round(fontSize)+"px"}CSSStyleDeclaration.prototype={constructor:CSSStyleDeclaration,getPropertyPriority:function(){throw Error("NotSupportedError: DOM Exception 9")},getPropertyValue:function(property){if(property===undefined){throw Error("TypeError: Not enough arguments to CSSStyleDeclaration.getPropertyValue")}property=property.replace(/-\w/g,function(match){return match[1].toUpperCase()});return typeof this[property]==="function"||property.match(/^(?:cssText|length|\d+)$/)?"":this[property]},item:function(index){if(property===undefined){throw Error("TypeError: Not enough arguments to CSSStyleDeclaration.item")}return this[parseInt(index,10)]},removeProperty:function(){throw Error("NoModificationAllowedError: DOM Exception 7")},setProperty:function(){throw Error("NoModificationAllowedError: DOM Exception 7")},getPropertyCSSValue:function(){throw Error("NotSupportedError: DOM Exception 9")}};return function(element){return new CSSStyleDeclaration(element)}}());if(!CSSStyleDeclaration.prototype.getPropertyValue){CSSStyleDeclaration.prototype.getPropertyValue=function(a){return this.getAttribute(a)};CSSStyleDeclaration.prototype.setProperty=function(a,b){return this.setAttribute(String(a),b)};CSSStyleDeclaration.prototype.removeProperty=function(a){return this.removeAttribute(a)}}if(!document.createElementNS){document.createElementNS=function(ns,name){if(ns)return document.createElement(name)}}!window.addEventListener&&function(WindowPrototype,DocumentPrototype,ElementPrototype,addEventListener,removeEventListener,dispatchEvent,registry){WindowPrototype[addEventListener]=DocumentPrototype[addEventListener]=ElementPrototype[addEventListener]=function(type,listener){var target=this;registry.unshift([target,type,listener,function(event){event.currentTarget=target;event.preventDefault=function(){event.returnValue=false};event.stopPropagation=function(){event.cancelBubble=true};event.target=event.srcElement||target;listener.call(target,event)}]);this.attachEvent("on"+type,registry[0][3])};WindowPrototype[removeEventListener]=DocumentPrototype[removeEventListener]=ElementPrototype[removeEventListener]=function(type,listener){for(var index=0,register;register=registry[index];++index){if(register[0]==this&&register[1]==type&&register[2]==listener){return this.detachEvent("on"+type,registry.splice(index,1)[0][3])}}};WindowPrototype[dispatchEvent]=DocumentPrototype[dispatchEvent]=ElementPrototype[dispatchEvent]=function(eventObject){return this.fireEvent("on"+eventObject.type,eventObject)}}(Window.prototype,HTMLDocument.prototype,Element.prototype,"addEventListener","removeEventListener","dispatchEvent",[]);!function(){try{if(Object.defineProperty&&Object.getOwnPropertyDescriptor&&Object.getOwnPropertyDescriptor(Element.prototype,"textContent")&&!Object.getOwnPropertyDescriptor(Element.prototype,"textContent").get){var innerText=Object.getOwnPropertyDescriptor(Element.prototype,"innerText");Object.defineProperty(Element.prototype,"textContent",{get:function(){return innerText.get.call(this)},set:function(x){return innerText.set.call(this,x)}})}}catch(e){}}();
 (function(glob) {
   var version = "0.3.4", has = "hasOwnProperty", separator = /[\.\/]/, wildcard = "*", fun = function() {}, numsort = function(a, b) {
     return a - b;
@@ -15738,8 +15738,7 @@ GeoDash.Chart = ezoop.BaseClass({
     this.options = {}
     this.activeBar = -1
     this.setOptions(options)
-    this.makeTitle()
-    this.setUpChart()
+    //this.makeTitle()
     this.drawChart()
   }
   , setOptions: function (options) {
@@ -15751,9 +15750,6 @@ GeoDash.Chart = ezoop.BaseClass({
       }
     }
     this.options = options
-  }
-  , setUpChart: function(){
-    d3.select(this.el).style('position', 'relative')
   }
   , drawChart: function () {
     var self = this
@@ -15769,6 +15765,8 @@ GeoDash.Chart = ezoop.BaseClass({
     this.formatComma = d3.format(",")
     this.formatPercentAxisLabel = d3.format("p")
     this.formatMoney = d3.format("$")
+
+    d3.select(this.el).html(null)
 
     this.container = d3.select(this.el).append("div")
       .attr("class", function() {
@@ -15787,6 +15785,12 @@ GeoDash.Chart = ezoop.BaseClass({
           self.options.margin.left + "px"
         return m
       })
+
+    if (this.options.title) {
+      this.container.append('div')
+        .attr('class', 'geodash-title')
+        .html(this.options.title)
+    }
 
     this.xAxisElement = this.container.append("div")
       .attr("class", "x axis")
@@ -15881,8 +15885,8 @@ GeoDash.Chart = ezoop.BaseClass({
       xrange -= this.options.legendWidth
     }
     if(this.options.drawY) {
-      xrange -= this.options.yaxisLabelPadding
-      marginleft += this.options.yaxisLabelPadding
+      xrange -= this.options.yAxisWidth
+      marginleft += this.options.yAxisWidth
     }
     if(this.options.yLabel) {
       xrange -= this.options.axisLabelPadding
@@ -15895,20 +15899,25 @@ GeoDash.Chart = ezoop.BaseClass({
   }
   , setYAxis: function() {
     var yrange = this.height
+    var topPadding = 0
     if(this.options.xLabel) {
       yrange -= this.options.axisLabelPadding
     }
     if(this.options.drawX){
       yrange -= this.options.axisLabelPadding
     }
+    if(this.options.barLabels){
+      topPadding = 15
+    }
     this.yrange = yrange
     this.y = d3.scale.linear()
-      .range([yrange, 0])
+      .range([yrange, topPadding])
   }
   , updateYAxis: function() {
     var self = this
     if (this.options.drawY) {
       var ticks = this.y.ticks(self.options.yTicksCount)
+
       var tickElements = this.yAxisElement
         .selectAll(".tick")
         .data(ticks)
@@ -15918,16 +15927,25 @@ GeoDash.Chart = ezoop.BaseClass({
           return self.y(d)  + 'px'
         })
 
+      var used = []
       ticks.select('.gd-label')
         .text(function(d){
-          var label = self.formatLarge(d)
+          var label
+          if(self.options.yTickFormat) {
+            label = self.options.yTickFormat(d)
+          } else {
+            label = d
+          }
           if (self.options.money) {
             label = '$' + label
           }
           if (self.options.percent) {
             label = label + '%'
           }
-          return label
+          if(used[used.length-1] !== label || used.length == 0){
+            used.push(label)
+            return label
+          } else return ''
         })
 
       var newTicks = tickElements.enter().append('div')
@@ -15941,8 +15959,6 @@ GeoDash.Chart = ezoop.BaseClass({
           }
         })
         .style("width", function(){
-          
-          // return self.xrange + self.marginleft + 'px'
           if(self.options.yLabel) {
             return self.width - self.options.axisLabelPadding + "px"
           } else {
@@ -15961,21 +15977,29 @@ GeoDash.Chart = ezoop.BaseClass({
         .append('div')
         .attr("class", "gd-label")
         .text(function(d){
-          var label = self.formatLarge(d)
+          var label
+          if(self.options.yTickFormat) {
+            label = self.options.yTickFormat(d)
+          } else {
+            label = d
+          }
           if (self.options.money) {
             label = '$' + label
           }
           if (self.options.percent) {
             label = label + '%'
           }
-          return label
+          if(used[used.length-1] !== label || used.length == 0){
+            used.push(label)
+            return label
+          } else return ''
         })
         .style("margin", function(d){
           var h = d3.select(this).style('height')
           var m = (parseInt(h)/2*-1)
           return m + 'px' + ' 0 0 0'
         })
-        .style("width", self.options.yaxisLabelPadding + 'px')
+        .style("width", self.options.yAxisWidth + 'px')
         .style("background-color", function(){
           var c = self.container.style("background-color")
           //IE8 can't get bg color?
@@ -16005,8 +16029,8 @@ GeoDash.Chart = ezoop.BaseClass({
         })
       ticks.select('.gd-label')
         .text(function(d){
-          if(self.options.xFormat) {
-            return self.options.xFormat(d)
+          if(self.options.xTickFormat) {
+            return self.options.xTickFormat(d)
           } else {
             return d
           }
@@ -16033,9 +16057,10 @@ GeoDash.Chart = ezoop.BaseClass({
 
       newTicks.append('div')
         .attr("class", "gd-label")
+        .style("line-height", self.options.axisLabelPadding + 'px')
         .text(function(d){
-          if(self.options.xFormat) {
-            return self.options.xFormat(d)
+          if(self.options.xTickFormat) {
+            return self.options.xTickFormat(d)
           } else {
             return d
           }
@@ -16118,7 +16143,7 @@ GeoDash.Chart = ezoop.BaseClass({
     this.height = parseInt(d3.select(this.el).style('height'))
     this.height = this.height - this.options.margin.top - this.options.margin.bottom
     if (this.options.title) {
-      this.height = this.height - 30
+      this.height = this.height - 20
     }
   }
   , setYAxisLabel: function(label) {
@@ -16162,8 +16187,9 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
     , outerPadding: 0.5
     , gdClass: 'chart-html horizontal'
     , hoverTemplate: "{{y}}: {{x}}"
-    , formatter: d3.format(",")
-    , xFormat: false
+    , xTickFormat: d3.format(".2s")
+    , yTickFormat: false
+    , valueFormat: d3.format(",")
     , margin: {
       top: 10
       , right: 10
@@ -16192,7 +16218,6 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
     this.marginleft = marginleft
     this.x = d3.scale.linear()
       .range([0, xrange- this.options.rightBarPadding]).nice()
-
   }
   , setYAxis: function() {
     var yrange = this.height
@@ -16544,18 +16569,19 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
 
       ticks.select('.gd-label')
         .text(function(d){
-          if(self.options.xFormat) {
-            return self.options.xFormat(d)
+          var label
+          if(self.options.xTickFormat) {
+            label = self.options.xTickFormat(d)
           } else {
-            var label = self.formatLarge(d)
-            if (self.options.money) {
-              label = '$' + label
-            }
-            if (self.options.percent) {
-              label = label + '%'
-            }
-            return label
+            label = d
           }
+          if (self.options.money) {
+            label = '$' + label
+          }
+          if (self.options.percent) {
+            label = label + '%'
+          }
+          return label
         })
 
       var newTicks = tickElements.enter().append('div')
@@ -16588,18 +16614,19 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
         .append('div')
         .attr("class", "gd-label")
         .text(function(d){
-          if(self.options.xFormat) {
-            return self.options.xFormat(d)
+          var label
+          if(self.options.xTickFormat) {
+            label = self.options.xTickFormat(d)
           } else {
-            var label = self.formatLarge(d)
-            if (self.options.money) {
-              label = '$' + label
-            }
-            if (self.options.percent) {
-              label = label + '%'
-            }
-            return label
+            label = d
           }
+          if (self.options.money) {
+            label = '$' + label
+          }
+          if (self.options.percent) {
+            label = label + '%'
+          }
+          return label
         })
         .style("bottom", "0px")
         .style("background", function(){
@@ -16746,7 +16773,7 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
       y += ' ' + self.options.x[i % self.stackNumber]
     }
     if(x !== null) {
-      x = self.options.formatter(x)
+      x = self.options.valueFormat(x)
       var view = {
         y: y
         , x: x
@@ -16797,27 +16824,44 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
     , y: 'y'
     , colors: ['#f00']
     , opacity: 0.7
+    // draw x axis
     , drawX: true
+    // draw y axis
     , drawY: true
     , xLabel: false
     , yLabel: false
     , percent: false
     , title: false
+    // border-radius value to round bars
     , roundRadius: 3
+    // highlight a certain bar by index
     , highlight: false
-    , verticalX: false
-    , invert: false
-    , roundRadius: 3
+    // width of legend container
     , legendWidth: 80
+    // position of legend. top, middle, bottom
     , legendPosition: 'middle'
+    // draw legend
     , legend: false
+    // add label to end of bar
+    , barLabels: false
+    // width of y axis label, height of x axis label
     , axisLabelPadding: 20
-    , yaxisLabelPadding: 25
+    // width of y axis scale
+    , yAxisWidth: 20
+    // approximate number of ticks on y axis
     , yTicksCount: 10
+    // class to assign chart container
     , gdClass: 'chart-html vertical'
+    // padding before and after bars. used in d3.scale.ticks
     , outerPadding: 0.5
+    // template that appears on mouse over
     , hoverTemplate: "{{x}}: {{y}}"
-    , formatter: d3.format(",")
+    //format x axis tick marks
+    , xTickFormat: false
+    //format y axis tick marks
+    , yTickFormat: d3.format(".2s")
+    // used to format y values in labels
+    , valueFormat: d3.format(",")
     , margin: {
       top: 10
       , right: 10
@@ -16989,6 +17033,14 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
       .style("background-color", function(d, i) {
         return self.options.colors[i%self.stackNumber]
       }, 'important')
+      .select('.bar-label')
+        .style("width", self.x.rangeBand() + 'px')
+        .style("top", "-12px")
+        .text(function(d){
+          if(self.options.barLabels) {
+            return self.options.valueFormat(d.y)
+          }
+        })
 
     bars.enter().append("div")
       .attr("class", "bar")
@@ -17021,8 +17073,8 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
         }
         return height + 'px'
       })
-      .style("opacity", function(d){
-        if(d[x] == self.options.highlight) return 1
+      .style("opacity", function(d, i){
+        if(d[x] === self.options.highlight ) return 1
         else return self.options.opacity
       })
       .style("background-color", function(d, i) {
@@ -17095,8 +17147,20 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
           self.mouseOver(d, i, this)
         }
       })
-
+      .append('div')
+        .attr('class', 'bar-label')
+        .style("width", self.x.rangeBand() + 'px')
+        .style("top", "-12px")
+        .text(function(d){
+          if(self.options.barLabels) {
+            return self.options.valueFormat(d.y)
+          }
+        })
     bars.exit().remove()
+  }
+  , setActiveBar: function(idx) {
+    this.activeBar = idx;
+
   }
   , mouseOver: function(d, i, el) {
     var self = this
@@ -17110,7 +17174,7 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
       x += ' ' + self.options.y[i % self.stackNumber]
     }
     if(y !== null) {
-      y = self.options.formatter(y)
+      y = self.options.valueFormat(y)
       var view = {
         y: y
         , x: x
@@ -17172,21 +17236,23 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
     , drawY: true
     , xLabel: false
     , yLabel: false
-    , xInterval: 'auto'
+    , xInterval: false
+    , xTimeInterval: false
     , dashed: false
     , time: true
     , legendWidth: 80
     , legendPosition: 'middle'
     , legend: false
     , axisLabelPadding: 20
-    , yaxisLabelPadding: 25
+    , yAxisWidth: 25
     , yTicksCount: 10
     , gdClass: 'chart-html linechart vertical'
-    , xFormat: d3.time.format("%Y-%m-%d")
     , hoverTemplate: "{{x}}: {{y}}"
-    , formatter: d3.format(",")
+    , xTickFormat: d3.time.format("%Y-%m-%d")
+    , yTickFormat: d3.format(".2s")
+    , valueFormat: d3.format(",")
     , outerPadding: 0
-    , linePadding: 10
+    , linePadding: 20
     , margin: {
       top: 10
       , right: 10
@@ -17304,13 +17370,25 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
     }
     this.xLine.domain(d3.extent(this.data, function(d) { return d[self.options.x] }))
     var xTicks = []
-    if(self.options.xInterval == 'auto') {
-      xTicks = this.xLine.ticks(data.length)
-    } else {
+    if(this.options.xInterval) {
       xTicks = this.xLine.ticks(self.options.xInterval)
+    } else {
+      xTicks = this.xLine.ticks(data.length)
     }
-    this.xLine.ticks(data.length)
+    if(self.options.xTimeInterval) {
+      xTicks = this.xLine.ticks(
+        self.options.xTimeInterval.timePeriod
+        , self.options.xTimeInterval.interval
+      )
+    }
     this.x.domain(xTicks)
+
+    if(!this.options.xInterval && !this.options.xTimeInterval) {
+      this.xLine.range([this.x.rangeBand()/2, this.xrange - this.x.rangeBand()/2])
+    } else {
+      this.xLine.range([this.options.linePadding, this.xrange - this.options.linePadding])
+    }
+
     this.y.domain([
       d3.min(this.linedata, function(c) { return d3.min(c.values, function(v) { return v.y; }) }),
       d3.max(this.linedata, function(c) { return d3.max(c.values, function(v) { return v.y; }) })
@@ -17323,9 +17401,7 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
     var max = ydomain[1] + ypadding
     this.y.domain([min, max])
 
-    
     this.updateXAxis()
-    this.xLine.range([this.x.rangeBand()/2, this.xrange - this.x.rangeBand()/2])
     this.updateYAxis()
     this.updateChart()
     this.updateLegend()
@@ -17406,18 +17482,82 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
       dots.exit().remove()
     }
   }
+  , updateXAxis: function() {
+    var self = this
+    if (this.options.drawX) {
+      if(this.options.xInterval || this.options.xTimeInterval) {
+        this.x.rangeRoundBands([this.options.linePadding, this.xrange - this.options.linePadding], 0.05, this.options.outerPadding)
+      }  else {
+        //this.x.rangeRoundBands([this.options.linePadding, this.xrange - this.options.linePadding], 0.05, this.options.outerPadding)
+      }
+      var labels = this.x.domain()
+      var tickElements = this.xAxisElement
+        .selectAll(".tick")
+        .data(labels)
+
+      var ticks = tickElements.transition()
+        .style("left", function (d) { return self.xLine(d) + 'px' })
+        .style("bottom", function (d) {
+          var b = self.height - self.yrange - self.options.axisLabelPadding
+          return b + 'px'
+        })
+
+      ticks.select('.gd-label')
+        .text(function(d){
+          if(self.options.xTickFormat) {
+            return self.options.xTickFormat(d)
+          } else {
+            return d
+          }
+        })
+        .style("margin", function(d, i){
+          var w = parseInt(d3.select(this).style('width'))
+          var m = (w / 2) * -1
+          return '0 0 0 ' + m + 'px'
+        })
+
+      var newTicks = tickElements.enter().append('div')
+        .attr("class", "tick")
+        .style("left", function (d) { return self.xLine(d) + 'px' })
+        .style("bottom", function (d) {
+          var b = self.height - self.yrange - self.options.axisLabelPadding
+          return b + 'px'
+        })
+        .style("height", self.options.axisLabelPadding + 'px')
+
+      tickElements.exit().remove()
+
+      newTicks.append('div')
+        .attr("class", "line")
+
+      newTicks.append('div')
+        .attr("class", "gd-label")
+        .text(function(d){
+          if(self.options.xTickFormat) {
+            return self.options.xTickFormat(d)
+          } else {
+            return d
+          }
+        })
+        .style("margin", function(d, i){
+          var w = parseInt(d3.select(this).style('width'))
+          var m = (w / 2) * -1
+          return '0 0 0 ' + m + 'px'
+        })
+    }
+  }
   , mouseOver: function(d, i, el){
     var self = this
       , y = d.y
       , x = d.x
       , output = ''
 
-    if(self.options.xFormat) {
-      x = self.options.xFormat(x)
+    if(self.options.xTickFormat) {
+      x = self.options.xTickFormat(x)
     }
 
     if(y !== null) {
-      y = self.options.formatter(y)
+      y = self.options.valueFormat(y)
       var view = {
         y: y
         , x: x
@@ -17467,7 +17607,7 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
     , hover: true
     , arclabels: false
     , gdClass: 'chart-html piechart-svg'
-    , formatter: d3.format(',.0f')
+    , valueFormat: d3.format(',.0f')
     , formatPercent: d3.format('.2f')
     , hoverTemplate: "{{label}}: {{value}} ({{percent}}%)"
     , labelColor: "#ccc"
@@ -17585,7 +17725,7 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
     d3.select(el).style('fill-opacity', 1)
     if(self.options.hover) {
       var label = d.data[self.options.label]
-      var value = self.options.formatter(d.value)
+      var value = self.options.valueFormat(d.value)
       var percent = self.options.formatPercent((d.value/self.total)*100)
       var view = {
         label: label
