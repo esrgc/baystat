@@ -846,9 +846,7 @@ var SolutionsView = Backbone.View.extend({
         } else if (max >= 9e3) {
             yaxisLabelPadding = 40;
         }
-        if (yaxisLabelPadding !== this.chart.options.yaxisLabelPadding) {
-            this.chart.drawChart();
-        }
+        if (yaxisLabelPadding !== this.chart.options.yaxisLabelPadding) {}
         if (max < 10 && max > 0) {
             this.chart.options.yTicksCount = max;
         } else if (max > 10) {
