@@ -19,3 +19,11 @@ Dashboards built to visualize causes of and solutions to pollution in Maryland's
 * Firefox
 * Safari
 * IE 9+
+
+##### Build
+
+To build:
+
+`npm install`
+`grunt dev` for developing
+`grunt deploy` for deployment
