@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.4 2014-01-31 
+baystat-dashboards v0.5.4 2014-02-10 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -673,6 +673,7 @@ var SolutionsModel = Backbone.Model.extend({
         if (this.get("request")) {
             this.get("request").abort();
         }
+        console.log(_stat);
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
         var url = this.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
         var request = $.ajax({
