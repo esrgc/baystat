@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.4 2014-02-10 
+baystat-dashboards v0.5.5 2014-02-10 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -664,7 +664,28 @@ var SolutionsModel = Backbone.Model.extend({
         lng: -77.4,
         data: {},
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
-        solutions_url: "https://data.maryland.gov/resource/8nvv-y5u6.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+        socrata_urls: {
+            mda: "https://data.maryland.gov/resource/tsya-25ee.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            mde: "https://data.maryland.gov/resource/ab68-n7ja.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            dnr: "https://data.maryland.gov/resource/4zqs-i2t2.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+        },
+        agency: {
+            "Cover Crops": "mda",
+            "Soil Conservation & Water Quality Plans": "mda",
+            "Stream Protection": "mda",
+            "Manure Management Structures": "mda",
+            "Natural Filters on Private Land": "mda",
+            "Wastewater Treatment Plants ENR": "mde",
+            "Stormwater Runoff Management Retrofits": "mde",
+            "Septic Retrofits": "mde",
+            "Air Pollution Reductions": "mde",
+            "Natural Filters on Public Land": "dnr",
+            "Program Open Space": "dnr",
+            "CREP Permanent Easements": "dnr",
+            "Rural Legacy": "dnr",
+            "Maryland Environmental Trust": "dnr",
+            "Maryland Agricultural Land Preservation": "dnr"
+        },
         request: null,
         start_year: 2e3,
         end_year: 2014
@@ -673,9 +694,9 @@ var SolutionsModel = Backbone.Model.extend({
         if (this.get("request")) {
             this.get("request").abort();
         }
-        console.log(_stat);
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
-        var url = this.get("solutions_url") + "&$where=basinname='" + geo + "'%20and%20bmpname='" + stat + "'";
+        var agency = this.get("agency")[_stat];
+        var url = this.get("socrata_urls")[agency] + "&$where=basin_name='" + geo + "'%20and%20best_management_practice='" + stat + "'";
         var request = $.ajax({
             dataType: "jsonp",
             jsonp: false,
@@ -821,8 +842,10 @@ var SolutionsView = Backbone.View.extend({
         var years = [ 2e3, 2013 ];
         if (_.has(data, "_2013_goal")) {
             goal = +data["_2013_goal"].replace(",", "").replace("*", "");
+            this.chart.options.y = [ "stat", "goal" ];
         } else {
             goal = 0;
+            this.chart.options.y = [ "stat" ];
         }
         var max = 0;
         for (var i = this.model.get("start_year"); i <= this.model.get("end_year"); i++) {
@@ -847,7 +870,6 @@ var SolutionsView = Backbone.View.extend({
         } else if (max >= 9e3) {
             yaxisLabelPadding = 40;
         }
-        if (yaxisLabelPadding !== this.chart.options.yaxisLabelPadding) {}
         if (max < 10 && max > 0) {
             this.chart.options.yTicksCount = max;
         } else if (max > 10) {
