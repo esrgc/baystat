@@ -31,7 +31,7 @@
     "source": "MDA"
   },{
     "stat": "Wastewater Treatment Plants ENR",
-    "definition": "At the current rate of implementation, 15 plants will be operational by June 30, 2013, accounting for an estimated 395,000 lbs/year reduction in nitrogen. <a href=\"http://www.mde.maryland.gov/programs/water/wwp/pages/index.aspx\" target=\"_blank\">More Information</a>",
+    "definition": "At the current rate of implementation, 15 plants will be operational by June 30, 2013, accounting for an estimated 395,000 lbs/year reduction in nitrogen. <a href=\"http://mde.maryland.gov/programs/Water/BayRestorationFund/Pages/water/cbwrf/evolution_enr.aspx\" target=\"_blank\">More Information</a>",
     "units": "Number of WWTPs upgraded.",
     "units_abbr": "Plants",
     "source": "MDE"
