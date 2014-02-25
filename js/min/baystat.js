@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.6 2014-02-25 
+baystat-dashboards v0.5.7 2014-02-25 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -839,9 +839,8 @@ var SolutionsView = Backbone.View.extend({
     prepareData: function(data) {
         var chartData = [];
         var parseDate = d3.time.format("%Y").parse;
-        var years = [ 2e3, 2013 ];
-        if (_.has(data, "_2013_goal")) {
-            goal = +data["_2013_goal"].replace(",", "").replace("*", "");
+        if (_.has(data, "_2015_goal")) {
+            goal = +data["_2015_goal"].replace(",", "").replace("*", "");
             this.chart.options.y = [ "stat", "goal" ];
         } else {
             goal = 0;
@@ -893,9 +892,9 @@ var SolutionsView = Backbone.View.extend({
         })[0].units_abbr;
         this.chart.options.hoverTemplate = "{{y}} " + units_abbr;
         this.chart.setYAxisLabel(units_abbr);
-        if (_.has(data[0], "_2013_goal")) {
-            var overlaytext = "<p>2013: " + this.formatComma(+data[0]["_2013"].replace(",", "").replace("*", "")) + "</p>";
-            overlaytext += "<p>2013 Goal: " + this.formatComma(+data[0]["_2013_goal"].replace(",", "").replace("*", "")) + "</p>";
+        if (_.has(data[0], "_2015_goal")) {
+            var overlaytext = "<p>2014: " + this.formatComma(+data[0]["_2014"].replace(",", "").replace("*", "")) + "</p>";
+            overlaytext += "<p>2015 Goal: " + this.formatComma(+data[0]["_2015_goal"].replace(",", "").replace("*", "")) + "</p>";
             $(".overlay").html(overlaytext);
         } else {
             $(".overlay").html("");
