@@ -31,13 +31,13 @@
     "source": "MDA"
   },{
     "stat": "Wastewater Treatment Plants ENR",
-    "definition": "At the current rate of implementation, 15 plants will be operational by June 30, 2013, accounting for an estimated 395,000 lbs/year reduction in nitrogen. <a href=\"http://mde.maryland.gov/programs/Water/BayRestorationFund/Pages/water/cbwrf/evolution_enr.aspx\" target=\"_blank\">More Information</a>",
+    "definition": "The 2015 goal is to have a total of 47 wastewater treatment plants upgraded to ENR technology. <a href=\"http://mde.maryland.gov/programs/Water/BayRestorationFund/Pages/water/cbwrf/evolution_enr.aspx\" target=\"_blank\">More Information</a>",
     "units": "Number of WWTPs upgraded.",
     "units_abbr": "Plants",
     "source": "MDE"
   },{
     "stat": "Stormwater Runoff Management Retrofits",
-    "definition": "An estimated 35,000 pounds of nitrogen will be reduced by 2013 as Maryland's large jurisdictions work to meet the recently tightened requirements of municipal stormwater permits. <a href=\"http://www.mde.state.md.us/programs/Water/StormwaterManagementProgram/stormprint/Pages/index.aspx\" target=\"_blank\">More Information</a>",
+    "definition": "An estimated 35,000 additional pounds of nitrogen will be reduced by the end of the 2015 milestone period as Maryland's large jurisdictions work to meet the recently tightened requirements of municipal stormwater permits. <a href=\"http://www.mde.state.md.us/programs/Water/StormwaterManagementProgram/stormprint/Pages/index.aspx\" target=\"_blank\">More Information</a>",
     "units": "Cumulative pounds of nitrogen reduced through urban and suburban stormwater management retrofits.",
     "units_abbr": "Pounds N",
     "source": "MDE"
