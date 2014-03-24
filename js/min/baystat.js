@@ -829,7 +829,6 @@ var SolutionsView = Backbone.View.extend({
     },
     updatePieChart: function() {
         var reduction = this.model.get("reduction");
-        console.log(reduction);
         this.pie.update([ {
             source: "Urban/Suburban",
             percent: reduction.urban
@@ -861,21 +860,18 @@ var SolutionsView = Backbone.View.extend({
     receiveGoalUrban: function(data) {
         var reduction = this.model.get("reduction");
         reduction.urban = data[0].goal;
-        console.log(reduction);
         this.model.set("reduction", reduction);
         this.updatePieChart();
     },
     receiveGoalFarms: function(data) {
         var reduction = this.model.get("reduction");
         reduction.farms = data[0].goal;
-        console.log(reduction);
         this.model.set("reduction", reduction);
         this.updatePieChart();
     },
     receiveGoalPublic: function(data) {
         var reduction = this.model.get("reduction");
         reduction.publicland = data[0].goal;
-        console.log(reduction);
         this.model.set("reduction", reduction);
         this.updatePieChart();
     },
