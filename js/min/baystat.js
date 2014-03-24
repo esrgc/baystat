@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.7 2014-02-26 
+baystat-dashboards v0.5.8 2014-03-24 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -688,7 +688,12 @@ var SolutionsModel = Backbone.Model.extend({
         },
         request: null,
         start_year: 2e3,
-        end_year: 2014
+        end_year: 2014,
+        reduction: {
+            urban: 0,
+            farms: 0,
+            publicland: 0
+        }
     },
     getBMPStatistics: function(_geo, _stat) {
         if (this.get("request")) {
@@ -703,6 +708,26 @@ var SolutionsModel = Backbone.Model.extend({
             url: url + "&$jsonp=BayStat.Solutions.receiveData"
         });
         this.set("request", request);
+    },
+    getPieData: function() {
+        var url = this.get("socrata_urls")["mde"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Solutions.receiveGoalUrban"
+        });
+        var url = this.get("socrata_urls")["dnr"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Solutions.receiveGoalPublic"
+        });
+        var url = this.get("socrata_urls")["mda"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
+        var request = $.ajax({
+            dataType: "jsonp",
+            jsonp: false,
+            url: url + "&$jsonp=BayStat.Solutions.receiveGoalFarms"
+        });
     }
 });
 
@@ -737,6 +762,7 @@ var SolutionsView = Backbone.View.extend({
     initialize: function() {
         this.listenTo(this.model, "change:stat", this.updateLineChart);
         this.listenTo(this.model, "change:geo", this.updateLineChart);
+        this.listenTo(this.model, "change:reduction", this.updatePieChart);
         this.formatComma = d3.format(",");
         this.render();
     },
@@ -758,6 +784,7 @@ var SolutionsView = Backbone.View.extend({
             self.statsData = res;
             self.updateLineChart();
         });
+        this.model.getPieData();
     },
     makeCharts: function() {
         this.chart = new GeoDash.LineChart("#line-chart .chart", {
@@ -791,13 +818,27 @@ var SolutionsView = Backbone.View.extend({
         });
         this.pie.update([ {
             source: "Urban/Suburban",
-            percent: 50
+            percent: 0
         }, {
             source: "Public Land",
-            percent: 4
+            percent: 0
         }, {
             source: "Farms",
-            percent: 46
+            percent: 0
+        } ]);
+    },
+    updatePieChart: function() {
+        var reduction = this.model.get("reduction");
+        console.log(reduction);
+        this.pie.update([ {
+            source: "Urban/Suburban",
+            percent: reduction.urban
+        }, {
+            source: "Public Land",
+            percent: reduction.publicland
+        }, {
+            source: "Farms",
+            percent: reduction.farms
         } ]);
     },
     updateLineChart: function() {
@@ -816,6 +857,27 @@ var SolutionsView = Backbone.View.extend({
             $(".loader").css("opacity", "1");
             this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"));
         }
+    },
+    receiveGoalUrban: function(data) {
+        var reduction = this.model.get("reduction");
+        reduction.urban = data[0].goal;
+        console.log(reduction);
+        this.model.set("reduction", reduction);
+        this.updatePieChart();
+    },
+    receiveGoalFarms: function(data) {
+        var reduction = this.model.get("reduction");
+        reduction.farms = data[0].goal;
+        console.log(reduction);
+        this.model.set("reduction", reduction);
+        this.updatePieChart();
+    },
+    receiveGoalPublic: function(data) {
+        var reduction = this.model.get("reduction");
+        reduction.publicland = data[0].goal;
+        console.log(reduction);
+        this.model.set("reduction", reduction);
+        this.updatePieChart();
     },
     receiveData: function(data) {
         var self = this;
