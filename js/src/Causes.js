@@ -46,7 +46,7 @@ var CausesModel = Backbone.Model.extend({
     if(this.get('request')) {
       this.get('request').abort();
     }
-    var url = this.get('causes_url')[_pollution] + "&$select=source_sector,sum(_2012) as sum_2012&$group=source_sector";
+    var url = this.get('causes_url')[_pollution] + "&$select=source_sector,sum(_2013) as sum_2013&$group=source_sector";
     var geo_column = _.where(this.get('layerlist'), {name: this.get('activelayer')})[0].column;
     if(_geo !== 'Maryland') {
       url += "&$where=" + geo_column + "='" + encodeURIComponent(_geo) + "'";
@@ -62,6 +62,9 @@ var CausesModel = Backbone.Model.extend({
     var self = this;
     if(this.get('request2')) {
       this.get('request2').abort();
+    }
+    if(_geo === 'Patapsco Back River') {
+      _geo = 'Patapsco/Back'
     }
     var geo = encodeURIComponent(_geo),
         source = encodeURIComponent(_source),
@@ -81,7 +84,7 @@ var CausesModel = Backbone.Model.extend({
       source = "Stormwater";
     }
     var geo_column = _.where(self.get('layerlist'), {name: self.get('activelayer')})[0].column;
-    url += "&$select=sum(" + this.get('goal_key')[pollution] + "_2017) as milestone2017,sum(" + this.get('goal_key')[pollution] + "_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012";
+    url += "&$select=sum(" + this.get('goal_key')[pollution] + "_2017) as milestone2017,sum(" + this.get('goal_key')[pollution] + "_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012,sum(_2013) as sum_2013";
     if(_geo === 'Maryland') {
       if(_source !== 'All Causes') {
         url += "&$where=source_sector='" + source + "'";
@@ -216,7 +219,8 @@ var CausesView = Backbone.View.extend({
       "sum_1985" : "0",
       "sum_2010" : "0",
       "sum_2011" : "0",
-      "sum_2012" : "0"
+      "sum_2012" : "0",
+      "sum_2013" : "0"
     }]);
     this.render();
     this.updateLineChart();
@@ -251,7 +255,7 @@ var CausesView = Backbone.View.extend({
     });
     this.pie = new GeoDash.PieChart('#pie .chart', {
       label: 'source_sector',
-      value: 'sum_2012',
+      value: 'sum_2013',
       title: false,
       colors: self.model.get('pie_colors'),
       innerRadius: 0,
@@ -267,7 +271,7 @@ var CausesView = Backbone.View.extend({
     if(self.request1){
       self.request1.abort();
     }
-    var empty_data = [{"source_sector":"Farms","sum_2012":"1"},{"source_sector":"Wastewater Treatment Plants","sum_2012":"0"},{"source_sector":"Stormwater Runoff","sum_2012":"0"},{"source_sector":"Septic","sum_2012":"0"},{"source_sector":"Forests","sum_2012":"0"}];
+    var empty_data = [{"source_sector":"Farms","sum_2013":"1"},{"source_sector":"Wastewater Treatment Plants","sum_2013":"0"},{"source_sector":"Stormwater Runoff","sum_2013":"0"},{"source_sector":"Septic","sum_2013":"0"},{"source_sector":"Forests","sum_2013":"0"}];
     if(_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
       self.pie.setColors(['#ccc']);
       self.pie.update(empty_data);
@@ -282,7 +286,7 @@ var CausesView = Backbone.View.extend({
     var atm = _.where(res, {source_sector: "Non-Tidal Atm"})[0];
     _.each(res, function(source, idx){
       if(source.source_sector === 'Forest') {
-        source.sum_2012 = source.sum_2012 + parseInt(atm.sum_2012);
+        source.sum_2013 = source.sum_2013 + parseInt(atm.sum_2013);
       }
       if(source.source_sector === 'Agriculture') {
         source.source_sector = 'Farms';
@@ -330,9 +334,9 @@ var CausesView = Backbone.View.extend({
   },
   receiveLineData: function(res){
     var self = this
-    if(this.model.get('geo') == 'Maryland') {
-      res = this.addCurrentYear(res)
-    }
+    // if(this.model.get('geo') == 'Maryland') {
+    //   res = this.addCurrentYear(res)
+    // }
     var data = this.prepareData(res);
     this.chart.update(data);
     setTimeout(function(){
