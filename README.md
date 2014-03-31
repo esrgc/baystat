@@ -24,6 +24,7 @@ Dashboards built to visualize causes of and solutions to pollution in Maryland's
 
 To build:
 
+* Install Node.JS and NPM
 * `npm install`
 * `grunt dev` for developing
 * `grunt deploy` for deployment
