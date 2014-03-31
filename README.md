@@ -18,7 +18,7 @@ Dashboards built to visualize causes of and solutions to pollution in Maryland's
 * Chrome
 * Firefox
 * Safari
-* IE 9+
+* IE 8+
 
 ##### Build
 
