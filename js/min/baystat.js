@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.5.9 2014-03-28 
+baystat-dashboards v0.5.9 2014-03-31 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -657,7 +657,7 @@ var MapView = Backbone.View.extend({
 
 var SolutionsModel = Backbone.Model.extend({
     defaults: {
-        title: "Maryland's 2014 - 2015 Milestone Goals and Progress Report",
+        title: "Maryland's 2014 - 2015 Milestone Goals and Progress",
         stat: "Cover Crops",
         geo: "Maryland",
         zoom: 7,
