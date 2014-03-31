@@ -1,7 +1,7 @@
 
 var SolutionsModel = Backbone.Model.extend({
   defaults: {
-    title: "Maryland's 2014 - 2015 Milestone Goals and Progress Report",
+    title: "Maryland's 2014 - 2015 Milestone Goals and Progress Reports",
     stat: 'Cover Crops',
     geo: 'Maryland',
     zoom: 7,
