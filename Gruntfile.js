@@ -116,6 +116,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dev', ['handlebars', 'uglify', 'concat', 'assemble:dev']);
   grunt.registerTask('deploy', ['handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
-  grunt.registerTask('server', ['connect']);
 
 };
