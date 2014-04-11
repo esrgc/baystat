@@ -23,6 +23,15 @@ var css_dependencies = [
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    bump: {
+      options: {
+        files: ['package.json'],
+        updateConfigs: ['pkg'],
+        commit: false,
+        createTag: false,
+        push: false
+      }
+    },
     //Compile handlebars templates
     handlebars: {
       compile: {
@@ -107,6 +116,7 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -115,6 +125,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('dev', ['handlebars', 'uglify', 'concat', 'assemble:dev']);
-  grunt.registerTask('deploy', ['handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
+  grunt.registerTask('deploy', ['bump', 'handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
 
 };
