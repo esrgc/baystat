@@ -160,6 +160,7 @@
   position: absolute;
   top: 225px;
   left: 340px;
+  display: none;
 }
 
 #pie .title {
