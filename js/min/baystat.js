@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.2 2014-04-11 
+baystat-dashboards v0.6.3 2014-04-30 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -711,23 +711,10 @@ var SolutionsModel = Backbone.Model.extend({
         this.set("request", request);
     },
     getPieData: function() {
-        var url = this.get("socrata_urls")["mde"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
-        var request = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Solutions.receiveGoalUrban"
-        });
-        var url = this.get("socrata_urls")["dnr"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
-        var request = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Solutions.receiveGoalPublic"
-        });
-        var url = this.get("socrata_urls")["mda"] + "&$where=basin_name='Maryland'&$select=sum(_2015_goal)%20as%20goal";
-        var request = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Solutions.receiveGoalFarms"
+        this.set("reduction", {
+            urban: 265705,
+            agriculture: 1140357,
+            filters: 36330
         });
     }
 });
@@ -811,34 +798,26 @@ var SolutionsView = Backbone.View.extend({
         this.pie = new GeoDash.PieChart("#pie .chart", {
             label: "source",
             value: "percent",
-            colors: [ "#d80000", "#0B6909", "#f0db4f" ],
+            colors: [ "#d80000", "#f0db4f", "#0B6909" ],
             innerRadius: 0,
+            arcstrokewidth: 1,
+            arcstrokecolor: "#555",
             opacity: .8,
             legend: true,
             legendWidth: 100
         });
-        this.pie.update([ {
-            source: "Urban/Suburban",
-            percent: 0
-        }, {
-            source: "Public Land",
-            percent: 0
-        }, {
-            source: "Farms",
-            percent: 0
-        } ]);
     },
     updatePieChart: function() {
         var reduction = this.model.get("reduction");
         this.pie.update([ {
-            source: "Urban/Suburban",
+            source: "Urban",
             percent: reduction.urban
         }, {
-            source: "Public Land",
-            percent: reduction.publicland
+            source: "Agriculture",
+            percent: reduction.agriculture
         }, {
-            source: "Farms",
-            percent: reduction.farms
+            source: "Natural Filters",
+            percent: reduction.filters
         } ]);
     },
     updateLineChart: function() {

@@ -7383,7 +7383,9 @@ d3 = function() {
       break;
     }
     if (basePrefix === "#") basePrefix = "";
-    if (type == "r" && !precision) type = "g";
+    if (type == "r" && !precision) {
+      type = "g";
+    }
     type = d3_format_types.get(type) || d3_format_typeDefault;
     var zcomma = zfill && comma;
     return function(value) {
@@ -15840,7 +15842,7 @@ GeoDash.Chart = ezoop.BaseClass({
     if(this.options.legend) {
       this.container.append('div')
         .attr('class', 'legend')
-        .attr("width", this.options.legendWidth + 'px')
+        .style("width", this.options.legendWidth + 'px')
         .style("background", function(){
           var c = d3.select(self.el).style("background-color")
           return c
@@ -16234,9 +16236,11 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
         if(this.options.xLabel) {
           height += this.options.axisLabelPadding
         }
+      this.height = height
       this.container.select('.bars')
         .style('height', height + 'px')
-      this.setHeight()
+      this.container.select('.axis')
+        .style('height', height + 'px')
       this.setYAxis()
     }
 
@@ -16324,8 +16328,9 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
       .style("top", function(d, i) {
         var top = 0
         if(self.options.barHeight !== 0){
-          top = self.options.barHeight * i
-            + self.options.padding * i
+          var yPos = self.y.range().indexOf(self.y(d.y))
+          top = self.options.barHeight * yPos
+            + self.options.padding * yPos
             + self.options.topPadding
         } else {
           top = self.y(d.y)
@@ -16423,8 +16428,9 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
       .style("top", function(d, i) {
         var top = 0
         if(self.options.barHeight !== 0){
-          top = self.options.barHeight * i
-            + self.options.padding * i
+          var yPos = self.y.range().indexOf(self.y(d.y))
+          top = self.options.barHeight * yPos
+            + self.options.padding * yPos
             + self.options.topPadding
         } else {
           top = self.y(d.y)
@@ -16525,13 +16531,11 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
   }
   , updateXAxis: function() {
     var self = this
-      // , y = this.options.y
-      // , x = this.options.x
       , y = 'y'
       , x = 'x'
 
     if(this.options.drawX){
-      var chartHeight = this.container.select('.bars').style('height')
+      var axisHeight = this.container.select('.x.axis').style('height')
       var ticks = this.x.ticks(self.options.xTicksCount)
       var tickElements = this.xAxisElement
         .selectAll(".tick")
@@ -16579,11 +16583,13 @@ GeoDash.BarChartHorizontal = ezoop.ExtendedClass(GeoDash.Chart, {
           }
         })
         .style("height", function(){
+          var h = 0
           if(self.options.xLabel) {
-            return self.height - self.options.axisLabelPadding + "px"
+            h = self.height - self.options.axisLabelPadding + "px"
           } else {
-            return self.height + "px"
+            h =  self.height + "px"
           }
+          return h
         })
 
       tickElements.exit().remove()
@@ -16958,7 +16964,6 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
         }
         bottom = parseInt(bottom)
         return bottom + 'px'
-
       })
       .style("height", function (d) {
         var height = 0
@@ -16969,8 +16974,8 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
         }
         return height + 'px'
       })
-      .style("opacity", function(d){
-        if(d[x] == self.options.highlight) return 1
+      .style("opacity", function(d, i){
+        if(i === self.options.highlight) return 1
         else return self.options.opacity
       })
       .style("background-color", function(d, i) { 
@@ -17068,7 +17073,7 @@ GeoDash.BarChartVertical = ezoop.ExtendedClass(GeoDash.Chart, {
         return height + 'px'
       })
       .style("opacity", function(d, i){
-        if(d[x] === self.options.highlight ) return 1
+        if(i === self.options.highlight) return 1
         else return self.options.opacity
       })
       .style("background-color", function(d, i) {
@@ -17463,6 +17468,7 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
 
     //dots
     for(var i = 0; i < this.linedata.length; i++) {
+      var label = this.linedata[i].name
       var one_line = this.linedata[i].values;
       var dots = this.svg.select(".line_group" + i).selectAll('.dot')
           .data(one_line)
@@ -17480,6 +17486,7 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
           return self.color(self.linedata[i].name); })
         .attr("fill-opacity", self.options.opacity)
         .attr("data", function(d){ return d.y; })
+        .attr("label", function(d){ return label })
         .on('mouseover', function(d, i) {self.mouseOver(d, i, this); })
         .on('mouseout', function(d, i) {self.mouseOut(d, i, this); })
         .attr("cx", function(d) { return self.xLine(d.x) })
@@ -17578,7 +17585,9 @@ GeoDash.LineChart = ezoop.ExtendedClass(GeoDash.Chart, {
     if(self.options.labelFormat) {
       x = self.options.labelFormat(x)
     }
-
+    if(typeof self.options.y == 'object') {
+      x = d3.select(el).attr('label') + ' ' + x
+    }
     if(y !== null) {
       y = self.options.valueFormat(y)
       var view = {
@@ -17635,7 +17644,10 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
     , hoverTemplate: "{{label}}: {{value}} ({{percent}}%)"
     , labelColor: "#ccc"
     , legendWidth: 80
-    , arcstroke: 2
+    , arcstrokewidth: 2
+    , arcstrokecolor: '#fff'
+    , abbreviate: false
+    , total: false
     , margin: {
       top: 10
       , right: 10
@@ -17665,16 +17677,19 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
       .value(function(d) { return d[self.options.value] })
 
 
-
-    this.total = 0
-    data.forEach(function(d, i) {
-      d[self.options.value] = +d[self.options.value]
-      if(+d[self.options.value] < 0) {
-        data.splice(i, 1)
-      } else {
-        self.total += +d[self.options.value]
-      }
-    })
+    if(!this.options.total) {
+      this.total = 0
+      data.forEach(function(d, i) {
+        d[self.options.value] = +d[self.options.value]
+        if(+d[self.options.value] < 0) {
+          data.splice(i, 1)
+        } else {
+          self.total += +d[self.options.value]
+        }
+      })
+    } else {
+      this.total = this.options.total
+    }
     this.data = data
     this.updateChart()
   }
@@ -17698,7 +17713,8 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
       .attr("d", this.arc)
       .attr("fill", function(d) { return self.color(d.data[self.options.label]) })
       .attr("fill-opacity", this.options.opacity)
-      .attr("stroke-width", this.options.arcstroke)
+      .attr("stroke-width", this.options.arcstrokewidth)
+      .attr("stroke", this.options.arcstrokecolor)
       .on('mouseover', function (d, i) {
         if(!GeoDash.Browser.touch) {
           self.mouseOver(d, i, this)
@@ -17727,7 +17743,15 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
 
       t.select("text")
         .attr("transform", function(d) { return "translate(" + self.arc.centroid(d) + ")"; })
-        .text(function(d) { return d.data[self.options.label] + ' (' + d.value + ')' })
+        .text(function(d) {
+          var label = d.data[self.options.label]
+          if(self.options.abbreviate) {
+            if(label.length > self.options.abbreviate) {
+              label = label.substring(0, self.options.abbreviate) + '..'
+            }
+          }
+          return label + ' (' + d.value + ')' 
+        })
 
       t.enter().append("g")
         .attr("class", "arc-text")
@@ -17736,7 +17760,15 @@ GeoDash.PieChart = ezoop.ExtendedClass(GeoDash.Chart, {
         .attr("dy", ".35em")
         .style("text-anchor", "middle")
         .style("fill", self.options.labelColor)
-        .text(function(d) { return d.data[self.options.label] + ' (' + d.value + ')' })
+        .text(function(d) {
+          var label = d.data[self.options.label]
+          if(self.options.abbreviate) {
+            if(label.length > self.options.abbreviate) {
+              label = label.substring(0, self.options.abbreviate) + '..'
+            }
+          }
+          return label + ' (' + d.value + ')' 
+        })
 
       t.exit().remove()
     }

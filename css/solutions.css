@@ -158,9 +158,8 @@
 #pie {
   width: 195px;
   position: absolute;
-  top: 225px;
+  top: 195px;
   left: 340px;
-  display: none;
 }
 
 #pie .title {
