@@ -180,9 +180,9 @@ var SolutionsView = Backbone.View.extend({
   updatePieChart: function() {
     var reduction = this.model.get('reduction')
     this.pie.update([
-      {"source":"Urban","percent": reduction.urban},
-      {"source":"Agriculture","percent":reduction.agriculture},
-      {"source":"Natural Filters","percent":reduction.filters}
+      {"source":"Urban Areas","percent": reduction.urban},
+      {"source":"Farming Practices","percent":reduction.agriculture},
+      {"source":"Public Lands","percent":reduction.filters}
     ]);
   },
   updateLineChart: function(){
