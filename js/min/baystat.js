@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.4 2014-04-30 
+baystat-dashboards v0.6.5 2014-04-30 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -811,13 +811,13 @@ var SolutionsView = Backbone.View.extend({
     updatePieChart: function() {
         var reduction = this.model.get("reduction");
         this.pie.update([ {
-            source: "Urban",
+            source: "Urban Areas",
             percent: reduction.urban
         }, {
-            source: "Agriculture",
+            source: "Farming Practices",
             percent: reduction.agriculture
         }, {
-            source: "Natural Filters",
+            source: "Public Lands",
             percent: reduction.filters
         } ]);
     },
