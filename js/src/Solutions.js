@@ -173,7 +173,8 @@ var SolutionsView = Backbone.View.extend({
       arcstrokecolor: '#555',
       opacity: 0.8,
       legend: true,
-      legendWidth: 100
+      legendWidth: 100,
+      hoverTemplate: "{{label}}: {{value}} TN Reduction ({{percent}}%)"
     });
   },
   updatePieChart: function() {
