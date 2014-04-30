@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.3 2014-04-30 
+baystat-dashboards v0.6.4 2014-04-30 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -804,7 +804,8 @@ var SolutionsView = Backbone.View.extend({
             arcstrokecolor: "#555",
             opacity: .8,
             legend: true,
-            legendWidth: 100
+            legendWidth: 100,
+            hoverTemplate: "{{label}}: {{value}} TN Reduction ({{percent}}%)"
         });
     },
     updatePieChart: function() {
