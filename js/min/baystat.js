@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.5 2014-04-30 
+baystat-dashboards v0.6.6 2014-04-30 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -798,7 +798,7 @@ var SolutionsView = Backbone.View.extend({
         this.pie = new GeoDash.PieChart("#pie .chart", {
             label: "source",
             value: "percent",
-            colors: [ "#d80000", "#f0db4f", "#0B6909" ],
+            colors: [ "#0B6909", "#d80000", "#f0db4f" ],
             innerRadius: 0,
             arcstrokewidth: 1,
             arcstrokecolor: "#555",
@@ -811,14 +811,14 @@ var SolutionsView = Backbone.View.extend({
     updatePieChart: function() {
         var reduction = this.model.get("reduction");
         this.pie.update([ {
+            source: "Public Lands",
+            percent: reduction.filters
+        }, {
             source: "Urban Areas",
             percent: reduction.urban
         }, {
             source: "Farming Practices",
             percent: reduction.agriculture
-        }, {
-            source: "Public Lands",
-            percent: reduction.filters
         } ]);
     },
     updateLineChart: function() {
