@@ -36,10 +36,10 @@ module.exports = function(grunt) {
     handlebars: {
       compile: {
         options: {
-          namespace: "BayStat.templates"
+          namespace: 'BayStat.templates'
         },
         files: {
-          "templates/templates.js": "templates/*.handlebars"
+          'templates/templates.js': ['templates/*.handlebars', '!causes.handlebars', '!solutions.handlebars']
         }
       }
     },
@@ -66,14 +66,14 @@ module.exports = function(grunt) {
     concat: {
       js: {
         src: js_dependencies,
-        dest: 'js/min/<%= pkg.name %>.<%= pkg.version %>.min.js',
+        dest: 'js/min/<%= pkg.name %>.min.js',
       },
       css: {
         src: css_dependencies,
-        dest: 'css/min/<%= pkg.name %>.<%= pkg.version %>.min.css',
+        dest: 'css/min/<%= pkg.name %>.min.css',
       }
     },
-    //Build HTML files for dev or deploy. (uses handlebars templates in /html)
+    //Build HTML files for dev or deploy.
     assemble: {
       deploy: {
         options: {
@@ -81,8 +81,8 @@ module.exports = function(grunt) {
           version: '<%= pkg.version %>'
         },
         files: {
-          'solutions.html': ['html/solutions.handlebars'],
-          'causes.html': ['html/causes.handlebars']
+          'solutions.html': ['templates/solutions.handlebars'],
+          'causes.html': ['templates/causes.handlebars']
         }
       },
       dev: {
@@ -93,8 +93,8 @@ module.exports = function(grunt) {
           css_dependencies: css_dependencies
         },
         files: {
-          'solutions.html': ['html/solutions.handlebars'],
-          'causes.html': ['html/causes.handlebars']
+          'solutions.html': ['templates/solutions.handlebars'],
+          'causes.html': ['templates/causes.handlebars']
         }
       }
     },

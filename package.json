@@ -1,6 +1,6 @@
 {
   "name": "baystat-dashboards",
-  "version": "0.6.8",
+  "version": "0.7.1",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.0",
@@ -14,6 +14,6 @@
     "grunt-bump": "0.0.13"
   },
   "dependencies": {
-    
+
   }
 }

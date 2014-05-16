@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="js/lib/leaflet-0.7.2/leaflet.css" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 {{#if deploy}}
-    <link rel="stylesheet" href="css/min/baystat-dashboards.{{version}}.min.css" />
+    <link rel="stylesheet" href="css/min/baystat-dashboards.min.css?v={{version}}" />
 {{else}}
     {{#each css_dependencies}}
         <link rel="stylesheet" href="{{this}}" />
@@ -26,9 +26,9 @@
       <!--[if (gte IE 9)|!(IE)]><!-->
       <script src="js/lib/geodash/geodash.min.js?v={{version}}"></script>
       <!--<![endif]-->
- 
+
         {{#if deploy}}
-          <script src="js/min/baystat-dashboards.{{version}}.min.js"></script>
+          <script src="js/min/baystat-dashboards.min.js?v={{version}}"></script>
         {{else}}
           {{#each js_dependencies}}
             <script src="{{this}}"></script>
@@ -39,7 +39,7 @@
             BayStat.Causes = new CausesView({model: new CausesModel()});
           });
         </script>
- 
+
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.8 2014-05-16 
+baystat-dashboards v0.7.1 2014-05-16 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -419,38 +419,6 @@ var CausesView = Backbone.View.extend({
         });
         return chartData;
     },
-    addCurrentYear: function(data) {
-        var self = this;
-        var currentyear = {
-            Nitrogen: {
-                "All Causes": "48410484",
-                Farms: "18002999",
-                Forests: "5990714",
-                Septic: "2950094",
-                "Stormwater Runoff": "9529595",
-                "Wastewater Treatment Plants": "11937083"
-            },
-            Phosphorus: {
-                "All Causes": "3021448",
-                Farms: "1582315",
-                Forests: "193267",
-                Septic: "0",
-                "Stormwater Runoff": "638059",
-                "Wastewater Treatment Plants": "607807"
-            },
-            Sediment: {
-                "All Causes": "1288177644",
-                Farms: "659188677",
-                Forests: "127443259",
-                Septic: "0",
-                "Stormwater Runoff": "490646155",
-                "Wastewater Treatment Plants": "10899553"
-            }
-        };
-        var stat = currentyear[self.model.get("pollution")][self.model.get("source")];
-        data[0]["sum_2013"] = stat;
-        return data;
-    },
     setDashedLines: function() {
         var dashed = [];
         var count = 0;
@@ -837,24 +805,6 @@ var SolutionsView = Backbone.View.extend({
             $(".loader").css("opacity", "1");
             this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"));
         }
-    },
-    receiveGoalUrban: function(data) {
-        var reduction = this.model.get("reduction");
-        reduction.urban = data[0].goal;
-        this.model.set("reduction", reduction);
-        this.updatePieChart();
-    },
-    receiveGoalFarms: function(data) {
-        var reduction = this.model.get("reduction");
-        reduction.farms = data[0].goal;
-        this.model.set("reduction", reduction);
-        this.updatePieChart();
-    },
-    receiveGoalPublic: function(data) {
-        var reduction = this.model.get("reduction");
-        reduction.publicland = data[0].goal;
-        this.model.set("reduction", reduction);
-        this.updatePieChart();
     },
     receiveData: function(data) {
         var self = this;
