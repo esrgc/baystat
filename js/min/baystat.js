@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.6.6 2014-04-30 
+baystat-dashboards v0.6.8 2014-05-16 
 Author: @frnkrw 
 */
 var CausesModel = Backbone.Model.extend({
@@ -207,7 +207,7 @@ var CausesView = Backbone.View.extend({
         this.labels = {
             Nitrogen: "Pounds",
             Phosphorus: "Pounds",
-            Sediment: "Tons"
+            Sediment: "Pounds"
         };
         this.emptyData = this.prepareData([ {
             milestone2017: "0",

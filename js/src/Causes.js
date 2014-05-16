@@ -116,7 +116,7 @@ var CausesModel = Backbone.Model.extend({
         combination[key] = combination[key] + parseFloat(obj[key]);
       });
     });
-    
+
     var res = [];
     res.push(combination);
     return res;
@@ -209,7 +209,7 @@ var CausesView = Backbone.View.extend({
     this.labels = {
       'Nitrogen': "Pounds",
       'Phosphorus': "Pounds",
-      'Sediment': "Tons"
+      'Sediment': "Pounds"
     };
     this.emptyData = this.prepareData([{
       "milestone2017" : "0",
@@ -324,7 +324,7 @@ var CausesView = Backbone.View.extend({
     this.chart.options.hoverTemplate = '{{y}} ' + this.labels[this.model.get('pollution')]
     this.chart.setYAxisLabel(this.labels[this.model.get('pollution')]);
     if(_.contains(this.model.get('invalidGeoms'), this.model.get('geo'))) {
-      
+
     } else {
       this.model.getCauses(this.model.get('pollution'), this.model.get('source'), this.model.get('geo'));
     }
@@ -340,9 +340,9 @@ var CausesView = Backbone.View.extend({
     var data = this.prepareData(res);
     this.chart.update(data);
     setTimeout(function(){
-      self.updateLabels();  
+      self.updateLabels();
     }, 500)
-    
+
   },
   updateLabels: function() {
     var self = this;
