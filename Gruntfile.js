@@ -1,6 +1,5 @@
 //BayStat dashboards build script
 
-
 var js_dependencies = [
   'js/lib/jquery.min.js',
   'js/lib/underscore-min.js',
@@ -49,7 +48,7 @@ module.exports = function(grunt) {
         options: {
           banner: '/*! \n' +
           '<%= pkg.name %> v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> \n' +
-          'Author: @frnkrw \n' +
+          'Author: @fsrowe, ESRGC, 2014 \n' +
           '*/\n',
           mangle: false,
           beautify: true,
@@ -105,14 +104,6 @@ module.exports = function(grunt) {
           'causes.html': 'causes.html'
         }
       }
-    },
-    connect: {
-      server: {
-        options: {
-          port: 9001,
-          keepalive: true
-        }
-      }
     }
   });
 
@@ -122,7 +113,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-line-remover');
-  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('dev', ['handlebars', 'uglify', 'concat', 'assemble:dev']);
   grunt.registerTask('deploy', ['bump', 'handlebars', 'uglify','concat', 'assemble:deploy', 'lineremover']);
