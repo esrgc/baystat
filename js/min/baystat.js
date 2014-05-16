@@ -1,8 +1,8 @@
 /*! 
-baystat-dashboards v0.7.1 2014-05-16 
-Author: @frnkrw 
+baystat-dashboards v0.7.4 2014-05-16 
+Author: @fsrowe, ESRGC, 2014 
 */
-var CausesModel = Backbone.Model.extend({
+BayStat.CausesModel = Backbone.Model.extend({
     defaults: {
         title: "Causes of Chesapeake Bay Pollution",
         geo: "Maryland",
@@ -126,7 +126,7 @@ var CausesModel = Backbone.Model.extend({
     }
 });
 
-var PollutionMenuView = Backbone.View.extend({
+BayStat.PollutionMenuView = Backbone.View.extend({
     events: {
         "change #pollution": "setPollution"
     },
@@ -146,7 +146,7 @@ var PollutionMenuView = Backbone.View.extend({
     }
 });
 
-var LayerMenuView = Backbone.View.extend({
+BayStat.LayerMenuView = Backbone.View.extend({
     events: {
         "change #layers": "setLayer"
     },
@@ -165,7 +165,7 @@ var LayerMenuView = Backbone.View.extend({
     }
 });
 
-var SourceMenuView = Backbone.View.extend({
+BayStat.SourceMenuView = Backbone.View.extend({
     events: {
         "change #source": "setSource"
     },
@@ -184,7 +184,7 @@ var SourceMenuView = Backbone.View.extend({
     }
 });
 
-var CausesView = Backbone.View.extend({
+BayStat.CausesView = Backbone.View.extend({
     el: ".dashboard",
     events: {
         "click .state": "goToState",
@@ -226,19 +226,19 @@ var CausesView = Backbone.View.extend({
     },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        var view = new PollutionMenuView({
+        var view = new BayStat.PollutionMenuView({
             model: this.model
         });
         $("#pollution-menu").html(view.render().el);
-        var view = new LayerMenuView({
+        var view = new BayStat.LayerMenuView({
             model: this.model
         });
         $("#layer-menu").html(view.render().el);
-        var view = new SourceMenuView({
+        var view = new BayStat.SourceMenuView({
             model: this.model
         });
         $("#source-menu").html(view.render().el);
-        this.map = new MapView({
+        this.map = new BayStat.MapView({
             model: this.model
         });
         this.makeCharts();
@@ -467,7 +467,7 @@ var CausesView = Backbone.View.extend({
     }
 });
 
-var MapView = Backbone.View.extend({
+BayStat.MapView = Backbone.View.extend({
     events: {},
     initialize: function() {
         this.listenTo(this.model, "change:activelayer", this.switchLayer);
@@ -623,7 +623,7 @@ var MapView = Backbone.View.extend({
     }
 });
 
-var SolutionsModel = Backbone.Model.extend({
+BayStat.SolutionsModel = Backbone.Model.extend({
     defaults: {
         title: "Maryland's 2014 - 2015 Milestone Goals and Progress Report",
         stat: "Cover Crops",
@@ -687,7 +687,7 @@ var SolutionsModel = Backbone.Model.extend({
     }
 });
 
-var MenuView = Backbone.View.extend({
+BayStat.MenuView = Backbone.View.extend({
     events: {
         "click .stat": "setStat"
     },
@@ -709,7 +709,7 @@ var MenuView = Backbone.View.extend({
     }
 });
 
-var SolutionsView = Backbone.View.extend({
+BayStat.SolutionsView = Backbone.View.extend({
     el: ".dashboard",
     events: {
         "click .state": "goToState"
@@ -724,11 +724,11 @@ var SolutionsView = Backbone.View.extend({
     },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        var view = new MenuView({
+        var view = new BayStat.MenuView({
             model: this.model
         });
         $("#menu .inner").html(view.render().el);
-        this.map = new MapView({
+        this.map = new BayStat.MapView({
             model: this.model
         });
         this.makeCharts();

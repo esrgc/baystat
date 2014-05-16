@@ -1,4 +1,4 @@
-var MapView = Backbone.View.extend({
+BayStat.MapView = Backbone.View.extend({
   events: {
 
   },

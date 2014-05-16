@@ -1,4 +1,4 @@
-var CausesModel = Backbone.Model.extend({
+BayStat.CausesModel = Backbone.Model.extend({
   defaults: {
     title: 'Causes of Chesapeake Bay Pollution',
     geo: 'Maryland',
@@ -126,7 +126,7 @@ var CausesModel = Backbone.Model.extend({
   }
 })
 
-var PollutionMenuView = Backbone.View.extend({
+BayStat.PollutionMenuView = Backbone.View.extend({
   events: {
     'change #pollution': 'setPollution'
   },
@@ -146,7 +146,7 @@ var PollutionMenuView = Backbone.View.extend({
   }
 })
 
-var LayerMenuView = Backbone.View.extend({
+BayStat.LayerMenuView = Backbone.View.extend({
   events: {
     'change #layers': 'setLayer'
   },
@@ -165,7 +165,7 @@ var LayerMenuView = Backbone.View.extend({
   }
 })
 
-var SourceMenuView = Backbone.View.extend({
+BayStat.SourceMenuView = Backbone.View.extend({
   events: {
     'change #source': 'setSource'
   },
@@ -184,7 +184,7 @@ var SourceMenuView = Backbone.View.extend({
   }
 })
 
-var CausesView = Backbone.View.extend({
+BayStat.CausesView = Backbone.View.extend({
   el: '.dashboard',
   events: {
     'click .state': 'goToState',
@@ -226,13 +226,13 @@ var CausesView = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()))
-    var view = new PollutionMenuView({model: this.model})
+    var view = new BayStat.PollutionMenuView({model: this.model})
     $('#pollution-menu').html(view.render().el)
-    var view = new LayerMenuView({model: this.model})
+    var view = new BayStat.LayerMenuView({model: this.model})
     $('#layer-menu').html(view.render().el)
-    var view = new SourceMenuView({model: this.model})
+    var view = new BayStat.SourceMenuView({model: this.model})
     $('#source-menu').html(view.render().el)
-    this.map = new MapView({model: this.model})
+    this.map = new BayStat.MapView({model: this.model})
     this.makeCharts()
     this.setDashedLines()
   },

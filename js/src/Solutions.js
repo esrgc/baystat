@@ -1,5 +1,4 @@
-
-var SolutionsModel = Backbone.Model.extend({
+BayStat.SolutionsModel = Backbone.Model.extend({
   defaults: {
     title: 'Maryland\'s 2014 - 2015 Milestone Goals and Progress Report',
     stat: 'Cover Crops',
@@ -69,7 +68,7 @@ var SolutionsModel = Backbone.Model.extend({
   }
 })
 
-var MenuView = Backbone.View.extend({
+BayStat.MenuView = Backbone.View.extend({
   events: {
     'click .stat': 'setStat'
   },
@@ -91,7 +90,7 @@ var MenuView = Backbone.View.extend({
   }
 })
 
-var SolutionsView = Backbone.View.extend({
+BayStat.SolutionsView = Backbone.View.extend({
   el: '.dashboard',
   events: {
     'click .state': 'goToState'
@@ -106,9 +105,9 @@ var SolutionsView = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()))
-    var view = new MenuView({model: this.model})
+    var view = new BayStat.MenuView({model: this.model})
     $('#menu .inner').html(view.render().el)
-    this.map = new MapView({model: this.model})
+    this.map = new BayStat.MapView({model: this.model})
     this.makeCharts()
     this.loadData()
   },
