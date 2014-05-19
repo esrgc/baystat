@@ -39,7 +39,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
       publicland: 0
     }
   },
-  getBMPStatistics: function(_geo, _stat){
+  getBMPStatistics: function(_geo, _stat) {
     if (this.get('request')) {
       this.get('request').abort()
     }
@@ -76,7 +76,7 @@ BayStat.MenuView = Backbone.View.extend({
   initialize: function() {
 
   },
-  render: function(){
+  render: function() {
      this.$el.html(this.template(this.model.toJSON()))
      return this
   },
@@ -111,15 +111,15 @@ BayStat.SolutionsView = Backbone.View.extend({
     this.makeCharts()
     this.loadData()
   },
-  loadData: function(){
+  loadData: function() {
     var self = this
-    $.getJSON('data/stats.json', function(res){
+    $.getJSON('data/stats.json', function(res) {
       self.statsData = res
       self.updateLineChart()
     })
     this.model.getPieData()
   },
-  makeCharts: function(){
+  makeCharts: function() {
     this.chart = new GeoDash.LineChart('#line-chart .chart', {
       x: 'date',
       y: ['stat', 'goal'],
@@ -161,7 +161,7 @@ BayStat.SolutionsView = Backbone.View.extend({
       {'source':'Farming Practices','percent':reduction.agriculture}
     ])
   },
-  updateLineChart: function(){
+  updateLineChart: function() {
     var self = this
     if (_.isEmpty(this.model.get('data')) == false) {
       var empty = this.makeEmptyData()
@@ -178,7 +178,7 @@ BayStat.SolutionsView = Backbone.View.extend({
       this.model.getBMPStatistics(this.model.get('geo'), this.model.get('stat'))
     }
   },
-  receiveData: function(data){
+  receiveData: function(data) {
     var self = this
     $('.loader').css('opacity', '0')
     self.updateLabels(data)
@@ -190,7 +190,7 @@ BayStat.SolutionsView = Backbone.View.extend({
   makeEmptyData: function() {
     var data = this.model.get('data')
     var keys = _.keys(data)
-    _.each(keys, function(key, idx){
+    _.each(keys, function(key, idx) {
       data[key] = '0'
     })
     return this.prepareData(data)
@@ -221,21 +221,21 @@ BayStat.SolutionsView = Backbone.View.extend({
       }
     }
     var yaxisLabelPadding = this.chart.options.yaxisLabelPadding
-    if (max < 100 && max > 0){
+    if (max < 100 && max > 0) {
       yaxisLabelPadding = 15
-    } else if (max > 100 && max < 9000){
+    } else if (max > 100 && max < 9000) {
       yaxisLabelPadding = 30
-    } else if (max >= 9000){
+    } else if (max >= 9000) {
       yaxisLabelPadding = 40
     }
-    if (max < 10 && max > 0){
+    if (max < 10 && max > 0) {
       this.chart.options.yTicksCount = max
     } else if (max > 10) {
       this.chart.options.yTicksCount = 10
     }
     return chartData
   },
-  updateLabels: function(data){
+  updateLabels: function(data) {
     var self = this
     var charttitle = self.model.get('stat') + ': ' + self.model.get('geo') + ''
     if (_.contains(self.model.get('invalidGeoms'), self.model.get('geo'))) {
@@ -255,7 +255,7 @@ BayStat.SolutionsView = Backbone.View.extend({
       $('.overlay').html('')
     }
   },
-  goToState: function(e){
+  goToState: function(e) {
     this.map.geojsonlayer.setStyle(this.map.style)
     this.model.set({geo: 'Maryland'})
     return false
