@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.8 2014-05-19 
+baystat-dashboards v0.7.10 2014-06-30 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -297,7 +297,7 @@ BayStat.CausesView = Backbone.View.extend({
             self.pie.setColors([ "#ccc" ]);
             self.pie.update(empty_data);
         } else {
-            self.pie.setColors(self.model.get("pie_colors"));
+            self.pie.setColor(self.model.get("pie_colors"));
             self.model.getSources(self.model.get("pollution"), self.model.get("geo"));
         }
     },

@@ -274,7 +274,7 @@ BayStat.CausesView = Backbone.View.extend({
       self.pie.setColors(['#ccc'])
       self.pie.update(empty_data)
     } else {
-      self.pie.setColors(self.model.get('pie_colors'))
+      self.pie.setColor(self.model.get('pie_colors'))
       self.model.getSources(self.model.get('pollution'), self.model.get('geo'))
     }
   },
