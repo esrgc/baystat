@@ -32,7 +32,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
     },
     request: null,
     start_year: 2000,
-    end_year: 2014,
+    end_year: 2015,
     reduction: {
       urban: 0,
       farms: 0,
@@ -130,8 +130,7 @@ BayStat.SolutionsView = Backbone.View.extend({
       xTickFormat: d3.time.format('\'%y'),
       yTickFormat: d3.format('.3s'),
       yAxisWidth: 30,
-      yaxisLabelPadding: 50,
-      hoverTemplate: '{{y}}',
+      hoverTemplate: '{{x}}: {{y}}',
       valueFormat: d3.format(',.0f'),
       margin: {
         top: 10,
@@ -216,6 +215,12 @@ BayStat.SolutionsView = Backbone.View.extend({
           stat: stat,
           goal: goal
         })
+        if (i === this.model.get('end_year') - 1 ) {
+          chartData.push({
+            date: parseDate((i+1).toString()),
+            goal: goal
+          })
+        }
       } else {
         stat = 0
       }
