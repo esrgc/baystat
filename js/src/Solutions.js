@@ -215,7 +215,7 @@ BayStat.SolutionsView = Backbone.View.extend({
           stat: stat,
           goal: goal
         })
-        if (i === this.model.get('end_year') - 1 ) {
+        if (i === this.model.get('end_year') - 1 && data['_' + this.model.get('end_year')] === undefined) {
           chartData.push({
             date: parseDate((i+1).toString()),
             goal: goal

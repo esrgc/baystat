@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.12 2014-08-27 
+baystat-dashboards v0.7.16 2014-08-27 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -845,7 +845,7 @@ BayStat.SolutionsView = Backbone.View.extend({
                     stat: stat,
                     goal: goal
                 });
-                if (i === this.model.get("end_year") - 1) {
+                if (i === this.model.get("end_year") - 1 && data["_" + this.model.get("end_year")] === undefined) {
                     chartData.push({
                         date: parseDate((i + 1).toString()),
                         goal: goal
