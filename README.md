@@ -4,8 +4,8 @@
 
 Dashboards built to visualize causes of and solutions to pollution in Maryland's Chesapeake Bay for the [BayStat](http://www.baystat.maryland.gov/) program. 
 
-- Solutions: http://www.baystat.maryland.gov/milestone_information.html
-- Causes: http://www.baystat.maryland.gov/sources2.html
+- Solutions: http://baystat.maryland.gov/solutions-map/
+- Causes: http://baystat.maryland.gov/causes-of-the-problems-map/
 
 #### Technology
 
