@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.16 2014-08-27 
+baystat-dashboards v0.7.17 2014-10-07 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -37,7 +37,32 @@ BayStat.CausesModel = Backbone.Model.extend({
             Nitrogen: "tn_target",
             Phosphorus: "tp_target",
             Sediment: "ts_target"
-        }
+        },
+        sediment_goals: [ {
+            geo: "Eastern Shore of Chesapeake Bay",
+            milestone2017: 189e6,
+            milestone2025: 194614981
+        }, {
+            geo: "Patuxent River Basin",
+            milestone2017: 123e6,
+            milestone2025: 125534516
+        }, {
+            geo: "Potomac River Basin",
+            milestone2017: 731e6,
+            milestone2025: 742417206
+        }, {
+            geo: "Susquehanna River Basin",
+            milestone2017: 64e6,
+            milestone2025: 67579296
+        }, {
+            geo: "Western Shore of Chesapeake Bay",
+            milestone2017: 243e6,
+            milestone2025: 237900908
+        }, {
+            geo: "Maryland",
+            milestone2017: 135e7,
+            milestone2025: 1368046907
+        } ]
     },
     getSources: function(_pollution, _geo) {
         if (this.get("request")) {
@@ -202,7 +227,7 @@ BayStat.CausesView = Backbone.View.extend({
         this.details = {
             Nitrogen: "<b>Nitrogen</b>:  The 1985 scenario is from EPA CBP Phase 5.3.2 using 1985 atmospheric reduction strategies.  Atmospheric reduction strategies projected to be in place by 2025 would have reduced Maryland's 1985 statewide nitrogen load by 4.8 million lbs/yr.  This reduction is due to actions both within Maryland and in the larger Chesapeake Bay airshed.  Changes in pollution over time are the result of a combination of reduction in atmospheric deposition, reduction due to management practices, and change due to new development. </p><p>Note that the 2017 goal represents 60% progress toward achieving the 2025 goal <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
             Phosphorus: "<b>Phosphorus</b>: Phosphorus pollution fuels the growth of algae, creating dense, harmful algae blooms that rob the Chesapeake Bay's aquatic life of needed sunlight and oxygen. Phosphorus often attaches to soil and sediment particles on land, entering the Bay many years later when stream banks erode or rainwater washes it into streams, rivers, and the Bay. Sources of phosphorus pollution include fertilizers from farmlands, lawns and golf courses, eroding soil and sediment from stream banks in urban and suburban neighborhoods, animal manure from farms, and wastewater from industrial facilities and sewage treatment plants.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
-            Sediment: "<b>Sediment</b>: Maryland did not establish TMDL caps for sediments. Excess sediments - direct, clay, silt, and sand - hurt the Bay's water quality by blocking the sunlight needed by underwater plants and grasses. Without enough sunlight, these underwater grasses are not able to grow and provide habitat for young fish and blue crabs. In addition to blocking sunlight, sediment pollution can also carry nutrient and chemical contaminates into the bay, and smother oysters, underwater grasses and other bottom dwelling creatures.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>"
+            Sediment: "<b>Sediment</b>: TMDL caps for sediments are available statewide and at the major basin scale.   It was determined that implementation of nutrient reduction practices more than achieved the sediment reduction targets.  Excess sediments - direct, clay, silt, and sand - hurt the Bay's water quality by blocking the sunlight needed by underwater plants and grasses. Without enough sunlight, these underwater grasses are not able to grow and provide habitat for young fish and blue crabs. In addition to blocking sunlight, sediment pollution can also carry nutrient and chemical contaminates into the bay, and smother oysters, underwater grasses and other bottom dwelling creatures.<p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>"
         };
         this.labels = {
             Nitrogen: "Pounds",
@@ -365,6 +390,9 @@ BayStat.CausesView = Backbone.View.extend({
     },
     receiveLineData: function(res) {
         var self = this;
+        if (this.model.get("pollution") === "Sediment" && this.model.get("source") === "All Causes") {
+            res = this.addSedimentGoals(res);
+        }
         var data = this.prepareData(res);
         this.chart.update(data);
         setTimeout(function() {
@@ -464,6 +492,16 @@ BayStat.CausesView = Backbone.View.extend({
             $(".sample.secondary").css("background", "#fff");
         }
         this.model.set("goals", goals);
+    },
+    addSedimentGoals: function(data) {
+        var goal = _.findWhere(this.model.get("sediment_goals"), {
+            geo: this.model.get("geo")
+        });
+        if (goal) {
+            data[0].milestone2017 = goal.milestone2017;
+            data[0].milestone2025 = goal.milestone2025;
+        }
+        return data;
     }
 });
 
