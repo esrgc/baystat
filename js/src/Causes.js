@@ -278,7 +278,7 @@ BayStat.CausesView = Backbone.View.extend({
       interpolate: 'monotone',
       yLabel: 'Pounds Per Year',
       xTickFormat: d3.time.format('%Y'),
-      yTickFormat: d3.format('.3s'),
+      yTickFormat: d3.format('.2s'),
       yAxisWidth: 30,
       hoverTemplate: '{{y}}',
       valueFormat: d3.format(',.0f')

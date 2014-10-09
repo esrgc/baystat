@@ -15978,7 +15978,7 @@ GeoDash.Chart = GeoDash.Class.extend({
     // draw legend
     , legend: false
     , legendWidth: 80
-    // position of legend. top, middle, bottom
+    // position of legend. top, middle, bottom, inside
     , legendPosition: 'middle'
     // width of y axis label, height of x axis label
     , axisLabelPadding: 20
@@ -16096,13 +16096,17 @@ GeoDash.Chart = GeoDash.Class.extend({
       })
 
     if(this.options.legend) {
-      this.container.append('div')
+      var d = this.container.append('div')
         .attr('class', 'legend')
-        .style("width", this.options.legendWidth + 'px')
         .style("background", function(){
           var c = d3.select(self.el).style("background-color")
           return c
         })
+
+      if (this.options.legendWidth !== 'auto') {
+        d.style("width", this.options.legendWidth + 'px')
+      }
+
     }
 
     this.makeSVG()
@@ -16116,8 +16120,8 @@ GeoDash.Chart = GeoDash.Class.extend({
   , setXAxis: function() {
     var xrange = this.width
       , marginleft = 0
-    if(this.options.legend) {
-      xrange -= this.options.legendWidth
+    if(this.options.legend && this.options.legendPosition !== 'inside' && this.options.legendWidth !== 'auto') {
+      xrange -= (this.options.legendWidth + 10)
     }
     if(this.options.drawY) {
       xrange -= this.options.yAxisWidth
@@ -16208,7 +16212,17 @@ GeoDash.Chart = GeoDash.Class.extend({
       newTicks
         .append('div')
         .attr("class", "line")
-        .style("width", "100%")
+        .style("width", function() {
+          return self.width - self.marginleft - 5 + 'px'
+        })
+        .style("margin", function(d){
+          var m = self.marginleft + 5
+          if (self.options.yLabel) {
+            m -= self.options.axisLabelPadding
+          }
+          return '0 0 0 ' + m + 'px'
+        })
+
 
       newTicks
         .append('div')
@@ -16237,14 +16251,14 @@ GeoDash.Chart = GeoDash.Class.extend({
           return m + 'px' + ' 0 0 0'
         })
         .style("width", self.options.yAxisWidth + 'px')
-        .style("background-color", function(){
-          var c = self.container.style("background-color")
-          //IE8 can't get bg color?
-          if(!c) {
-            return '#fff'
-          }
-          return c
-        })
+        // .style("background-color", function(){
+        //   var c = self.container.style("background-color")
+        //   //IE8 can't get bg color?
+        //   if(!c) {
+        //     return '#fff'
+        //   }
+        //   return c
+        // })
     }
   }
   , updateXAxis: function() {
@@ -16304,13 +16318,26 @@ GeoDash.Chart = GeoDash.Class.extend({
             return d
           }
         })
+        .on('mouseover', function (d, i) {
+          if(!GeoDash.Browser.touch) {
+            self.mouseOver(d, i, this)
+          }
+        })
+        .on('mouseout', function (d, i) {
+          if(!GeoDash.Browser.touch) {
+            self.mouseOut(d, i, this)
+          }
+        })
+        .on('click', function (d, i) {
+          self.setActiveBar(i, this)
+        })
     }
   }
   , updateLegend: function() {
     var self = this
     if(this.options.legend) {
       var block = {width: 10, height: 10, padding: 5}
-      var padding = 3
+      var padding = 5
       var legend = this.container.select('.legend')
 
       var d = this.color.domain()//.slice().reverse()
@@ -16334,14 +16361,17 @@ GeoDash.Chart = GeoDash.Class.extend({
         .style("height", block.height + 'px')
         .style("background", this.color)
 
-      legenditem.append("div")
+      var value = legenditem.append("div")
           .attr("class", "value")
-          .style("width", this.options.legendWidth - block.width - padding*2 + 'px')
           .text(function(d) { return d })
+
+      if (this.options.legendWidth !== 'auto') {
+        value.style("width", this.options.legendWidth - block.width - padding*2 - block.padding + 'px')
+      }
 
       legenditems.exit().remove()
 
-      if(this.options.legendPosition == 'middle') {
+      if(this.options.legendPosition == 'middle' || this.options.legendPosition == 'inside') {
         var lHeight = parseInt(legend.style('height'))
         var middle = (this.height / 2) - (lHeight / 2)
         legend.style('top', middle + 'px')
@@ -16790,7 +16820,7 @@ GeoDash.BarChartHorizontal = GeoDash.BarChart.extend({
         }
       })
       .on('click', function (d, i) {
-        self.setActiveBar(i)
+        self.setActiveBar(i. this)
       })
   }
   , updateXAxis: function() {
@@ -17014,11 +17044,27 @@ GeoDash.BarChartHorizontal = GeoDash.BarChart.extend({
           .text(function(d){
             return d
           })
+        .on('mouseover', function (d, i) {
+          if(!GeoDash.Browser.touch) {
+            self.mouseOver(d, i, this)
+          }
+        })
+        .on('mouseout', function (d, i) {
+          if(!GeoDash.Browser.touch) {
+            self.mouseOut(d, i, this)
+          }
+        })
+        .on('click', function (d, i) {
+          self.setActiveBar(i, this)
+        })
 
       tickElements.exit().remove()
     }
   }
-  , setActiveBar: function(i) {
+  , setActiveBar: function(i, el) {
+    if(d3.select(el).attr('class') === 'gd-label') {
+      i = i * this.stackNumber
+    }
     var d = this._data[i];
     var el = d3.select(this.el).selectAll('.bar')[0][i]
     if(this.options.activeBar === i) {
@@ -17035,11 +17081,21 @@ GeoDash.BarChartHorizontal = GeoDash.BarChart.extend({
       , x
       , output = ''
 
-    var x = self._data[i].x
-    var y = self._data[i].y
-    if(typeof self.options.x == 'object') {
-      y += ' ' + self.options.x[i % self.stackNumber]
+    if(d3.select(el).attr('class') === 'gd-label') {
+      x = 0
+      var start = i * self.stackNumber
+      for (var j = start; j < start + self.stackNumber; j++) {
+        x += self._data[j].x
+      }
+      y = self._data[start].y
+    } else {
+      y = self._data[i].y
+      x = self._data[i].x
+      if(typeof self.options.x == 'object') {
+        y += ' ' + self.options.x[i % self.stackNumber]
+      }
     }
+
     if(x !== null) {
       x = self.options.valueFormat(x)
       var view = {
@@ -17279,7 +17335,11 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         .style("top", "-12px")
         .text(function(d){
           if(self.options.barLabels) {
-            return self.options.valueFormat(d.y)
+            if (self.options.barLabelFormat) {
+              return self.options.barLabelFormat(d.y)
+            } else {
+              return self.options.valueFormat(d.y)
+            }
           }
         })
 
@@ -17397,7 +17457,7 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         }
       })
       .on('click', function (d, i) {
-        self.setActiveBar(i)
+        self.setActiveBar(i, this)
       })
       .append('div')
         .attr('class', 'bar-label')
@@ -17405,12 +17465,19 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         .style("top", "-12px")
         .text(function(d){
           if(self.options.barLabels) {
-            return self.options.valueFormat(d.y)
+            if (self.options.barLabelFormat) {
+              return self.options.barLabelFormat(d.y)
+            } else {
+              return self.options.valueFormat(d.y)
+            }
           }
         })
     bars.exit().remove()
   }
-  , setActiveBar: function(i) {
+  , setActiveBar: function(i, el) {
+    if(d3.select(el).attr('class') === 'gd-label') {
+      i = i * this.stackNumber
+    }
     var d = this._data[i];
     var el = d3.select(this.el).selectAll('.bar')[0][i]
     if(this.options.activeBar === i) {
@@ -17427,11 +17494,21 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
       , x
       , output = ''
 
-    var x = self._data[i].x
-    var y = self._data[i].y
-    if(typeof self.options.y == 'object') {
-      x += ' ' + self.options.y[i % self.stackNumber]
+    if(d3.select(el).attr('class') === 'gd-label') {
+      y = 0
+      var start = i * self.stackNumber
+      for (var j = start; j < start + self.stackNumber; j++) {
+        y += self._data[j].y
+      }
+      x = self._data[start].x
+    } else {
+      y = self._data[i].y
+      x = self._data[i].x
+      if(typeof self.options.y == 'object') {
+        x += ' ' + self.options.y[i % self.stackNumber]
+      }
     }
+
     if(y !== null) {
       y = self.options.valueFormat(y)
       var view = {
@@ -17466,7 +17543,9 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
     if(d[self.options.x] == self.options.highlight) {
       opacity =  1
     }
-    d3.select(el).style('opacity', opacity)
+    if(d3.select(el).attr('class') === 'bar') {
+      d3.select(el).style('opacity', opacity)
+    }
     self.container.select('.hoverbox')
       .transition()
       .duration(this.options.transitionDuration)
@@ -17497,6 +17576,7 @@ GeoDash.LineChart = GeoDash.Chart.extend({
     , outerPadding: 0
     , linePadding: 20
     , showArea: false
+    , accumulate: false
   }
   , makeSVG: function() {
     var self = this
@@ -17550,6 +17630,17 @@ GeoDash.LineChart = GeoDash.Chart.extend({
       }
       self.linedata.push(l)
     })
+
+    if (this.options.accumulate) {
+      this.linedata.forEach(function(line) {
+        var sums = []
+        line.values.forEach(function(value, idx) {
+          if (idx > 0) {
+            line.values[idx].y += line.values[idx-1].y
+          }
+        })
+      })
+    }
 
     /*
       dashed: [{
@@ -17640,6 +17731,7 @@ GeoDash.LineChart = GeoDash.Chart.extend({
       d3.min(this.linedata, function(c) { return d3.min(c.values, function(v) { return v.y; }) }),
       d3.max(this.linedata, function(c) { return d3.max(c.values, function(v) { return v.y; }) })
     ])
+
     var ydomain = this.y.domain()
 
     var range = ydomain[1] - ydomain[0]
@@ -17978,7 +18070,14 @@ GeoDash.PieChart = GeoDash.Chart.extend({
         .append("path")
         .attr("fill", function(d) { return self.color(d.data[self.options.label]) })
         .attr("fill-opacity", this.options.opacity)
-        .attr("stroke-width", this.options.arcstrokewidth)
+        .attr("stroke-width", function(d) {
+          var p = (d.value/self.total)*100
+          if (p >= .1) {
+            return self.options.arcstrokewidth
+          } else {
+            return 0
+          }
+        })
         .attr("stroke", this.options.arcstrokecolor)
         .on('mouseover', function (d, i) {
           if(!GeoDash.Browser.touch) {
