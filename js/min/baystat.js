@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.17 2014-10-07 
+baystat-dashboards v0.7.18 2014-10-09 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -40,28 +40,28 @@ BayStat.CausesModel = Backbone.Model.extend({
         },
         sediment_goals: [ {
             geo: "Eastern Shore of Chesapeake Bay",
-            milestone2017: 189e6,
-            milestone2025: 194614981
+            milestone2025: 189e6,
+            milestone2017: 194614981
         }, {
             geo: "Patuxent River Basin",
-            milestone2017: 123e6,
-            milestone2025: 125534516
+            milestone2025: 123e6,
+            milestone2017: 125534516
         }, {
             geo: "Potomac River Basin",
-            milestone2017: 731e6,
-            milestone2025: 742417206
+            milestone2025: 731e6,
+            milestone2017: 742417206
         }, {
             geo: "Susquehanna River Basin",
-            milestone2017: 64e6,
-            milestone2025: 67579296
+            milestone2025: 64e6,
+            milestone2017: 67579296
         }, {
             geo: "Western Shore of Chesapeake Bay",
-            milestone2017: 243e6,
-            milestone2025: 237900908
+            milestone2025: 243e6,
+            milestone2017: 237900908
         }, {
             geo: "Maryland",
-            milestone2017: 135e7,
-            milestone2025: 1368046907
+            milestone2025: 135e7,
+            milestone2017: 1368046907
         } ]
     },
     getSources: function(_pollution, _geo) {
