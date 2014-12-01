@@ -40,6 +40,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
     }
   },
   getBMPStatistics: function(_geo, _stat) {
+    var self = this
     if (this.get('request')) {
       this.get('request').abort()
     }
@@ -48,13 +49,19 @@ BayStat.SolutionsModel = Backbone.Model.extend({
         stat = encodeURIComponent(_stat)
 
     var agency = this.get('agency')[_stat]
-    var url = this.get('socrata_urls')[agency]
-      + '&$where=basin_name=\''+geo+'\'%20and%20best_management_practice=\''+stat+'\''
+
+    var url = '/dashboards/baystat/api/solutions?'
+      url += 'agency=' + agency
+      url += '&basin_name=' + geo
+      url += '&best_management_practice=' + stat
 
     var request = $.ajax({
-      dataType: 'jsonp',
-      jsonp: false,
-      url: url + '&$jsonp=BayStat.Solutions.receiveData'
+      dataType: 'json',
+      url: url
+    })
+
+    request.done(function(data) {
+      self.set('data', data)
     })
 
     this.set('request', request)
@@ -100,6 +107,7 @@ BayStat.SolutionsView = Backbone.View.extend({
     this.listenTo(this.model, 'change:stat', this.updateLineChart)
     this.listenTo(this.model, 'change:geo', this.updateLineChart)
     this.listenTo(this.model, 'change:reduction', this.updatePieChart)
+    this.listenTo(this.model, 'change:data', this.receiveData)
     this.formatComma = d3.format(',')
     this.render()
   },
@@ -162,10 +170,6 @@ BayStat.SolutionsView = Backbone.View.extend({
   },
   updateLineChart: function() {
     var self = this
-    if (_.isEmpty(this.model.get('data')) == false) {
-      var empty = this.makeEmptyData()
-      this.chart.update(empty)
-    }
     if (_.contains(this.model.get('invalidGeoms'), this.model.get('geo'))) {
       this.updateLabels([{}])
       this.addNotes([{}])
@@ -177,12 +181,13 @@ BayStat.SolutionsView = Backbone.View.extend({
       this.model.getBMPStatistics(this.model.get('geo'), this.model.get('stat'))
     }
   },
-  receiveData: function(data) {
+  receiveData: function() {
     var self = this
+    var data = self.model.get('data')
     $('.loader').css('opacity', '0')
-    self.updateLabels(data)
+    self.updateLabels(data[0])
     self.addNotes(data[0])
-    self.model.set({data: data[0]})
+    //self.model.set({data: data[0]})
     var _data = self.prepareData(data[0])
     self.chart.update(_data)
   },
@@ -197,7 +202,7 @@ BayStat.SolutionsView = Backbone.View.extend({
   prepareData: function(data) {
     var chartData = []
     var parseDate = d3.time.format('%Y').parse
-    if (_.has(data, '_2015_goal')) {
+    if(typeof data['_2015_goal'] !== 'undefined' && data['_2015_goal'] !== null) {
       goal = +data['_2015_goal'].replace(',', '').replace('*', '')
       this.chart.options.y = ['stat', 'goal']
     } else {
@@ -207,7 +212,7 @@ BayStat.SolutionsView = Backbone.View.extend({
     var max = 0
     for (var i = this.model.get('start_year'); i <= this.model.get('end_year'); i++) {
       var year = '_' + i, stat = null
-      if (data[year] !== undefined) {
+      if (data[year] !== undefined && data[year] !== null) {
         stat = +data[year].replace(',', '').replace('*', '')
         if (stat > max) max = stat
         chartData.push({
@@ -252,9 +257,9 @@ BayStat.SolutionsView = Backbone.View.extend({
     var units_abbr = _.where(self.statsData, {stat: self.model.get('stat')})[0].units_abbr
     this.chart.options.hoverTemplate = '{{y}} ' + units_abbr
     this.chart.setYAxisLabel(units_abbr)
-    if (_.has(data[0], '_2015_goal')) {
-      var overlaytext = '<p>2014: ' + this.formatComma(+data[0]['_2014'].replace(',', '').replace('*', '')) + '</p>'
-      overlaytext += '<p>2015 Goal: ' + this.formatComma(+data[0]['_2015_goal'].replace(',', '').replace('*', '')) + '</p>'
+    if(typeof data['_2015_goal'] !== 'undefined' && data['_2015_goal'] !== null) {
+      var overlaytext = '<p>2014: ' + this.formatComma(+data['_2014'].replace(',', '').replace('*', '')) + '</p>'
+      overlaytext += '<p>2015 Goal: ' + this.formatComma(+data['_2015_goal'].replace(',', '').replace('*', '')) + '</p>'
       $('.overlay').html(overlaytext)
     } else {
       $('.overlay').html('')

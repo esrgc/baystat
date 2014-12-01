@@ -75,18 +75,29 @@ BayStat.CausesModel = Backbone.Model.extend({
     ]
   },
   getSources: function(_pollution, _geo) {
+    var self = this
     if (this.get('request')) {
       this.get('request').abort()
     }
-    var url = this.get('causes_url')[_pollution] + '&$select=source_sector,sum(_2013) as sum_2013&$group=source_sector'
-    var geo_column = _.where(this.get('layerlist'), {name: this.get('activelayer')})[0].column
-    if (_geo !== 'Maryland') {
-      url += '&$where=' + geo_column + '=\'' + encodeURIComponent(_geo) + '\''
+
+    var geo = encodeURIComponent(_geo),
+      pollution = encodeURIComponent(_pollution),
+      geo_column = _.where(this.get('layerlist'), {name: this.get('activelayer')})[0].column
+
+    if (geo_column === 'county' && geo !== 'Maryland') {
+      geo = geo.toUpperCase()
     }
+    var url = '/dashboards/baystat/api/sources?'
+    url += 'pollution=' + pollution
+    url += '&geo=' + geo
+    url += '&geo_column=' + geo_column
+
     var request = $.ajax({
-      dataType: 'jsonp',
-      jsonp: false,
-      url: url + '&$jsonp=BayStat.Causes.receivePieData'
+      dataType: 'json',
+      url: url
+    })
+    request.done(function(data) {
+      self.set('piedata', data)
     })
     this.set('request', request)
   },
@@ -98,16 +109,21 @@ BayStat.CausesModel = Backbone.Model.extend({
     if (_geo === 'Patapsco Back River') {
       _geo = 'Patapsco/Back'
     }
+
     var geo = encodeURIComponent(_geo),
-        source = encodeURIComponent(_source),
-        pollution = encodeURIComponent(_pollution),
-        url = this.get('causes_url')[pollution]
+      source = encodeURIComponent(_source),
+      pollution = encodeURIComponent(_pollution),
+      geo_column = _.where(self.get('layerlist'), {name: self.get('activelayer')})[0].column
+
+    if (geo_column === 'county' && geo !== 'Maryland') {
+      geo = geo.toUpperCase()
+    }
 
     if (_source === 'Farms') {
       source = 'Agriculture'
     }
     if (_source === 'Forests') {
-      source = 'Forest\' or source_sector=\'Non-Tidal ATM'
+      source = 'Forest'
     }
     if (_source === 'Wastewater Treatment Plants') {
       source = 'Wastewater'
@@ -115,24 +131,19 @@ BayStat.CausesModel = Backbone.Model.extend({
     if (_source === 'Stormwater Runoff') {
       source = 'Stormwater'
     }
-    var geo_column = _.where(self.get('layerlist'), {name: self.get('activelayer')})[0].column
-    url += '&$select=sum(' + this.get('goal_key')[pollution] + '_2017) as milestone2017,sum(' + this.get('goal_key')[pollution] + '_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012,sum(_2013) as sum_2013'
-    if (_geo === 'Maryland') {
-      if (_source !== 'All Causes') {
-        url += '&$where=source_sector=\'' + source + '\''
-      }
-    } else {
-      if (_source === 'All Causes') {
-        url += '&$where=' + geo_column + '=\'' + geo + '\''
-      } else {
-        url += '&$where=' + geo_column + '=\'' + geo + '\''
-        url += ' and (source_sector=\'' + source + '\')'
-      }
-    }
+
+    var url = '/dashboards/baystat/api/causes?'
+    url += 'source=' + source
+    url += '&pollution=' + pollution
+    url += '&geo=' + geo
+    url += '&geo_column=' + geo_column
+
     var request2 = $.ajax({
-      dataType: 'jsonp',
-      jsonp: false,
-      url: url + '&$jsonp=BayStat.Causes.receiveLineData'
+      dataType: 'json',
+      url: url
+    })
+    request2.done(function(data) {
+      self.set('linedata', data)
     })
     this.set('request2', request2)
   },
@@ -230,6 +241,8 @@ BayStat.CausesView = Backbone.View.extend({
     this.listenTo(this.model, 'change:geo', this.updatePieChart)
     this.listenTo(this.model, 'change:pollution', this.updatePieChart)
     this.listenTo(this.model, 'change:goals', this.updateLineChart)
+    this.listenTo(this.model, 'change:linedata', this.receiveLineData)
+    this.listenTo(this.model, 'change:piedata', this.receivePieData)
     this.formatComma = d3.format(',')
     this.details = {
       'Nitrogen': "<b>Nitrogen</b>:  The 1985 scenario is from EPA CBP Phase 5.3.2 using 1985 atmospheric reduction strategies.  Atmospheric reduction strategies projected to be in place by 2025 would have reduced Maryland's 1985 statewide nitrogen load by 4.8 million lbs/yr.  This reduction is due to actions both within Maryland and in the larger Chesapeake Bay airshed.  Changes in pollution over time are the result of a combination of reduction in atmospheric deposition, reduction due to management practices, and change due to new development. </p><p>Note that the 2017 goal represents 60% progress toward achieving the 2025 goal <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
@@ -312,9 +325,9 @@ BayStat.CausesView = Backbone.View.extend({
   },
   receivePieData: function(res) {
     var self = this
-    var data = []
-    var atm = _.where(res, {source_sector: 'Non-Tidal Atm'})[0]
-    _.each(res, function(source, idx) {
+    var piedata = this.model.get('piedata')
+    var atm = _.where(piedata, {source_sector: 'Non-Tidal Atm'})[0]
+    _.each(piedata, function(source, idx) {
       if (source.source_sector === 'Forest') {
         source.sum_2013 = source.sum_2013 + parseInt(atm.sum_2013)
       }
@@ -331,19 +344,19 @@ BayStat.CausesView = Backbone.View.extend({
         source.source_sector = 'Wastewater Treatment Plants'
       }
       if (source.source_sector !== 'Non-Tidal Atm') {
-        data.push(source)
+        //data.push(source)
       }
     })
     var sorted_data = []
-    var obj = _.where(res, {source_sector: 'Farms'})[0]
+    var obj = _.where(piedata, {source_sector: 'Farms'})[0]
     sorted_data.push(obj)
-    obj = _.where(res, {source_sector: 'Wastewater Treatment Plants'})[0]
+    obj = _.where(piedata, {source_sector: 'Wastewater Treatment Plants'})[0]
     sorted_data.push(obj)
-    obj = _.where(res, {source_sector: 'Stormwater Runoff'})[0]
+    obj = _.where(piedata, {source_sector: 'Stormwater Runoff'})[0]
     sorted_data.push(obj)
-    obj = _.where(res, {source_sector: 'Septic'})[0]
+    obj = _.where(piedata, {source_sector: 'Septic'})[0]
     sorted_data.push(obj)
-    obj = _.where(res, {source_sector: 'Forests'})[0]
+    obj = _.where(piedata, {source_sector: 'Forests'})[0]
     sorted_data.push(obj)
     self.pie.update(sorted_data)
   },
@@ -364,12 +377,14 @@ BayStat.CausesView = Backbone.View.extend({
   },
   receiveLineData: function(res) {
     var self = this
+    var data = this.model.get('linedata')
+
     //add temp sediment goals that are not in Socrata
     if (this.model.get('pollution') === 'Sediment' && this.model.get('source') === 'All Causes') {
-      res = this.addSedimentGoals(res)
+      data = this.addSedimentGoals(data)
     }
-    var data = this.prepareData(res)
-    this.chart.update(data)
+    var chartdata = this.prepareData(data)
+    this.chart.update(chartdata)
     setTimeout(function() {
       self.updateLabels()
     }, 500)
