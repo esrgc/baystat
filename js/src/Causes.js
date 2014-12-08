@@ -87,7 +87,7 @@ BayStat.CausesModel = Backbone.Model.extend({
     if (geo_column === 'county' && geo !== 'Maryland') {
       geo = geo.toUpperCase()
     }
-    var url = '/dashboards/baystat/api/sources?'
+    var url = '/dashboards/baystat2/api/sources?'
     url += 'pollution=' + pollution
     url += '&geo=' + geo
     url += '&geo_column=' + geo_column
@@ -143,7 +143,9 @@ BayStat.CausesModel = Backbone.Model.extend({
       url: url
     })
     request2.done(function(data) {
+      console.log(data)
       self.set('linedata', data)
+      self.trigger('change:linedata')
     })
     this.set('request2', request2)
   },
@@ -254,17 +256,17 @@ BayStat.CausesView = Backbone.View.extend({
       'Phosphorus': 'Pounds',
       'Sediment': 'Pounds'
     }
-    this.emptyData = this.prepareData([{
-      'milestone2017' : '0',
-      'milestone2025' : '0',
-      'sum_2009' : '0',
-      'sum_2007' : '0',
-      'sum_1985' : '0',
-      'sum_2010' : '0',
-      'sum_2011' : '0',
-      'sum_2012' : '0',
-      'sum_2013' : '0'
-    }])
+    // this.emptyData = this.prepareData([{
+    //   'milestone2017' : '0',
+    //   'milestone2025' : '0',
+    //   'sum_2009' : '0',
+    //   'sum_2007' : '0',
+    //   'sum_1985' : '0',
+    //   'sum_2010' : '0',
+    //   'sum_2011' : '0',
+    //   'sum_2012' : '0',
+    //   'sum_2013' : '0'
+    // }])
     this.render()
     this.updateLineChart()
     this.updatePieChart()
@@ -371,7 +373,7 @@ BayStat.CausesView = Backbone.View.extend({
     } else {
       this.model.getCauses(this.model.get('pollution'), this.model.get('source'), this.model.get('geo'))
     }
-    this.chart.update(this.emptyData)
+    //this.chart.update(this.emptyData)
     this.updateLabels()
     this.setDashedLines()
   },
@@ -384,6 +386,7 @@ BayStat.CausesView = Backbone.View.extend({
       data = this.addSedimentGoals(data)
     }
     var chartdata = this.prepareData(data)
+    console.log(chartdata)
     this.chart.update(chartdata)
     setTimeout(function() {
       self.updateLabels()
@@ -425,9 +428,12 @@ BayStat.CausesView = Backbone.View.extend({
           stat: years[key]
         }
         _.each(this.model.get('goals'), function(goal, idx) {
+          console.log(goal, idx)
           p['goal' + idx] = data[0][goal]
           if (self.chart) self.chart.options.y.push('goal' + idx)
         })
+        self.chart.options.y = _.uniq(self.chart.options.y)
+        console.log(self.chart.options.y)
         chartData.push(p)
       }
     }

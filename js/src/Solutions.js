@@ -50,7 +50,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
 
     var agency = this.get('agency')[_stat]
 
-    var url = '/dashboards/baystat/api/solutions?'
+    var url = '/dashboards/baystat2/api/solutions?'
       url += 'agency=' + agency
       url += '&basin_name=' + geo
       url += '&best_management_practice=' + stat
@@ -138,8 +138,8 @@ BayStat.SolutionsView = Backbone.View.extend({
       xTickFormat: d3.time.format('\'%y'),
       yTickFormat: d3.format('.2s'),
       yAxisWidth: 30,
-      hoverTemplate: '{{x}}: {{y}}',
       valueFormat: d3.format(',.0f'),
+      labelFormat: d3.time.format('%Y'),
       margin: {
         top: 10,
         right: 0,
@@ -204,10 +204,10 @@ BayStat.SolutionsView = Backbone.View.extend({
     var parseDate = d3.time.format('%Y').parse
     if(typeof data['_2015_goal'] !== 'undefined' && data['_2015_goal'] !== null) {
       goal = +data['_2015_goal'].replace(',', '').replace('*', '')
-      this.chart.options.y = ['stat', 'goal']
+      this.chart.options.y = ['Progress', 'Goal']
     } else {
       goal = 0
-      this.chart.options.y = ['stat']
+      this.chart.options.y = ['Progress']
     }
     var max = 0
     for (var i = this.model.get('start_year'); i <= this.model.get('end_year'); i++) {
@@ -217,13 +217,13 @@ BayStat.SolutionsView = Backbone.View.extend({
         if (stat > max) max = stat
         chartData.push({
           date: parseDate(i.toString()),
-          stat: stat,
-          goal: goal
+          Progress: stat,
+          Goal: goal
         })
         if (i === this.model.get('end_year') - 1 && data['_' + this.model.get('end_year')] === undefined) {
           chartData.push({
             date: parseDate((i+1).toString()),
-            goal: goal
+            Goal: goal
           })
         }
       } else {

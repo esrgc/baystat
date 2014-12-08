@@ -1,6 +1,6 @@
 
 var GeoDash = {
-  version: '0.2-dev'
+  version: '0.3-dev'
 }
 
 function expose() {
@@ -1249,14 +1249,6 @@ GeoDash.Chart = GeoDash.Class.extend({
           return m + 'px' + ' 0 0 0'
         })
         .style("width", self.options.yAxisWidth + 'px')
-        // .style("background-color", function(){
-        //   var c = self.container.style("background-color")
-        //   //IE8 can't get bg color?
-        //   if(!c) {
-        //     return '#fff'
-        //   }
-        //   return c
-        // })
     }
   }
   , updateXAxis: function() {
@@ -1683,7 +1675,11 @@ GeoDash.BarChartHorizontal = GeoDash.BarChart.extend({
         }
       })
       .style("background-color", function(d, i) {
-        return self.options.colors[i%self.stackNumber]
+        if (self.stackNumber > 1) {
+          return self.options.colors[i%self.stackNumber]
+        } else {
+          return self.options.colors[i%self.options.colors.length]
+        }
       }, 'important')
 
     var barsenter = bars.enter().append("div")
@@ -1801,7 +1797,11 @@ GeoDash.BarChartHorizontal = GeoDash.BarChart.extend({
       })
       .style("-webkit-print-color-adjust", "exact")
       .style("background-color", function(d, i) {
-        return self.options.colors[i%self.stackNumber]
+        if (self.stackNumber > 1) {
+          return self.options.colors[i%self.stackNumber]
+        } else {
+          return self.options.colors[i%self.options.colors.length]
+        }
       }, 'important')
 
     bars.exit().remove()
@@ -2275,7 +2275,11 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         return self.options.opacity
       })
       .style("background-color", function(d, i) { 
-        return self.options.colors[i%self.stackNumber]
+        if (self.stackNumber > 1) {
+          return self.options.colors[i%self.stackNumber]
+        } else {
+          return self.options.colors[i%self.options.colors.length]
+        }
       })
       .style("border-top-right-radius", function(d, i){
         var notend = (i + 1) % self.stackNumber
@@ -2326,7 +2330,11 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         }
       })
       .style("background-color", function(d, i) {
-        return self.options.colors[i%self.stackNumber]
+        if (self.stackNumber > 1) {
+          return self.options.colors[i%self.stackNumber]
+        } else {
+          return self.options.colors[i%self.options.colors.length]
+        }
       }, 'important')
       .select('.bar-label')
         .style("width", self.x.rangeBand() + 'px')
@@ -2394,7 +2402,11 @@ GeoDash.BarChartVertical = GeoDash.BarChart.extend({
         else return self.options.opacity
       })
       .style("background-color", function(d, i) {
-        return self.options.colors[i%self.stackNumber]
+        if (self.stackNumber > 1) {
+          return self.options.colors[i%self.stackNumber]
+        } else {
+          return self.options.colors[i%self.options.colors.length]
+        }
       }, 'important')
       .style("border-top-right-radius", function(d, i){
         var notend = (i + 1) % self.stackNumber
@@ -2768,6 +2780,27 @@ GeoDash.LineChart = GeoDash.Chart.extend({
 
     var delay = function(d, i) { return i * 10 }
 
+    if(this.options.showArea) {
+      var areas = this.svg.selectAll(".area")
+        .data(this.linedata)
+
+      areas
+        .enter()
+        .append("path")
+        .attr("class", "area")
+        .attr('opacity', 0.1)
+        .attr('fill', function(d) { return self.color(d.name) })
+        .attr("d", function(d) { return self.area(d.values) })
+
+      areas
+        .transition()
+        .duration(this.options.transitionDuration)
+        .attr('fill', function(d) { return self.color(d.name) })
+        .attr("d", function(d) { return self.area(d.values) })
+
+      areas.exit().remove()
+    }
+
     var line_groups = this.svg.selectAll(".line_group")
       .data(this.linedata)
 
@@ -2826,33 +2859,36 @@ GeoDash.LineChart = GeoDash.Chart.extend({
         .attr("fill-opacity", self.options.opacity)
         .attr("data", function(d){ return d.y; })
         .attr("label", function(d){ return label })
+        //.on('mouseover', function(d, i) {self.mouseOver(d, i, this); })
+        //.on('mouseout', function(d, i) {self.mouseOut(d, i, this); })
+        .attr("cx", function(d) { return self.xLine(d.x) })
+        .attr("cy", function(d) { return self.y(d.y); })
+
+      dots.exit().remove()
+
+      var dot_targets = this.svg.select(".line_group" + i).selectAll('.dot-target')
+          .data(one_line)
+
+      dot_targets
+        .transition()
+        .duration(this.options.transitionDuration)
+        .attr("data", function(d){ return d.y; })
+        .attr("cx", function(d) { return self.xLine(d.x)})
+        .attr("cy", function(d) { return self.y(d.y); })
+
+      dot_targets.enter().append("circle")
+        .attr("class", "dot-target")
+        .attr("r", 6)
+        .attr("fill", '#333')
+        .attr("fill-opacity", 0)
+        .attr("data", function(d){ return d.y; })
+        .attr("label", function(d){ return label })
         .on('mouseover', function(d, i) {self.mouseOver(d, i, this); })
         .on('mouseout', function(d, i) {self.mouseOut(d, i, this); })
         .attr("cx", function(d) { return self.xLine(d.x) })
         .attr("cy", function(d) { return self.y(d.y); })
 
-      dots.exit().remove()
-    }
-
-    if(this.options.showArea) {
-      var areas = this.svg.selectAll(".area")
-        .data(this.linedata)
-
-      areas
-        .enter()
-        .append("path")
-        .attr("class", "area")
-        .attr('opacity', 0.1)
-        .attr('fill', function(d) { return self.color(d.name) })
-        .attr("d", function(d) { return self.area(d.values) })
-
-      areas
-        .transition()
-        .duration(this.options.transitionDuration)
-        .attr('fill', function(d) { return self.color(d.name) })
-        .attr("d", function(d) { return self.area(d.values) })
-
-      areas.exit().remove()
+      dot_targets.exit().remove()
     }
   }
   , updateXAxis: function() {
@@ -2919,34 +2955,76 @@ GeoDash.LineChart = GeoDash.Chart.extend({
           var m = (w / 2) * -1
           return '0 0 0 ' + m + 'px'
         })
+        // .on('mouseover', function (d, i) {
+        //   if(!GeoDash.Browser.touch) {
+        //     self.mouseOver(d, i, this)
+        //   }
+        // })
+        // .on('mouseout', function (d, i) {
+        //   if(!GeoDash.Browser.touch) {
+        //     self.mouseOut(d, i, this)
+        //   }
+        // })
     }
   }
   , mouseOver: function(d, i, el){
+    console.log(d, i, el)
     var self = this
-      , y = d.y
-      , x = d.x
       , output = ''
 
-    if(self.options.labelFormat) {
-      x = self.options.labelFormat(x)
-    }
-    if(typeof self.options.y == 'object') {
-      x = d3.select(el).attr('label') + ' ' + x
-    }
-    if(y !== null) {
-      y = self.options.valueFormat(y)
-      var view = {
-        y: y
-        , x: x
+    if(d3.select(el).attr('class') === 'gd-label') {
+      var x = d
+      console.log(x, self.data[i])
+      if(self.stackNumber > 1) {
+        var y
+        for (var j = 0; j < self.stackNumber; j++) {
+          y = self.data[i][self.options.y[j]]
+          output += makeLabel(x, y, self.options.y[j])
+          output += '<br>'
+        }
+      } else {
+        var y = self.data[i][self.options.y[0]]
+        output = makeLabel(x, y)
       }
-      output = Mustache.render(self.options.hoverTemplate, view)
     } else {
-      output = 'NA'
+      var y = d.y
+      , x = d.x
+      output = makeLabel(x, y)
     }
 
-    d3.select(el)
-      .attr('r', this.options.dotRadius + 3)
-    d3.select(el).style("fill-opacity", 0.9)
+    function makeLabel(x, y, yLabel) {
+      var label = ''
+
+      if(self.options.labelFormat) {
+        x = self.options.labelFormat(x)
+      }
+
+      if(y !== null) {
+        y = self.options.valueFormat(y)
+        if(yLabel) {
+          y = yLabel + ': ' + y
+        }
+        var view = {
+          y: y
+          , x: x
+        }
+        label = Mustache.render(self.options.hoverTemplate, view)
+      } else {
+        label = 'NA'
+      }
+      return label
+    }
+
+    var el = d3.select(el)
+    var selector = '.dot'
+     + '[cx="' + el.attr('cx') + '"]'
+     + '[cy="' + el.attr('cy') + '"]'
+     + '[label="' + el.attr('label') + '"]'
+     + '[data="' + el.attr('data') + '"]'
+    var dot = self.container.select(selector)
+    console.log(dot)
+    dot.attr('r', this.options.dotRadius + 3)
+    dot.style("fill-opacity", 0.9)
 
     if(self.options.hover) {
       self.container.select('.hoverbox')
@@ -2958,10 +3036,18 @@ GeoDash.LineChart = GeoDash.Chart.extend({
   }
   , mouseOut: function(d, i, el){
     var self = this;
-    // d3.select(self.el).select('.hoverbox').transition().style('display', 'none');
-    d3.select(el).style("fill-opacity", self.options.opacity)
-    d3.select(el)
-      .attr('r', this.options.dotRadius);
+    var el = d3.select(el)
+    var selector = '.dot'
+     + '[cx="' + el.attr('cx') + '"]'
+     + '[cy="' + el.attr('cy') + '"]'
+     + '[label="' + el.attr('label') + '"]'
+     + '[data="' + el.attr('data') + '"]'
+    var dot = self.container.select(selector)
+    
+    // d3.select(el)
+    dot
+      .attr('r', this.options.dotRadius)
+      .style("fill-opacity", self.options.opacity)
     self.container.select('.hoverbox')
       .style('display', 'none')
   }
@@ -3038,23 +3124,46 @@ GeoDash.PieChart = GeoDash.Chart.extend({
         d[self.options.value] = +d[self.options.value]
         if(+d[self.options.value] > 0) {
           self.total += +d[self.options.value]
-          new_data.push(d)
         }
+        new_data.push(d)
       })
     } else {
       this.total = this.options.total
     }
     this.data = new_data
-    this.updateChart(firstUpdate)
-  }
-  , updateChart: function(firstUpdate) {
-    var self = this
 
     var domain = []
     for (var i = 0; i < this.data.length; i++) {
       domain.push(this.data[i][this.options.label])
     }
+
     this.color.domain(domain)
+
+    var empty = true
+    this.data.forEach(function(d, i) {
+      if (d[self.options.value] > 0) empty = false
+    })
+    if (!empty) {
+      this.updateChart(firstUpdate)
+    } else {
+      this.emptyChart()
+      this.updateLegend()
+    }
+  }
+  , emptyChart: function() {
+    var self = this
+    this.svg.selectAll("path")
+      .transition()
+      .duration(this.options.transitionDuration)
+      .attrTween("d", function (d, i) {
+        return self.arcTweenOut(this, d)
+      })
+      .remove()
+    this.svg.selectAll(".arc-text")
+      .remove()
+  }
+  , updateChart: function(firstUpdate) {
+    var self = this
 
     this.enterAntiClockwise = {
       startAngle: Math.PI * 2,

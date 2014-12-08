@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.19 2014-12-01 
+baystat-dashboards v0.7.20 2014-12-08 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -65,20 +65,26 @@ BayStat.CausesModel = Backbone.Model.extend({
         } ]
     },
     getSources: function(_pollution, _geo) {
+        var self = this;
         if (this.get("request")) {
             this.get("request").abort();
         }
-        var url = this.get("causes_url")[_pollution] + "&$select=source_sector,sum(_2013) as sum_2013&$group=source_sector";
-        var geo_column = _.where(this.get("layerlist"), {
+        var geo = encodeURIComponent(_geo), pollution = encodeURIComponent(_pollution), geo_column = _.where(this.get("layerlist"), {
             name: this.get("activelayer")
         })[0].column;
-        if (_geo !== "Maryland") {
-            url += "&$where=" + geo_column + "='" + encodeURIComponent(_geo) + "'";
+        if (geo_column === "county" && geo !== "Maryland") {
+            geo = geo.toUpperCase();
         }
+        var url = "/dashboards/baystat2/api/sources?";
+        url += "pollution=" + pollution;
+        url += "&geo=" + geo;
+        url += "&geo_column=" + geo_column;
         var request = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Causes.receivePieData"
+            dataType: "json",
+            url: url
+        });
+        request.done(function(data) {
+            self.set("piedata", data);
         });
         this.set("request", request);
     },
@@ -90,12 +96,17 @@ BayStat.CausesModel = Backbone.Model.extend({
         if (_geo === "Patapsco Back River") {
             _geo = "Patapsco/Back";
         }
-        var geo = encodeURIComponent(_geo), source = encodeURIComponent(_source), pollution = encodeURIComponent(_pollution), url = this.get("causes_url")[pollution];
+        var geo = encodeURIComponent(_geo), source = encodeURIComponent(_source), pollution = encodeURIComponent(_pollution), geo_column = _.where(self.get("layerlist"), {
+            name: self.get("activelayer")
+        })[0].column;
+        if (geo_column === "county" && geo !== "Maryland") {
+            geo = geo.toUpperCase();
+        }
         if (_source === "Farms") {
             source = "Agriculture";
         }
         if (_source === "Forests") {
-            source = "Forest' or source_sector='Non-Tidal ATM";
+            source = "Forest";
         }
         if (_source === "Wastewater Treatment Plants") {
             source = "Wastewater";
@@ -103,26 +114,19 @@ BayStat.CausesModel = Backbone.Model.extend({
         if (_source === "Stormwater Runoff") {
             source = "Stormwater";
         }
-        var geo_column = _.where(self.get("layerlist"), {
-            name: self.get("activelayer")
-        })[0].column;
-        url += "&$select=sum(" + this.get("goal_key")[pollution] + "_2017) as milestone2017,sum(" + this.get("goal_key")[pollution] + "_2025) as milestone2025, sum(_1985) as sum_1985,sum(_2007) as sum_2007,sum(_2009) as sum_2009,sum(_2010) as sum_2010,sum(_2011) as sum_2011,sum(_2012) as sum_2012,sum(_2013) as sum_2013";
-        if (_geo === "Maryland") {
-            if (_source !== "All Causes") {
-                url += "&$where=source_sector='" + source + "'";
-            }
-        } else {
-            if (_source === "All Causes") {
-                url += "&$where=" + geo_column + "='" + geo + "'";
-            } else {
-                url += "&$where=" + geo_column + "='" + geo + "'";
-                url += " and (source_sector='" + source + "')";
-            }
-        }
+        var url = "/dashboards/baystat/api/causes?";
+        url += "source=" + source;
+        url += "&pollution=" + pollution;
+        url += "&geo=" + geo;
+        url += "&geo_column=" + geo_column;
         var request2 = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Causes.receiveLineData"
+            dataType: "json",
+            url: url
+        });
+        request2.done(function(data) {
+            console.log(data);
+            self.set("linedata", data);
+            self.trigger("change:linedata");
         });
         this.set("request2", request2);
     },
@@ -223,6 +227,8 @@ BayStat.CausesView = Backbone.View.extend({
         this.listenTo(this.model, "change:geo", this.updatePieChart);
         this.listenTo(this.model, "change:pollution", this.updatePieChart);
         this.listenTo(this.model, "change:goals", this.updateLineChart);
+        this.listenTo(this.model, "change:linedata", this.receiveLineData);
+        this.listenTo(this.model, "change:piedata", this.receivePieData);
         this.formatComma = d3.format(",");
         this.details = {
             Nitrogen: "<b>Nitrogen</b>:  The 1985 scenario is from EPA CBP Phase 5.3.2 using 1985 atmospheric reduction strategies.  Atmospheric reduction strategies projected to be in place by 2025 would have reduced Maryland's 1985 statewide nitrogen load by 4.8 million lbs/yr.  This reduction is due to actions both within Maryland and in the larger Chesapeake Bay airshed.  Changes in pollution over time are the result of a combination of reduction in atmospheric deposition, reduction due to management practices, and change due to new development. </p><p>Note that the 2017 goal represents 60% progress toward achieving the 2025 goal <p><b>Data source:</b>  EPA Phase 5.3.2 Watershed Model</p>",
@@ -234,17 +240,6 @@ BayStat.CausesView = Backbone.View.extend({
             Phosphorus: "Pounds",
             Sediment: "Pounds"
         };
-        this.emptyData = this.prepareData([ {
-            milestone2017: "0",
-            milestone2025: "0",
-            sum_2009: "0",
-            sum_2007: "0",
-            sum_1985: "0",
-            sum_2010: "0",
-            sum_2011: "0",
-            sum_2012: "0",
-            sum_2013: "0"
-        } ]);
         this.render();
         this.updateLineChart();
         this.updatePieChart();
@@ -328,11 +323,11 @@ BayStat.CausesView = Backbone.View.extend({
     },
     receivePieData: function(res) {
         var self = this;
-        var data = [];
-        var atm = _.where(res, {
+        var piedata = this.model.get("piedata");
+        var atm = _.where(piedata, {
             source_sector: "Non-Tidal Atm"
         })[0];
-        _.each(res, function(source, idx) {
+        _.each(piedata, function(source, idx) {
             if (source.source_sector === "Forest") {
                 source.sum_2013 = source.sum_2013 + parseInt(atm.sum_2013);
             }
@@ -348,28 +343,26 @@ BayStat.CausesView = Backbone.View.extend({
             if (source.source_sector === "Wastewater") {
                 source.source_sector = "Wastewater Treatment Plants";
             }
-            if (source.source_sector !== "Non-Tidal Atm") {
-                data.push(source);
-            }
+            if (source.source_sector !== "Non-Tidal Atm") {}
         });
         var sorted_data = [];
-        var obj = _.where(res, {
+        var obj = _.where(piedata, {
             source_sector: "Farms"
         })[0];
         sorted_data.push(obj);
-        obj = _.where(res, {
+        obj = _.where(piedata, {
             source_sector: "Wastewater Treatment Plants"
         })[0];
         sorted_data.push(obj);
-        obj = _.where(res, {
+        obj = _.where(piedata, {
             source_sector: "Stormwater Runoff"
         })[0];
         sorted_data.push(obj);
-        obj = _.where(res, {
+        obj = _.where(piedata, {
             source_sector: "Septic"
         })[0];
         sorted_data.push(obj);
-        obj = _.where(res, {
+        obj = _.where(piedata, {
             source_sector: "Forests"
         })[0];
         sorted_data.push(obj);
@@ -384,17 +377,18 @@ BayStat.CausesView = Backbone.View.extend({
         if (_.contains(this.model.get("invalidGeoms"), this.model.get("geo"))) {} else {
             this.model.getCauses(this.model.get("pollution"), this.model.get("source"), this.model.get("geo"));
         }
-        this.chart.update(this.emptyData);
         this.updateLabels();
         this.setDashedLines();
     },
     receiveLineData: function(res) {
         var self = this;
+        var data = this.model.get("linedata");
         if (this.model.get("pollution") === "Sediment" && this.model.get("source") === "All Causes") {
-            res = this.addSedimentGoals(res);
+            data = this.addSedimentGoals(data);
         }
-        var data = this.prepareData(res);
-        this.chart.update(data);
+        var chartdata = this.prepareData(data);
+        console.log(chartdata);
+        this.chart.update(chartdata);
         setTimeout(function() {
             self.updateLabels();
         }, 500);
@@ -434,9 +428,12 @@ BayStat.CausesView = Backbone.View.extend({
                     stat: years[key]
                 };
                 _.each(this.model.get("goals"), function(goal, idx) {
+                    console.log(goal, idx);
                     p["goal" + idx] = data[0][goal];
                     if (self.chart) self.chart.options.y.push("goal" + idx);
                 });
+                self.chart.options.y = _.uniq(self.chart.options.y);
+                console.log(self.chart.options.y);
                 chartData.push(p);
             }
         }
@@ -703,16 +700,22 @@ BayStat.SolutionsModel = Backbone.Model.extend({
         }
     },
     getBMPStatistics: function(_geo, _stat) {
+        var self = this;
         if (this.get("request")) {
             this.get("request").abort();
         }
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
         var agency = this.get("agency")[_stat];
-        var url = this.get("socrata_urls")[agency] + "&$where=basin_name='" + geo + "'%20and%20best_management_practice='" + stat + "'";
+        var url = "/dashboards/baystat2/api/solutions?";
+        url += "agency=" + agency;
+        url += "&basin_name=" + geo;
+        url += "&best_management_practice=" + stat;
         var request = $.ajax({
-            dataType: "jsonp",
-            jsonp: false,
-            url: url + "&$jsonp=BayStat.Solutions.receiveData"
+            dataType: "json",
+            url: url
+        });
+        request.done(function(data) {
+            self.set("data", data);
         });
         this.set("request", request);
     },
@@ -757,6 +760,7 @@ BayStat.SolutionsView = Backbone.View.extend({
         this.listenTo(this.model, "change:stat", this.updateLineChart);
         this.listenTo(this.model, "change:geo", this.updateLineChart);
         this.listenTo(this.model, "change:reduction", this.updatePieChart);
+        this.listenTo(this.model, "change:data", this.receiveData);
         this.formatComma = d3.format(",");
         this.render();
     },
@@ -791,8 +795,8 @@ BayStat.SolutionsView = Backbone.View.extend({
             xTickFormat: d3.time.format("'%y"),
             yTickFormat: d3.format(".2s"),
             yAxisWidth: 30,
-            hoverTemplate: "{{x}}: {{y}}",
             valueFormat: d3.format(",.0f"),
+            labelFormat: d3.time.format("%Y"),
             margin: {
                 top: 10,
                 right: 0,
@@ -828,10 +832,6 @@ BayStat.SolutionsView = Backbone.View.extend({
     },
     updateLineChart: function() {
         var self = this;
-        if (_.isEmpty(this.model.get("data")) == false) {
-            var empty = this.makeEmptyData();
-            this.chart.update(empty);
-        }
         if (_.contains(this.model.get("invalidGeoms"), this.model.get("geo"))) {
             this.updateLabels([ {} ]);
             this.addNotes([ {} ]);
@@ -843,14 +843,12 @@ BayStat.SolutionsView = Backbone.View.extend({
             this.model.getBMPStatistics(this.model.get("geo"), this.model.get("stat"));
         }
     },
-    receiveData: function(data) {
+    receiveData: function() {
         var self = this;
+        var data = self.model.get("data");
         $(".loader").css("opacity", "0");
-        self.updateLabels(data);
+        self.updateLabels(data[0]);
         self.addNotes(data[0]);
-        self.model.set({
-            data: data[0]
-        });
         var _data = self.prepareData(data[0]);
         self.chart.update(_data);
     },
@@ -865,28 +863,28 @@ BayStat.SolutionsView = Backbone.View.extend({
     prepareData: function(data) {
         var chartData = [];
         var parseDate = d3.time.format("%Y").parse;
-        if (_.has(data, "_2015_goal")) {
+        if (typeof data["_2015_goal"] !== "undefined" && data["_2015_goal"] !== null) {
             goal = +data["_2015_goal"].replace(",", "").replace("*", "");
-            this.chart.options.y = [ "stat", "goal" ];
+            this.chart.options.y = [ "Progress", "Goal" ];
         } else {
             goal = 0;
-            this.chart.options.y = [ "stat" ];
+            this.chart.options.y = [ "Progress" ];
         }
         var max = 0;
         for (var i = this.model.get("start_year"); i <= this.model.get("end_year"); i++) {
             var year = "_" + i, stat = null;
-            if (data[year] !== undefined) {
+            if (data[year] !== undefined && data[year] !== null) {
                 stat = +data[year].replace(",", "").replace("*", "");
                 if (stat > max) max = stat;
                 chartData.push({
                     date: parseDate(i.toString()),
-                    stat: stat,
-                    goal: goal
+                    Progress: stat,
+                    Goal: goal
                 });
                 if (i === this.model.get("end_year") - 1 && data["_" + this.model.get("end_year")] === undefined) {
                     chartData.push({
                         date: parseDate((i + 1).toString()),
-                        goal: goal
+                        Goal: goal
                     });
                 }
             } else {
@@ -924,9 +922,9 @@ BayStat.SolutionsView = Backbone.View.extend({
         })[0].units_abbr;
         this.chart.options.hoverTemplate = "{{y}} " + units_abbr;
         this.chart.setYAxisLabel(units_abbr);
-        if (_.has(data[0], "_2015_goal")) {
-            var overlaytext = "<p>2014: " + this.formatComma(+data[0]["_2014"].replace(",", "").replace("*", "")) + "</p>";
-            overlaytext += "<p>2015 Goal: " + this.formatComma(+data[0]["_2015_goal"].replace(",", "").replace("*", "")) + "</p>";
+        if (typeof data["_2015_goal"] !== "undefined" && data["_2015_goal"] !== null) {
+            var overlaytext = "<p>2014: " + this.formatComma(+data["_2014"].replace(",", "").replace("*", "")) + "</p>";
+            overlaytext += "<p>2015 Goal: " + this.formatComma(+data["_2015_goal"].replace(",", "").replace("*", "")) + "</p>";
             $(".overlay").html(overlaytext);
         } else {
             $(".overlay").html("");
