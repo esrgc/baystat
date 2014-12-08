@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.20 2014-12-08 
+baystat-dashboards v0.7.21 2014-12-08 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -114,7 +114,7 @@ BayStat.CausesModel = Backbone.Model.extend({
         if (_source === "Stormwater Runoff") {
             source = "Stormwater";
         }
-        var url = "/dashboards/baystat/api/causes?";
+        var url = "/dashboards/baystat2/api/causes?";
         url += "source=" + source;
         url += "&pollution=" + pollution;
         url += "&geo=" + geo;

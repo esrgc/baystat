@@ -132,7 +132,7 @@ BayStat.CausesModel = Backbone.Model.extend({
       source = 'Stormwater'
     }
 
-    var url = '/dashboards/baystat/api/causes?'
+    var url = '/dashboards/baystat2/api/causes?'
     url += 'source=' + source
     url += '&pollution=' + pollution
     url += '&geo=' + geo
