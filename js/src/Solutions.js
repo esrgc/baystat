@@ -9,9 +9,9 @@ BayStat.SolutionsModel = Backbone.Model.extend({
     data: {},
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
     socrata_urls: {
-      mda: 'https://data.maryland.gov/resource/tsya-25ee.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
-      mde: 'https://data.maryland.gov/resource/ab68-n7ja.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
-      dnr: 'https://data.maryland.gov/resource/4zqs-i2t2.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
+      mda: 'https://opendata.maryland.gov/resource/tsya-25ee.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
+      mde: 'https://opendata.maryland.gov/resource/ab68-n7ja.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
+      dnr: 'https://opendata.maryland.gov/resource/4zqs-i2t2.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
     },
     agency: {
       'Cover Crops': 'mda',

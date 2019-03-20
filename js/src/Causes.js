@@ -32,9 +32,9 @@ BayStat.CausesModel = Backbone.Model.extend({
     invalidGeoms: ['Youghiogheny', 'Christina River', 'Coastal Bays'],
     pie_colors: ['#f0db4f', '#d80000', '#66adda', '#A278C1', '#0B6909', '#ff6600', '#a882c5'],
     causes_url: {
-      'Nitrogen': 'https://data.maryland.gov/resource/rsrj-4w3t.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
-      'Phosphorus': 'https://data.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
-      'Sediment': 'https://data.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
+      'Nitrogen': 'https://opendata.maryland.gov/resource/rsrj-4w3t.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
+      'Phosphorus': 'https://opendata.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag',
+      'Sediment': 'https://opendata.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag'
     },
     goal_key: {
       'Nitrogen': 'tn_target',
