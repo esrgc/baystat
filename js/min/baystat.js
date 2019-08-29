@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.21 2015-01-30 
+baystat-dashboards v0.7.22 2019-03-20 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -29,9 +29,9 @@ BayStat.CausesModel = Backbone.Model.extend({
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
         pie_colors: [ "#f0db4f", "#d80000", "#66adda", "#A278C1", "#0B6909", "#ff6600", "#a882c5" ],
         causes_url: {
-            Nitrogen: "https://data.maryland.gov/resource/rsrj-4w3t.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            Phosphorus: "https://data.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            Sediment: "https://data.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+            Nitrogen: "https://opendata.maryland.gov/resource/rsrj-4w3t.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            Phosphorus: "https://opendata.maryland.gov/resource/eumn-ip4q.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            Sediment: "https://opendata.maryland.gov/resource/x5pe-335m.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
         },
         goal_key: {
             Nitrogen: "tn_target",
@@ -672,9 +672,9 @@ BayStat.SolutionsModel = Backbone.Model.extend({
         data: {},
         invalidGeoms: [ "Youghiogheny", "Christina River", "Coastal Bays" ],
         socrata_urls: {
-            mda: "https://data.maryland.gov/resource/tsya-25ee.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            mde: "https://data.maryland.gov/resource/ab68-n7ja.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
-            dnr: "https://data.maryland.gov/resource/4zqs-i2t2.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
+            mda: "https://opendata.maryland.gov/resource/tsya-25ee.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            mde: "https://opendata.maryland.gov/resource/ab68-n7ja.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag",
+            dnr: "https://opendata.maryland.gov/resource/4zqs-i2t2.json?$$app_token=bA8APUlfPGYcccq8XQyyigLag"
         },
         agency: {
             "Cover Crops": "mda",
