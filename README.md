@@ -28,3 +28,5 @@ To build:
 * `npm install`
 * `grunt dev` for developing
 * `grunt deploy` for deployment
+
+Use `api/config.sample.js` as a template to create the file `api/config/config.js`.
