@@ -1,5 +1,5 @@
 /*! 
-baystat-dashboards v0.7.21 2014-12-08 
+baystat-dashboards v0.7.22 2020-10-05 
 Author: @fsrowe, ESRGC, 2014 
 */
 BayStat.CausesModel = Backbone.Model.extend({
@@ -75,7 +75,7 @@ BayStat.CausesModel = Backbone.Model.extend({
         if (geo_column === "county" && geo !== "Maryland") {
             geo = geo.toUpperCase();
         }
-        var url = "/dashboards/baystat2/api/sources?";
+        var url = "/baystat/api/sources?";
         url += "pollution=" + pollution;
         url += "&geo=" + geo;
         url += "&geo_column=" + geo_column;
@@ -706,7 +706,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
         }
         var geo = encodeURIComponent(_geo), stat = encodeURIComponent(_stat);
         var agency = this.get("agency")[_stat];
-        var url = "/dashboards/baystat2/api/solutions?";
+        var url = "/baystat/api/solutions?";
         url += "agency=" + agency;
         url += "&basin_name=" + geo;
         url += "&best_management_practice=" + stat;

@@ -87,7 +87,7 @@ BayStat.CausesModel = Backbone.Model.extend({
     if (geo_column === 'county' && geo !== 'Maryland') {
       geo = geo.toUpperCase()
     }
-    var url = '/dashboards/baystat2/api/sources?'
+    var url = '/baystat/api/sources?'
     url += 'pollution=' + pollution
     url += '&geo=' + geo
     url += '&geo_column=' + geo_column

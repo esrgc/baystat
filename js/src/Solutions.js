@@ -50,7 +50,7 @@ BayStat.SolutionsModel = Backbone.Model.extend({
 
     var agency = this.get('agency')[_stat]
 
-    var url = '/dashboards/baystat2/api/solutions?'
+    var url = '/baystat/api/solutions?'
       url += 'agency=' + agency
       url += '&basin_name=' + geo
       url += '&best_management_practice=' + stat
