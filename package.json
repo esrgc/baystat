@@ -2,7 +2,7 @@
   "name": "baystat-dashboards",
   "version": "0.7.22",
   "devDependencies": {
-    "grunt": "~1.3.0",
+    "grunt": "~1.5.3",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-handlebars": "~0.5.10",
     "grunt-contrib-watch": "~0.5.1",
